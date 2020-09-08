@@ -1,0 +1,22 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-littystyle-dev-114547-authRole",
+            "UnauthRoleArn": "arn:aws:iam::846928963573:role/amplify-littystyle-dev-114547-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::846928963573:role/amplify-littystyle-dev-114547-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-littystyle-dev-114547-deployment",
+            "UnauthRoleName": "amplify-littystyle-dev-114547-unauthRole",
+            "StackName": "amplify-littystyle-dev-114547",
+            "StackId": "arn:aws:cloudformation:us-east-1:846928963573:stack/amplify-littystyle-dev-114547/5f30dae0-f1ea-11ea-bc50-0a479dbf9bdf",
+            "AmplifyAppId": "d3jzf24caswlgt"
+        },
+        "categories": {
+            "auth": {
+                "littystyle0826a386": {
+                    "hostedUIProviderCreds": "[]"
+                }
+            }
+        }
+    }
+}
