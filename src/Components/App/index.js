@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-
+import React, { useEffect, useState } from 'react';
 
 import HeaderLinks from '../HeaderLinks/';
 
@@ -7,71 +6,106 @@ import { Routes } from '../Routes/';
 
 import { Auth } from 'aws-amplify';
 
-export default class App extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      authState: {
-        isLoggedIn: false,
-        error: false,
-      },
-      username: "",
-      email: "",
-      phonenumber: "",
-      user_roll: ""
-    };
+const App = () => {
+  const [ isLoggedIn, setIsLoggedIn ] = useState(false);
+  const [ error, setError ] = useState(false);
+  const [ errorMessage, setErrorMessage ] = useState(false);
+  const [ username, setUsername ] = useState("");
+  const [ email, setEmail ] = useState("");
+  const [ phonenumber, setPhonenumber ] = useState("");
+  const [ user_rolls, setUser_rolls ] = useState([]);
 
-    this._isMounted = false;
-  }
+  useEffect(
+		() => {
+      let didCancel = false;
+      
+			/* const fetchEvent = async () => {
+        let user = {};
+        let roles = [];
 
-  componentDidMount(){
-    this.setLoggedUserData();
-  }
+				try {
+          const data = await Auth.currentSession();
 
-  setLoggedUserData = () => {
-    Auth.currentSession().then( user => {
-      this.setState({
-        username: user.accessToken.payload.username,
-        email: user.idToken.payload.email,
-        phonenumber: user.idToken.payload.phone_number,
-        user_roll: user.accessToken.payload['cognito:groups'][0]
-      })
-    }).catch( err => {
-    })
-  }
+          data.accessToken.payload['cognito:groups'].forEach(e => {
+            roles.push(e);
+          });
+          user = data;
 
+				} catch (e) {
+          setError(true);
+          setErrorMessage(e);
+				}
 
-  handleUserSignIn = async () => {
-    this.setState({ authState: { isLoggedIn: true } });
+				if (!didCancel) {
+          if (user.accessToken === undefined) {
+            setIsLoggedIn(false);
+          }else{
+            setUsername(user.accessToken.payload.username);
+            setEmail(user.idToken.payload.email);
+            setPhonenumber(user.idToken.payload.phone_number);
+            setUser_rolls(roles);
+          }
+				}
 
-    const user = await Auth.currentSession();
-    this.setState({
-      username: user.accessToken.payload.username,
-      email: user.idToken.payload.email,
-      phonenumber: user.idToken.payload.phone_number,
-      user_roll: user.accessToken.payload['cognito:groups'][0]
-    })
+				return () => {
+					didCancel = true;
+				};
+			};
+
+			fetchEvent(); */
+		}
+  );
+  
+  const handleUserSignIn = async () => {
+    let roles = [];
+    setIsLoggedIn(true);
+
+    try {
+      Auth.currentSession().then(user => {
+        user.accessToken.payload['cognito:groups'].forEach(e => {
+          roles.push(e);
+        });
+        console.log("asdas");
+        setUsername(user.accessToken.payload.username);
+        setEmail(user.idToken.payload.email);
+        setPhonenumber(user.idToken.payload.phone_number);
+        setUser_rolls(roles);
+
+      }).catch(e => {
+        setError(true);
+        setErrorMessage(e);
+      });
+
+    } catch (e) {
+      setError(true);
+      setErrorMessage(e);
+    }
   };
 
-  handleUserLogOut = () => {
-    this.setState({ authState: { isLoggedIn: false } });
+  const handleUserLogOut = () => {
+    setIsLoggedIn(false);
   }; 
-  
-  render() {
 
-    const childProps = {
-      isLoggedIn: this.state.authState.isLoggedIn,
-      onUserSignIn: this.handleUserSignIn,
-      onUserLogOut: this.handleUserLogOut,
-      state: this.state
-    };
+  const cp = {
+    isLoggedIn: isLoggedIn,
+    onUserSignIn: handleUserSignIn,
+    onUserLogOut: handleUserLogOut,
+    state: {
+      username: username,
+      phonenumber: phonenumber,
+      email: email,
+      user_rolls: user_rolls,
+    }
+  };
 
 
-    return (
-      <div className="App">
-        <HeaderLinks childProps={childProps}/>
-        <Routes childProps={childProps} />
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      <HeaderLinks cp={cp}/>
+      <Routes cp={cp} />
+    </div>
+  );
+
 }
+
+export default App;

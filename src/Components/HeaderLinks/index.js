@@ -13,29 +13,29 @@ export default class HeaderLinks extends Component {
 	handlesignOut = () => {
 		Auth.signOut().then((d) => {
 			window.location.reload();
-			//this.props.childProps.onUserLogOut();
+			//this.props.cp.onUserLogOut();
 		});
     };
     
-    //this.props.childProps.state.user_roll
+    //this.props.cp.state.user_roll
 
 	redirectSignIn = () => {
 		window.location.href = '/signin';
 	};
 
 	render() {
-		const username =
-			this.props.childProps.state.username !== '' ? this.props.childProps.state.username : 'Ingresar';
 
 		return (
             <Navbar>
                 <Navbar.Group align={Alignment.LEFT}>
-                    <Navbar.Heading>Blueprint {username}</Navbar.Heading>
+                    <Navbar.Heading>Litty Style</Navbar.Heading>
                     <Navbar.Divider />
-                    <Button className="bp3-minimal" icon="home" text="Home" />
-                    <Button className="bp3-minimal" icon="document" text="Files" />
-                    {this.props.childProps.isLoggedIn && ( <Button className="bp3-minimal" icon="document" text="logout" />)}
-                    {!this.props.childProps.isLoggedIn && (<Button className="bp3-minimal" icon="document" text="login" />)}
+                    <Button className="bp3-minimal" icon="home"/>
+                </Navbar.Group>
+                <Navbar.Group align={Alignment.RIGHT}>
+                    <Navbar.Divider />
+                    {this.props.cp.isLoggedIn && ( <Button onClick={this.handlesignOut} className="bp3-minimal" text="Logout"/>)}
+                    {!this.props.cp.isLoggedIn && (<Button onClick={this.redirectSignIn} className="bp3-minimal" text="Login" />)}
                 </Navbar.Group>
             </Navbar>
 		);
