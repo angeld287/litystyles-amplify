@@ -19,27 +19,18 @@ const CustomSignIn = (props) => {
   const [ nperrorMessage, npsetErrorMessage ] = useState("");
   const [ newPassword, setNewPassword ] = useState(false);
   const [ user, setUser ] = useState({});
-  const { register, handleSubmit, errors, formState, setValue } = useForm();
+  const { register, handleSubmit, errors, formState } = useForm();
 
   const onSubmit = async (input) => {
 
-    /* console.log(props);
-    props.cp.onUserSignIn();
-    props.onStateChange('signedIn',{}); */
-
     try {
       const user = await Auth.signIn(input.username, input.password);
-      //debugger
+
       if (user.challengeName === "SMS_MFA" || user.challengeName === "SOFTWARE_TOKEN_MFA") {
         //this.changeState("confirmSignIn", user);
       } else if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
         setUser(user);
-        setNewPassword(true)
-        //props.onStateChange("requireNewPassword", user);
-        //const changepass = await Auth.completeNewPassword(user, "Therc.287*");
-
-        //console.log(changepass);
-
+        setNewPassword(true);
       } else if (user.challengeName === "MFA_SETUP") {
         //this.changeState("TOTPSetup", user);
       } else {
@@ -66,12 +57,11 @@ const CustomSignIn = (props) => {
   }
 
   const nponSubmit = async (input) => {
-
     try {
-      const changepass = await Auth.completeNewPassword(user, input.password);
+      await Auth.completeNewPassword(user, input.password);
     } catch (e) {
-      setError(true);
-      setErrorMessage(e.message);
+      npsetError(true);
+      npsetErrorMessage(e.message);
     }
     
   }
@@ -110,7 +100,7 @@ const CustomSignIn = (props) => {
                               </div>
                           <Button className={Classes.LARGE} intent={Intent.PRIMARY} text="Cambiar Password" type="submit" disabled={formState.isSubmitting} />
                           <div style={{marginBottom: 10}}>
-                            {error && <Callout intent="danger">{nperrorMessage}</Callout>}
+                            {nperror && <Callout intent="danger">{nperrorMessage}</Callout>}
                           </div>
                       </ControlGroup>
                   </form>

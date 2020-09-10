@@ -3,27 +3,78 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import Home from './../Home';
+import Administration from '../Administration';
+import Customer from '../Customer';
+import Employee from '../Employee';
 import AuthComponent from './../Authentication/AuthComponent';
 
 export const Routes = ({ cp }) => (
 	<Switch>
 		<ProtectedRoute exact path="/" render={Home} props={cp} />
-		{/* <ProtectedRoutePriest exact path="/events/:id/details" render={DetailsEvent} props={cp} /> */}
+		<ProtectedRouteAdmin exact path="/administration" render={Administration} props={cp} />
+		<ProtectedRouteEmployee exact path="/stylist/:id" render={Employee} props={cp} />
+		<ProtectedRouteCustomer exact path="/customer" render={Customer} props={cp} />
 		<ProppedRoute exact path="/signin" render={AuthComponent} props={cp} />
 	</Switch>
 );
 
-export const ProtectedRouteAdmin = ({ render: C, props: cp, ...rest }) => (
+export const ProtectedRouteAdmin = ({ render: C, props: cp, ...rest }) => 
+(
 	<Route
 		{...rest}
-		render={(rProps) =>
-			cp.isLoggedIn ? cp.state.user_roll === 'admin' ? (
-				<C {...rProps} {...cp} />
-			) : (
-				<Redirect to="/" />
-			) : (
-				<Redirect to={`/signin?redirect=${rProps.location.pathname}${rProps.location.search}`} />
-			)}
+		render={
+			(rProps) =>
+				cp.isLoggedIn && cp.state.user_roles.length !== 0 ? 
+				(
+					cp.state.user_roles.indexOf('company_admin') !== -1 ? (
+						<C {...rProps} {...cp} />
+					) : (
+						<Redirect to="/" />
+					)
+				) : (
+					<Redirect to={`/signin?redirect=${rProps.location.pathname}${rProps.location.search}`} />
+				)
+			}
+	/>
+);
+
+export const ProtectedRouteEmployee = ({ render: C, props: cp, ...rest }) => 
+(
+	<Route
+		{...rest}
+		render={
+			(rProps) =>
+				cp.isLoggedIn && cp.state.user_roles.length !== 0 ? 
+				(
+					cp.state.user_roles.indexOf('employee') !== -1 ? (
+						<C {...rProps} {...cp} />
+					) : (
+						<Redirect to="/" />
+					)
+				) : (
+					<Redirect to={`/signin?redirect=${rProps.location.pathname}${rProps.location.search}`} />
+				)
+			}
+	/>
+);
+
+export const ProtectedRouteCustomer = ({ render: C, props: cp, ...rest }) => 
+(
+	<Route
+		{...rest}
+		render={
+			(rProps) =>
+				cp.isLoggedIn && cp.state.user_roles.length !== 0 ? 
+				(
+					cp.state.user_roles.indexOf('customer') !== -1 ? (
+						<C {...rProps} {...cp} />
+					) : (
+						<Redirect to="/" />
+					)
+				) : (
+					<Redirect to={`/signin?redirect=${rProps.location.pathname}${rProps.location.search}`} />
+				)
+			}
 	/>
 );
 

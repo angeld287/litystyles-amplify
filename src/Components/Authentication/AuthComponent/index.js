@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 
 
-import { Authenticator, RequireNewPassword, SignUp} from 'aws-amplify-react';
+import { Authenticator } from 'aws-amplify-react';
 
 import CustomSignIn from '../SignIn';
 
 import queryString from 'query-string';
 
 export default class AuthComponent extends Component {
-  constructor(props) {
-    super(props);
-  }
   
   handleStateChange = state => {
     const values = queryString.parse(this.props.location.search)

@@ -7,20 +7,15 @@ import {
     Navbar,
 } from "@blueprintjs/core";
 
-//import { Container } from 'aws-amplify-react';
-
 export default class HeaderLinks extends Component {
 	handlesignOut = () => {
 		Auth.signOut().then((d) => {
 			window.location.reload();
-			//this.props.cp.onUserLogOut();
 		});
     };
     
-    //this.props.cp.state.user_roll
-
-	redirectSignIn = () => {
-		window.location.href = '/signin';
+    redirect = (path) => {
+        window.location.href = path;
 	};
 
 	render() {
@@ -30,12 +25,15 @@ export default class HeaderLinks extends Component {
                 <Navbar.Group align={Alignment.LEFT}>
                     <Navbar.Heading>Litty Style</Navbar.Heading>
                     <Navbar.Divider />
-                    <Button className="bp3-minimal" icon="home"/>
+                    <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.redirect('/')}} icon="home"/>
+                    <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.redirect('/administration')}} icon="wrench"/>
+                    <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.redirect('/stylist/'+this.props.cp.state.username)}} icon="cut"/>
+                    <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.redirect('/customer')}} icon="user"/>
                 </Navbar.Group>
                 <Navbar.Group align={Alignment.RIGHT}>
                     <Navbar.Divider />
                     {this.props.cp.isLoggedIn && ( <Button onClick={this.handlesignOut} className="bp3-minimal" text="Logout"/>)}
-                    {!this.props.cp.isLoggedIn && (<Button onClick={this.redirectSignIn} className="bp3-minimal" text="Login" />)}
+                    {!this.props.cp.isLoggedIn && (<Button onClick={(e) => {e.preventDefault(); this.redirect('/signin')}} className="bp3-minimal" text="Login" />)}
                 </Navbar.Group>
             </Navbar>
 		);
