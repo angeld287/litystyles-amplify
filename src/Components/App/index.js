@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import HeaderLinks from '../HeaderLinks/';
 
@@ -13,73 +13,61 @@ const App = () => {
   const [ username, setUsername ] = useState("");
   const [ email, setEmail ] = useState("");
   const [ phonenumber, setPhonenumber ] = useState("");
-  const [ user_rolls, setUser_rolls ] = useState([]);
+  const [ user_roles, setUser_rolls ] = useState([]);
 
-  useEffect(
-		() => {
+
+ /*  useEffect(() => {
       let didCancel = false;
       
-			/* const fetchEvent = async () => {
-        let user = {};
-        let roles = [];
 
-				try {
-          const data = await Auth.currentSession();
+      const fetchEvents = async () => {
+          var user = {};
+          var roles = [];
 
-          data.accessToken.payload['cognito:groups'].forEach(e => {
-            roles.push(e);
-          });
-          user = data;
-
-				} catch (e) {
-          setError(true);
-          setErrorMessage(e);
-				}
-
-				if (!didCancel) {
-          if (user.accessToken === undefined) {
-            setIsLoggedIn(false);
-          }else{
-            setUsername(user.accessToken.payload.username);
-            setEmail(user.idToken.payload.email);
-            setPhonenumber(user.idToken.payload.phone_number);
-            setUser_rolls(roles);
+          try {
+              user = await Auth.currentSession();
+              user.accessToken.payload['cognito:groups'].forEach(e => {
+                roles.push(e);
+             });
+          } catch (e) {
+              setError(true);
+              setErrorMessage(e);
           }
-				}
 
-				return () => {
-					didCancel = true;
-				};
-			};
+          if (!didCancel) {
+             console.log("asdas");
+             setUsername(user.accessToken.payload.username);
+             setEmail(user.idToken.payload.email);
+             setPhonenumber(user.idToken.payload.phone_number);
+             console.log(roles);
+             //setUser_rolls(roles);
+          }
+      };
 
-			fetchEvent(); */
-		}
-  );
+      if (isLoggedIn) {fetchEvents();}
+
+      return () => {
+          didCancel = true;
+      };
+  }, [isLoggedIn]); */
   
-  const handleUserSignIn = async () => {
-    let roles = [];
+  const handleUserSignIn = () => {
     setIsLoggedIn(true);
-
-    try {
-      Auth.currentSession().then(user => {
-        user.accessToken.payload['cognito:groups'].forEach(e => {
-          roles.push(e);
-        });
-        console.log("asdas");
-        setUsername(user.accessToken.payload.username);
-        setEmail(user.idToken.payload.email);
-        setPhonenumber(user.idToken.payload.phone_number);
-        setUser_rolls(roles);
-
-      }).catch(e => {
-        setError(true);
-        setErrorMessage(e);
+    let roles = [];
+    
+    Auth.currentSession().then(user => {
+      user.accessToken.payload['cognito:groups'].forEach(e => {
+        roles.push(e);
       });
+      setUsername(user.accessToken.payload.username);
+      setEmail(user.idToken.payload.email);
+      setPhonenumber(user.idToken.payload.phone_number);
+      setUser_rolls(roles);
 
-    } catch (e) {
+    }).catch(e => {
       setError(true);
       setErrorMessage(e);
-    }
+    });
   };
 
   const handleUserLogOut = () => {
@@ -94,7 +82,7 @@ const App = () => {
       username: username,
       phonenumber: phonenumber,
       email: email,
-      user_rolls: user_rolls,
+      user_roles: user_roles,
     }
   };
 
@@ -102,7 +90,8 @@ const App = () => {
   return (
     <div className="App">
       <HeaderLinks cp={cp}/>
-      <Routes cp={cp} />
+      {error &&  <div align="center"> <h1>Ha ocurrido un error</h1><p>{errorMessage}</p> </div>}
+      {!error && <Routes cp={cp} />}
     </div>
   );
 
