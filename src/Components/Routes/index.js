@@ -12,7 +12,7 @@ export const Routes = ({ cp }) => (
 	<Switch>
 		<ProtectedRoute exact path="/" render={Home} props={cp} />
 		<ProtectedRouteAdmin exact path="/administration" render={Administration} props={cp} />
-		<ProtectedRouteEmployee exact path="/stylist/:id" render={Employee} props={cp} />
+		<ProtectedRouteEmployee exact path="/stylist" render={Employee} props={cp} />
 		<ProtectedRouteCustomer exact path="/customer" render={Customer} props={cp} />
 		<ProppedRoute exact path="/signin" render={AuthComponent} props={cp} />
 	</Switch>
