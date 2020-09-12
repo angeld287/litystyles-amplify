@@ -5,6 +5,7 @@ export const getCompany = /* GraphQL */ `
   query GetCompany($id: ID!) {
     getCompany(id: $id) {
       id
+      name
       offices {
         items {
           id
@@ -19,24 +20,14 @@ export const getCompany = /* GraphQL */ `
       services {
         items {
           id
-          name
-          cost
-          deleted
-          deletedAt
           createdAt
-          owner
         }
         nextToken
       }
       products {
         items {
           id
-          name
-          cost
-          deleted
-          deletedAt
           createdAt
-          owner
         }
         nextToken
       }
@@ -56,6 +47,7 @@ export const listCompanys = /* GraphQL */ `
     listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        name
         offices {
           nextToken
         }
@@ -119,45 +111,19 @@ export const listOffices = /* GraphQL */ `
     }
   }
 `;
-export const getService = /* GraphQL */ `
-  query GetService($id: ID!) {
-    getService(id: $id) {
-      id
-      name
-      cost
-      deleted
-      deletedAt
-      createdAt
-      owner
-    }
-  }
-`;
-export const listServices = /* GraphQL */ `
-  query ListServices(
-    $filter: ModelServiceFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listServices(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        cost
-        deleted
-        deletedAt
-        createdAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
 export const getProduct = /* GraphQL */ `
   query GetProduct($id: ID!) {
     getProduct(id: $id) {
       id
       name
       cost
+      companies {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -176,6 +142,62 @@ export const listProducts = /* GraphQL */ `
         id
         name
         cost
+        companies {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getService = /* GraphQL */ `
+  query GetService($id: ID!) {
+    getService(id: $id) {
+      id
+      name
+      cost
+      employees {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      companies {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const listServices = /* GraphQL */ `
+  query ListServices(
+    $filter: ModelServiceFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listServices(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -190,6 +212,20 @@ export const getEmployee = /* GraphQL */ `
     getEmployee(id: $id) {
       id
       name
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      request {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -207,6 +243,12 @@ export const listEmployees = /* GraphQL */ `
       items {
         id
         name
+        services {
+          nextToken
+        }
+        request {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -220,14 +262,10 @@ export const getRequest = /* GraphQL */ `
   query GetRequest($id: ID!) {
     getRequest(id: $id) {
       id
-      remposible {
+      resposible {
         items {
           id
-          name
-          deleted
-          deletedAt
           createdAt
-          owner
         }
         nextToken
       }
@@ -236,6 +274,12 @@ export const getRequest = /* GraphQL */ `
         id
         name
         cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -245,6 +289,9 @@ export const getRequest = /* GraphQL */ `
         id
         name
         cost
+        companies {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -267,7 +314,7 @@ export const listRequests = /* GraphQL */ `
     listRequests(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        remposible {
+        resposible {
           nextToken
         }
         customerName

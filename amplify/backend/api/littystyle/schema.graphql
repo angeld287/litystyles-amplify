@@ -1,3 +1,7 @@
+#admin
+#company_admin
+#customer
+#employee
 type Company
     @model
     @auth(rules: [
@@ -6,16 +10,32 @@ type Company
 
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
-        #{ allow: groups, groups: ["secretary"], operations: [read] },
-        #{ allow: groups, groups: ["client"], operations: [read] }
+        { allow: groups, groups: ["company_admin"] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: groups, groups: ["employee"], operations: [read] }
     ]) {
     id: ID!
+    name: String!
     offices: [Office] @connection
-    services: [Service] @connection
-    products: [Product] @connection
+    services: [CompanyService] @connection(name: "cs")
+    products: [CompanyProduct] @connection(name: "cp")
     deleted: Boolean
     deletedAt: String
     createdAt: String
+}
+
+type CompanyService @model(queries: null) {
+  id: ID!
+  comapny: Company @connection(name: "cs")
+  service: Service @connection(name: "sc")
+  createdAt: String
+}
+
+type CompanyProduct @model(queries: null) {
+  id: ID!
+  comapny: Company @connection(name: "cp")
+  product: Product @connection(name: "pc")
+  createdAt: String
 }
 
 type Office
@@ -26,27 +46,13 @@ type Office
 
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["company_admin"] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: groups, groups: ["employee"], operations: [read] }
     ]) {
     id: ID!
     employees: [Employee] @connection
     location: String!
-    deleted: Boolean
-    deletedAt: String
-    createdAt: String
-}
-
-type Service
-    @model
-    @auth(rules: [
-        # Defaults to use the "owner" field.
-        { allow: owner },
-
-        # Roles users can access any operation.
-        { allow: groups, groups: ["admin"] },
-    ]) {
-    id: ID!
-    name: String
-    cost: String
     deleted: Boolean
     deletedAt: String
     createdAt: String
@@ -60,13 +66,46 @@ type Product
 
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["company_admin"] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: groups, groups: ["employee"], operations: [read] }
     ]) {
     id: ID!
     name: String
     cost: String
+    companies: [CompanyProduct] @connection(name: "pc")
     deleted: Boolean
     deletedAt: String
     createdAt: String
+}
+
+type Service
+    @model
+    @auth(rules: [
+        # Defaults to use the "owner" field.
+        { allow: owner },
+
+        # Roles users can access any operation.
+        { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["company_admin"] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: groups, groups: ["employee"], operations: [read] }
+    ]) {
+    id: ID!
+    name: String
+    cost: String
+    employees: [EmployeeService] @connection(name: "see")
+    companies: [CompanyService] @connection(name: "sc")
+    deleted: Boolean
+    deletedAt: String
+    createdAt: String
+}
+
+type EmployeeService @model(queries: null) {
+  id: ID!
+  employee: Employee @connection(name: "ess")
+  service: Service @connection(name: "see")
+  createdAt: String
 }
 
 type Employee
@@ -77,15 +116,27 @@ type Employee
 
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["company_admin"] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: groups, groups: ["employee"], operations: [read] }
     ]) {
     id: ID!
     name: String
+    services: [EmployeeService] @connection(name: "ess")
+    request: [RequestEmployee] @connection(name: "er")
     deleted: Boolean
     deletedAt: String
     createdAt: String
 }
 
 enum State { IN_PROCESS FINISHED CANCELED ON_HOLD }
+
+type RequestEmployee @model(queries: null) {
+  id: ID!
+  employee: Employee @connection(name: "er")
+  request: Request @connection(name: "re")
+  createdAt: String
+}
 
 type Request
     @model
@@ -95,9 +146,12 @@ type Request
 
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["customer"] },
+        { allow: groups, groups: ["company_admin"], operations: [update, read] },
+        { allow: groups, groups: ["employee"], operations: [update, read] }
     ]) {
     id: ID!
-    remposible: [Employee] @connection
+    resposible: [RequestEmployee] @connection(name: "re")
     customerName: String!
     service: Service @connection
     product: Product @connection
