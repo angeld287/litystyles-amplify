@@ -94,6 +94,8 @@ const Customer = (props) => {
 			case 4:
 				setEmployee(d);
 				setStep(param);
+				break;
+				
 			default:
 				setStep(param);
 				break;

@@ -44,7 +44,7 @@ const useCustomer = (props, finishRequest, setStep) => {
 		return () => {
 			didCancel = true;
 		};
-	}, []);
+	});
 
 	const _createRequest = async (ri, rei, rsi, rpi, isService) => {
 		try {
