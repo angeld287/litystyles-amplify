@@ -10,7 +10,6 @@ import {
   Intent,
   Callout,
   Overlay,
-  Spinner,
 } from "@blueprintjs/core";
 
 const CustomSignIn = (props) => {
@@ -83,13 +82,13 @@ const CustomSignIn = (props) => {
                         <div style={{marginBottom: 10}}>
                           {errors.password && <Callout intent="danger">{errors.password.message}</Callout>}
                         </div>
-                    <Button className={Classes.LARGE} intent={Intent.PRIMARY} text="Login" type="submit" disabled={formState.isSubmitting} />
+                    <Button className={Classes.LARGE} intent={Intent.PRIMARY} text="Login" type="submit" loading={formState.isSubmitting} />
                     <div style={{marginBottom: 10}}>
                       {error && <Callout intent="danger">{errorMessage}</Callout>}
                     </div>
                 </ControlGroup>
             </form>
-            <div hidden={!formState.isSubmitting}><Spinner intent="primary" size={55} /></div>
+            {/* <div hidden={!formState.isSubmitting}><Spinner intent="primary" size={55} /></div> */}
           </div>
 
           }

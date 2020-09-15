@@ -5,9 +5,12 @@ export const getCompany = /* GraphQL */ `
   query GetCompany($id: ID!) {
     getCompany(id: $id) {
       id
+      name
+      assistant
       offices {
         items {
           id
+          administrator
           location
           deleted
           deletedAt
@@ -19,24 +22,14 @@ export const getCompany = /* GraphQL */ `
       services {
         items {
           id
-          name
-          cost
-          deleted
-          deletedAt
           createdAt
-          owner
         }
         nextToken
       }
       products {
         items {
           id
-          name
-          cost
-          deleted
-          deletedAt
           createdAt
-          owner
         }
         nextToken
       }
@@ -56,6 +49,8 @@ export const listCompanys = /* GraphQL */ `
     listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        name
+        assistant
         offices {
           nextToken
         }
@@ -78,10 +73,12 @@ export const getOffice = /* GraphQL */ `
   query GetOffice($id: ID!) {
     getOffice(id: $id) {
       id
+      administrator
       employees {
         items {
           id
           name
+          officeId
           deleted
           deletedAt
           createdAt
@@ -106,43 +103,11 @@ export const listOffices = /* GraphQL */ `
     listOffices(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        administrator
         employees {
           nextToken
         }
         location
-        deleted
-        deletedAt
-        createdAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-export const getService = /* GraphQL */ `
-  query GetService($id: ID!) {
-    getService(id: $id) {
-      id
-      name
-      cost
-      deleted
-      deletedAt
-      createdAt
-      owner
-    }
-  }
-`;
-export const listServices = /* GraphQL */ `
-  query ListServices(
-    $filter: ModelServiceFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listServices(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        cost
         deleted
         deletedAt
         createdAt
@@ -158,6 +123,20 @@ export const getProduct = /* GraphQL */ `
       id
       name
       cost
+      companies {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      request {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -176,6 +155,75 @@ export const listProducts = /* GraphQL */ `
         id
         name
         cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getService = /* GraphQL */ `
+  query GetService($id: ID!) {
+    getService(id: $id) {
+      id
+      name
+      cost
+      employees {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      companies {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      request {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const listServices = /* GraphQL */ `
+  query ListServices(
+    $filter: ModelServiceFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listServices(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -190,6 +238,21 @@ export const getEmployee = /* GraphQL */ `
     getEmployee(id: $id) {
       id
       name
+      officeId
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      request {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -207,6 +270,13 @@ export const listEmployees = /* GraphQL */ `
       items {
         id
         name
+        officeId
+        services {
+          nextToken
+        }
+        request {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -220,36 +290,30 @@ export const getRequest = /* GraphQL */ `
   query GetRequest($id: ID!) {
     getRequest(id: $id) {
       id
-      remposible {
+      companyId
+      resposible {
         items {
           id
-          name
-          deleted
-          deletedAt
           createdAt
-          owner
         }
         nextToken
       }
-      customerName
       service {
-        id
-        name
-        cost
-        deleted
-        deletedAt
-        createdAt
-        owner
+        items {
+          id
+          createdAt
+        }
+        nextToken
       }
       product {
-        id
-        name
-        cost
-        deleted
-        deletedAt
-        createdAt
-        owner
+        items {
+          id
+          createdAt
+        }
+        nextToken
       }
+      resposibleName
+      customerName
       state
       deleted
       deletedAt
@@ -267,28 +331,18 @@ export const listRequests = /* GraphQL */ `
     listRequests(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        remposible {
+        companyId
+        resposible {
           nextToken
         }
-        customerName
         service {
-          id
-          name
-          cost
-          deleted
-          deletedAt
-          createdAt
-          owner
+          nextToken
         }
         product {
-          id
-          name
-          cost
-          deleted
-          deletedAt
-          createdAt
-          owner
+          nextToken
         }
+        resposibleName
+        customerName
         state
         deleted
         deletedAt
