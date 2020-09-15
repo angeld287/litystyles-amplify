@@ -6,9 +6,11 @@ export const onCreateCompany = /* GraphQL */ `
     onCreateCompany(owner: $owner) {
       id
       name
+      assistant
       offices {
         items {
           id
+          administrator
           location
           deleted
           deletedAt
@@ -43,9 +45,11 @@ export const onUpdateCompany = /* GraphQL */ `
     onUpdateCompany(owner: $owner) {
       id
       name
+      assistant
       offices {
         items {
           id
+          administrator
           location
           deleted
           deletedAt
@@ -80,9 +84,11 @@ export const onDeleteCompany = /* GraphQL */ `
     onDeleteCompany(owner: $owner) {
       id
       name
+      assistant
       offices {
         items {
           id
+          administrator
           location
           deleted
           deletedAt
@@ -119,6 +125,7 @@ export const onCreateCompanyService = /* GraphQL */ `
       comapny {
         id
         name
+        assistant
         offices {
           nextToken
         }
@@ -141,6 +148,9 @@ export const onCreateCompanyService = /* GraphQL */ `
           nextToken
         }
         companies {
+          nextToken
+        }
+        request {
           nextToken
         }
         deleted
@@ -159,6 +169,7 @@ export const onUpdateCompanyService = /* GraphQL */ `
       comapny {
         id
         name
+        assistant
         offices {
           nextToken
         }
@@ -181,6 +192,9 @@ export const onUpdateCompanyService = /* GraphQL */ `
           nextToken
         }
         companies {
+          nextToken
+        }
+        request {
           nextToken
         }
         deleted
@@ -199,6 +213,7 @@ export const onDeleteCompanyService = /* GraphQL */ `
       comapny {
         id
         name
+        assistant
         offices {
           nextToken
         }
@@ -223,6 +238,9 @@ export const onDeleteCompanyService = /* GraphQL */ `
         companies {
           nextToken
         }
+        request {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -239,6 +257,7 @@ export const onCreateCompanyProduct = /* GraphQL */ `
       comapny {
         id
         name
+        assistant
         offices {
           nextToken
         }
@@ -258,6 +277,9 @@ export const onCreateCompanyProduct = /* GraphQL */ `
         name
         cost
         companies {
+          nextToken
+        }
+        request {
           nextToken
         }
         deleted
@@ -276,6 +298,7 @@ export const onUpdateCompanyProduct = /* GraphQL */ `
       comapny {
         id
         name
+        assistant
         offices {
           nextToken
         }
@@ -295,6 +318,9 @@ export const onUpdateCompanyProduct = /* GraphQL */ `
         name
         cost
         companies {
+          nextToken
+        }
+        request {
           nextToken
         }
         deleted
@@ -313,6 +339,7 @@ export const onDeleteCompanyProduct = /* GraphQL */ `
       comapny {
         id
         name
+        assistant
         offices {
           nextToken
         }
@@ -334,6 +361,9 @@ export const onDeleteCompanyProduct = /* GraphQL */ `
         companies {
           nextToken
         }
+        request {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -347,10 +377,12 @@ export const onCreateOffice = /* GraphQL */ `
   subscription OnCreateOffice($owner: String) {
     onCreateOffice(owner: $owner) {
       id
+      administrator
       employees {
         items {
           id
           name
+          officeId
           deleted
           deletedAt
           createdAt
@@ -370,10 +402,12 @@ export const onUpdateOffice = /* GraphQL */ `
   subscription OnUpdateOffice($owner: String) {
     onUpdateOffice(owner: $owner) {
       id
+      administrator
       employees {
         items {
           id
           name
+          officeId
           deleted
           deletedAt
           createdAt
@@ -393,10 +427,12 @@ export const onDeleteOffice = /* GraphQL */ `
   subscription OnDeleteOffice($owner: String) {
     onDeleteOffice(owner: $owner) {
       id
+      administrator
       employees {
         items {
           id
           name
+          officeId
           deleted
           deletedAt
           createdAt
@@ -425,6 +461,13 @@ export const onCreateProduct = /* GraphQL */ `
         }
         nextToken
       }
+      request {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -445,6 +488,13 @@ export const onUpdateProduct = /* GraphQL */ `
         }
         nextToken
       }
+      request {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -459,6 +509,13 @@ export const onDeleteProduct = /* GraphQL */ `
       name
       cost
       companies {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      request {
         items {
           id
           createdAt
@@ -492,6 +549,13 @@ export const onCreateService = /* GraphQL */ `
         }
         nextToken
       }
+      request {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -513,6 +577,13 @@ export const onUpdateService = /* GraphQL */ `
         nextToken
       }
       companies {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      request {
         items {
           id
           createdAt
@@ -546,6 +617,13 @@ export const onDeleteService = /* GraphQL */ `
         }
         nextToken
       }
+      request {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -560,6 +638,7 @@ export const onCreateEmployeeService = /* GraphQL */ `
       employee {
         id
         name
+        officeId
         services {
           nextToken
         }
@@ -579,6 +658,9 @@ export const onCreateEmployeeService = /* GraphQL */ `
           nextToken
         }
         companies {
+          nextToken
+        }
+        request {
           nextToken
         }
         deleted
@@ -597,6 +679,7 @@ export const onUpdateEmployeeService = /* GraphQL */ `
       employee {
         id
         name
+        officeId
         services {
           nextToken
         }
@@ -616,6 +699,9 @@ export const onUpdateEmployeeService = /* GraphQL */ `
           nextToken
         }
         companies {
+          nextToken
+        }
+        request {
           nextToken
         }
         deleted
@@ -634,6 +720,7 @@ export const onDeleteEmployeeService = /* GraphQL */ `
       employee {
         id
         name
+        officeId
         services {
           nextToken
         }
@@ -655,6 +742,9 @@ export const onDeleteEmployeeService = /* GraphQL */ `
         companies {
           nextToken
         }
+        request {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -669,6 +759,7 @@ export const onCreateEmployee = /* GraphQL */ `
     onCreateEmployee(owner: $owner) {
       id
       name
+      officeId
       services {
         items {
           id
@@ -691,10 +782,11 @@ export const onCreateEmployee = /* GraphQL */ `
   }
 `;
 export const onUpdateEmployee = /* GraphQL */ `
-  subscription OnUpdateEmployee($owner: String) {
-    onUpdateEmployee(owner: $owner) {
+  subscription OnUpdateEmployee($owner: String, $name: String) {
+    onUpdateEmployee(owner: $owner, name: $name) {
       id
       name
+      officeId
       services {
         items {
           id
@@ -721,6 +813,7 @@ export const onDeleteEmployee = /* GraphQL */ `
     onDeleteEmployee(owner: $owner) {
       id
       name
+      officeId
       services {
         items {
           id
@@ -749,6 +842,7 @@ export const onCreateRequestEmployee = /* GraphQL */ `
       employee {
         id
         name
+        officeId
         services {
           nextToken
         }
@@ -762,28 +856,18 @@ export const onCreateRequestEmployee = /* GraphQL */ `
       }
       request {
         id
+        companyId
         resposible {
           nextToken
         }
-        customerName
         service {
-          id
-          name
-          cost
-          deleted
-          deletedAt
-          createdAt
-          owner
+          nextToken
         }
         product {
-          id
-          name
-          cost
-          deleted
-          deletedAt
-          createdAt
-          owner
+          nextToken
         }
+        resposibleName
+        customerName
         state
         deleted
         deletedAt
@@ -801,6 +885,7 @@ export const onUpdateRequestEmployee = /* GraphQL */ `
       employee {
         id
         name
+        officeId
         services {
           nextToken
         }
@@ -814,28 +899,18 @@ export const onUpdateRequestEmployee = /* GraphQL */ `
       }
       request {
         id
+        companyId
         resposible {
           nextToken
         }
-        customerName
         service {
-          id
-          name
-          cost
-          deleted
-          deletedAt
-          createdAt
-          owner
+          nextToken
         }
         product {
-          id
-          name
-          cost
-          deleted
-          deletedAt
-          createdAt
-          owner
+          nextToken
         }
+        resposibleName
+        customerName
         state
         deleted
         deletedAt
@@ -853,6 +928,7 @@ export const onDeleteRequestEmployee = /* GraphQL */ `
       employee {
         id
         name
+        officeId
         services {
           nextToken
         }
@@ -866,29 +942,286 @@ export const onDeleteRequestEmployee = /* GraphQL */ `
       }
       request {
         id
+        companyId
         resposible {
           nextToken
         }
-        customerName
         service {
-          id
-          name
-          cost
-          deleted
-          deletedAt
-          createdAt
-          owner
+          nextToken
         }
         product {
-          id
-          name
-          cost
-          deleted
-          deletedAt
-          createdAt
-          owner
+          nextToken
         }
+        resposibleName
+        customerName
         state
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onCreateRequestService = /* GraphQL */ `
+  subscription OnCreateRequestService {
+    onCreateRequestService {
+      id
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        state
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onUpdateRequestService = /* GraphQL */ `
+  subscription OnUpdateRequestService {
+    onUpdateRequestService {
+      id
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        state
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onDeleteRequestService = /* GraphQL */ `
+  subscription OnDeleteRequestService {
+    onDeleteRequestService {
+      id
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        state
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onCreateRequestProduct = /* GraphQL */ `
+  subscription OnCreateRequestProduct {
+    onCreateRequestProduct {
+      id
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        state
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onUpdateRequestProduct = /* GraphQL */ `
+  subscription OnUpdateRequestProduct {
+    onUpdateRequestProduct {
+      id
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        state
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onDeleteRequestProduct = /* GraphQL */ `
+  subscription OnDeleteRequestProduct {
+    onDeleteRequestProduct {
+      id
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        state
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -902,6 +1235,7 @@ export const onCreateRequest = /* GraphQL */ `
   subscription OnCreateRequest($owner: String) {
     onCreateRequest(owner: $owner) {
       id
+      companyId
       resposible {
         items {
           id
@@ -909,34 +1243,22 @@ export const onCreateRequest = /* GraphQL */ `
         }
         nextToken
       }
-      customerName
       service {
-        id
-        name
-        cost
-        employees {
-          nextToken
+        items {
+          id
+          createdAt
         }
-        companies {
-          nextToken
-        }
-        deleted
-        deletedAt
-        createdAt
-        owner
+        nextToken
       }
       product {
-        id
-        name
-        cost
-        companies {
-          nextToken
+        items {
+          id
+          createdAt
         }
-        deleted
-        deletedAt
-        createdAt
-        owner
+        nextToken
       }
+      resposibleName
+      customerName
       state
       deleted
       deletedAt
@@ -946,9 +1268,10 @@ export const onCreateRequest = /* GraphQL */ `
   }
 `;
 export const onUpdateRequest = /* GraphQL */ `
-  subscription OnUpdateRequest($owner: String) {
-    onUpdateRequest(owner: $owner) {
+  subscription OnUpdateRequest($owner: String, $resposibleName: String) {
+    onUpdateRequest(owner: $owner, resposibleName: $resposibleName) {
       id
+      companyId
       resposible {
         items {
           id
@@ -956,34 +1279,22 @@ export const onUpdateRequest = /* GraphQL */ `
         }
         nextToken
       }
-      customerName
       service {
-        id
-        name
-        cost
-        employees {
-          nextToken
+        items {
+          id
+          createdAt
         }
-        companies {
-          nextToken
-        }
-        deleted
-        deletedAt
-        createdAt
-        owner
+        nextToken
       }
       product {
-        id
-        name
-        cost
-        companies {
-          nextToken
+        items {
+          id
+          createdAt
         }
-        deleted
-        deletedAt
-        createdAt
-        owner
+        nextToken
       }
+      resposibleName
+      customerName
       state
       deleted
       deletedAt
@@ -996,6 +1307,7 @@ export const onDeleteRequest = /* GraphQL */ `
   subscription OnDeleteRequest($owner: String) {
     onDeleteRequest(owner: $owner) {
       id
+      companyId
       resposible {
         items {
           id
@@ -1003,34 +1315,22 @@ export const onDeleteRequest = /* GraphQL */ `
         }
         nextToken
       }
-      customerName
       service {
-        id
-        name
-        cost
-        employees {
-          nextToken
+        items {
+          id
+          createdAt
         }
-        companies {
-          nextToken
-        }
-        deleted
-        deletedAt
-        createdAt
-        owner
+        nextToken
       }
       product {
-        id
-        name
-        cost
-        companies {
-          nextToken
+        items {
+          id
+          createdAt
         }
-        deleted
-        deletedAt
-        createdAt
-        owner
+        nextToken
       }
+      resposibleName
+      customerName
       state
       deleted
       deletedAt

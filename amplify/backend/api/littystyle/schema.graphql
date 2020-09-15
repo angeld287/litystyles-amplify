@@ -2,6 +2,8 @@
 #company_admin
 #customer
 #employee
+
+# se debe permitir el acceso a los datos de la compania solo al creador de la misma, 
 type Company
     @model
     @auth(rules: [
@@ -16,6 +18,7 @@ type Company
     ]) {
     id: ID!
     name: String!
+    assistant: String
     offices: [Office] @connection
     services: [CompanyService] @connection(name: "cs")
     products: [CompanyProduct] @connection(name: "cp")
@@ -24,6 +27,8 @@ type Company
     createdAt: String
 }
 
+# se ha creado una relacion de n a n entre compania y servicio para tener un control de los servicios creados. Las companias seleccionaran los servicios que brindan
+# y estos servicios seran creados por la administraccion del software. Lo mismo para los productos
 type CompanyService @model(queries: null) {
   id: ID!
   comapny: Company @connection(name: "cs")
@@ -51,6 +56,7 @@ type Office
         { allow: groups, groups: ["employee"], operations: [read] }
     ]) {
     id: ID!
+    administrator: String
     employees: [Employee] @connection
     location: String!
     deleted: Boolean
@@ -66,7 +72,7 @@ type Product
 
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
-        { allow: groups, groups: ["company_admin"] },
+        { allow: groups, groups: ["company_admin"], operations: [read] },
         { allow: groups, groups: ["customer"], operations: [read] },
         { allow: groups, groups: ["employee"], operations: [read] }
     ]) {
@@ -74,6 +80,7 @@ type Product
     name: String
     cost: String
     companies: [CompanyProduct] @connection(name: "pc")
+    request: [RequestProduct] @connection(name: "pr")
     deleted: Boolean
     deletedAt: String
     createdAt: String
@@ -87,7 +94,7 @@ type Service
 
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
-        { allow: groups, groups: ["company_admin"] },
+        { allow: groups, groups: ["company_admin"], operations: [read] },
         { allow: groups, groups: ["customer"], operations: [read] },
         { allow: groups, groups: ["employee"], operations: [read] }
     ]) {
@@ -96,6 +103,7 @@ type Service
     cost: String
     employees: [EmployeeService] @connection(name: "see")
     companies: [CompanyService] @connection(name: "sc")
+    request: [RequestService] @connection(name: "sr")
     deleted: Boolean
     deletedAt: String
     createdAt: String
@@ -116,12 +124,13 @@ type Employee
 
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
-        { allow: groups, groups: ["company_admin"] },
         { allow: groups, groups: ["customer"], operations: [read] },
-        { allow: groups, groups: ["employee"], operations: [read] }
+        { allow: groups, groups: ["company_admin"], operations: [create] },
+        { allow: owner, ownerField: "name", operations: [update, read] },  
     ]) {
     id: ID!
     name: String
+    officeId: String
     services: [EmployeeService] @connection(name: "ess")
     request: [RequestEmployee] @connection(name: "er")
     deleted: Boolean
@@ -138,6 +147,20 @@ type RequestEmployee @model(queries: null) {
   createdAt: String
 }
 
+type RequestService @model(queries: null) {
+  id: ID!
+  request: Request @connection(name: "rs")
+  service: Service @connection(name: "sr")
+  createdAt: String
+}
+
+type RequestProduct @model(queries: null) {
+  id: ID!
+  request: Request @connection(name: "rp")
+  product: Product @connection(name: "pr")
+  createdAt: String
+}
+
 type Request
     @model
     @auth(rules: [
@@ -148,13 +171,15 @@ type Request
         { allow: groups, groups: ["admin"] },
         { allow: groups, groups: ["customer"] },
         { allow: groups, groups: ["company_admin"], operations: [update, read] },
-        { allow: groups, groups: ["employee"], operations: [update, read] }
+        { allow: owner, ownerField: "resposibleName", operations: [update, read] },
     ]) {
     id: ID!
+    companyId: String!
     resposible: [RequestEmployee] @connection(name: "re")
+    service: [RequestService] @connection(name: "rs")
+    product: [RequestProduct] @connection(name: "rp")
+    resposibleName: String
     customerName: String!
-    service: Service @connection
-    product: Product @connection
     state: State
     deleted: Boolean
     deletedAt: String
