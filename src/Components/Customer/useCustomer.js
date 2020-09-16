@@ -44,7 +44,7 @@ const useCustomer = (props, finishRequest, setStep) => {
 		return () => {
 			didCancel = true;
 		};
-	});
+	}, [props.state.company.id, props.state.office.id]);
 
 	const _createRequest = async (ri, rei, rsi, rpi, isService) => {
 		try {
