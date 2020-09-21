@@ -50,6 +50,7 @@ export const listEmployees = `
       items {
         id
         name
+        username
         services {
           items {
             id
@@ -61,6 +62,41 @@ export const listEmployees = `
           }
         }
       }
+    }
+  }
+`;
+
+export const listRequests = /* GraphQL */ `
+  query ListRequests(
+    $filter: ModelRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRequests(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          items {
+            service {
+              name
+            }
+          }
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        state
+        deleted
+        deletedAt
+        createdAt
+      }
+      nextToken
     }
   }
 `;

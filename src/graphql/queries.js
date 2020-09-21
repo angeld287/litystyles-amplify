@@ -78,6 +78,7 @@ export const getOffice = /* GraphQL */ `
         items {
           id
           name
+          username
           officeId
           deleted
           deletedAt
@@ -193,6 +194,7 @@ export const getService = /* GraphQL */ `
       request {
         items {
           id
+          resposibleName
           createdAt
         }
         nextToken
@@ -238,6 +240,7 @@ export const getEmployee = /* GraphQL */ `
     getEmployee(id: $id) {
       id
       name
+      username
       officeId
       services {
         items {
@@ -270,6 +273,7 @@ export const listEmployees = /* GraphQL */ `
       items {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -301,6 +305,7 @@ export const getRequest = /* GraphQL */ `
       service {
         items {
           id
+          resposibleName
           createdAt
         }
         nextToken
@@ -318,7 +323,6 @@ export const getRequest = /* GraphQL */ `
       deleted
       deletedAt
       createdAt
-      owner
     }
   }
 `;
@@ -347,7 +351,6 @@ export const listRequests = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       nextToken
     }

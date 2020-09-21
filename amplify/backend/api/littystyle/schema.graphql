@@ -130,6 +130,7 @@ type Employee
     ]) {
     id: ID!
     name: String
+    username: String
     officeId: String
     services: [EmployeeService] @connection(name: "ess")
     request: [RequestEmployee] @connection(name: "er")
@@ -147,10 +148,11 @@ type RequestEmployee @model(queries: null) {
   createdAt: String
 }
 
-type RequestService @model(queries: null) {
+type RequestService @model(queries: null, subscriptions: null) {
   id: ID!
   request: Request @connection(name: "rs")
   service: Service @connection(name: "sr")
+  resposibleName: String!
   createdAt: String
 }
 
@@ -162,7 +164,7 @@ type RequestProduct @model(queries: null) {
 }
 
 type Request
-    @model
+    @model(subscriptions: null)
     @auth(rules: [
         # Defaults to use the "owner" field.
         { allow: owner },
@@ -184,4 +186,9 @@ type Request
     deleted: Boolean
     deletedAt: String
     createdAt: String
+}
+
+type Subscription {
+  onCreateRequest(resposibleName: String): Request @aws_subscribe(mutations: ["createRequest"])
+  onCreateRequestService(resposibleName: String): RequestService @aws_subscribe(mutations: ["createRequestService"])
 }
