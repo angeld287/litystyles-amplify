@@ -56,6 +56,7 @@ const useCustomer = (props, finishRequest, setStep) => {
 			if (isService) {
 				rei.requestEmployeeRequestId = request.data.createRequest.id;
 				rsi.requestServiceRequestId = request.data.createRequest.id;
+				rsi.resposibleName = ri.resposibleName;
 				await API.graphql(graphqlOperation(createRequestEmployee, {input: rei}));
 				await API.graphql(graphqlOperation(createRequestService, {input: rsi}));
 			} else {

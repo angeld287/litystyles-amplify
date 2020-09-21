@@ -412,6 +412,7 @@ export const createOffice = /* GraphQL */ `
         items {
           id
           name
+          username
           officeId
           deleted
           deletedAt
@@ -440,6 +441,7 @@ export const updateOffice = /* GraphQL */ `
         items {
           id
           name
+          username
           officeId
           deleted
           deletedAt
@@ -468,6 +470,7 @@ export const deleteOffice = /* GraphQL */ `
         items {
           id
           name
+          username
           officeId
           deleted
           deletedAt
@@ -600,6 +603,7 @@ export const createService = /* GraphQL */ `
       request {
         items {
           id
+          resposibleName
           createdAt
         }
         nextToken
@@ -637,6 +641,7 @@ export const updateService = /* GraphQL */ `
       request {
         items {
           id
+          resposibleName
           createdAt
         }
         nextToken
@@ -674,6 +679,7 @@ export const deleteService = /* GraphQL */ `
       request {
         items {
           id
+          resposibleName
           createdAt
         }
         nextToken
@@ -695,6 +701,7 @@ export const createEmployeeService = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -739,6 +746,7 @@ export const updateEmployeeService = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -783,6 +791,7 @@ export const deleteEmployeeService = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -825,6 +834,7 @@ export const createEmployee = /* GraphQL */ `
     createEmployee(input: $input, condition: $condition) {
       id
       name
+      username
       officeId
       services {
         items {
@@ -855,6 +865,7 @@ export const updateEmployee = /* GraphQL */ `
     updateEmployee(input: $input, condition: $condition) {
       id
       name
+      username
       officeId
       services {
         items {
@@ -885,6 +896,7 @@ export const deleteEmployee = /* GraphQL */ `
     deleteEmployee(input: $input, condition: $condition) {
       id
       name
+      username
       officeId
       services {
         items {
@@ -917,6 +929,7 @@ export const createRequestEmployee = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -947,7 +960,6 @@ export const createRequestEmployee = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       createdAt
     }
@@ -963,6 +975,7 @@ export const updateRequestEmployee = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -993,7 +1006,6 @@ export const updateRequestEmployee = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       createdAt
     }
@@ -1009,6 +1021,7 @@ export const deleteRequestEmployee = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -1039,7 +1052,6 @@ export const deleteRequestEmployee = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       createdAt
     }
@@ -1070,7 +1082,6 @@ export const createRequestService = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       service {
         id
@@ -1090,6 +1101,7 @@ export const createRequestService = /* GraphQL */ `
         createdAt
         owner
       }
+      resposibleName
       createdAt
     }
   }
@@ -1119,7 +1131,6 @@ export const updateRequestService = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       service {
         id
@@ -1139,6 +1150,7 @@ export const updateRequestService = /* GraphQL */ `
         createdAt
         owner
       }
+      resposibleName
       createdAt
     }
   }
@@ -1168,7 +1180,6 @@ export const deleteRequestService = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       service {
         id
@@ -1188,6 +1199,7 @@ export const deleteRequestService = /* GraphQL */ `
         createdAt
         owner
       }
+      resposibleName
       createdAt
     }
   }
@@ -1217,7 +1229,6 @@ export const createRequestProduct = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       product {
         id
@@ -1263,7 +1274,6 @@ export const updateRequestProduct = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       product {
         id
@@ -1309,7 +1319,6 @@ export const deleteRequestProduct = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       product {
         id
@@ -1348,6 +1357,7 @@ export const createRequest = /* GraphQL */ `
       service {
         items {
           id
+          resposibleName
           createdAt
         }
         nextToken
@@ -1365,7 +1375,6 @@ export const createRequest = /* GraphQL */ `
       deleted
       deletedAt
       createdAt
-      owner
     }
   }
 `;
@@ -1387,6 +1396,7 @@ export const updateRequest = /* GraphQL */ `
       service {
         items {
           id
+          resposibleName
           createdAt
         }
         nextToken
@@ -1404,7 +1414,6 @@ export const updateRequest = /* GraphQL */ `
       deleted
       deletedAt
       createdAt
-      owner
     }
   }
 `;
@@ -1426,6 +1435,7 @@ export const deleteRequest = /* GraphQL */ `
       service {
         items {
           id
+          resposibleName
           createdAt
         }
         nextToken
@@ -1443,7 +1453,6 @@ export const deleteRequest = /* GraphQL */ `
       deleted
       deletedAt
       createdAt
-      owner
     }
   }
 `;

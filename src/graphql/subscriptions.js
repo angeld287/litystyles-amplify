@@ -1,6 +1,88 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateRequest = /* GraphQL */ `
+  subscription OnCreateRequest($resposibleName: String) {
+    onCreateRequest(resposibleName: $resposibleName) {
+      id
+      companyId
+      resposible {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      service {
+        items {
+          id
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      product {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      resposibleName
+      customerName
+      state
+      deleted
+      deletedAt
+      createdAt
+    }
+  }
+`;
+export const onCreateRequestService = /* GraphQL */ `
+  subscription OnCreateRequestService($resposibleName: String) {
+    onCreateRequestService(resposibleName: $resposibleName) {
+      id
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        state
+        deleted
+        deletedAt
+        createdAt
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      resposibleName
+      createdAt
+    }
+  }
+`;
 export const onCreateCompany = /* GraphQL */ `
   subscription OnCreateCompany($owner: String) {
     onCreateCompany(owner: $owner) {
@@ -382,6 +464,7 @@ export const onCreateOffice = /* GraphQL */ `
         items {
           id
           name
+          username
           officeId
           deleted
           deletedAt
@@ -407,6 +490,7 @@ export const onUpdateOffice = /* GraphQL */ `
         items {
           id
           name
+          username
           officeId
           deleted
           deletedAt
@@ -432,6 +516,7 @@ export const onDeleteOffice = /* GraphQL */ `
         items {
           id
           name
+          username
           officeId
           deleted
           deletedAt
@@ -552,6 +637,7 @@ export const onCreateService = /* GraphQL */ `
       request {
         items {
           id
+          resposibleName
           createdAt
         }
         nextToken
@@ -586,6 +672,7 @@ export const onUpdateService = /* GraphQL */ `
       request {
         items {
           id
+          resposibleName
           createdAt
         }
         nextToken
@@ -620,6 +707,7 @@ export const onDeleteService = /* GraphQL */ `
       request {
         items {
           id
+          resposibleName
           createdAt
         }
         nextToken
@@ -638,6 +726,7 @@ export const onCreateEmployeeService = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -679,6 +768,7 @@ export const onUpdateEmployeeService = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -720,6 +810,7 @@ export const onDeleteEmployeeService = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -759,6 +850,7 @@ export const onCreateEmployee = /* GraphQL */ `
     onCreateEmployee(owner: $owner) {
       id
       name
+      username
       officeId
       services {
         items {
@@ -786,6 +878,7 @@ export const onUpdateEmployee = /* GraphQL */ `
     onUpdateEmployee(owner: $owner, name: $name) {
       id
       name
+      username
       officeId
       services {
         items {
@@ -813,6 +906,7 @@ export const onDeleteEmployee = /* GraphQL */ `
     onDeleteEmployee(owner: $owner) {
       id
       name
+      username
       officeId
       services {
         items {
@@ -842,6 +936,7 @@ export const onCreateRequestEmployee = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -872,7 +967,6 @@ export const onCreateRequestEmployee = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       createdAt
     }
@@ -885,6 +979,7 @@ export const onUpdateRequestEmployee = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -915,7 +1010,6 @@ export const onUpdateRequestEmployee = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       createdAt
     }
@@ -928,6 +1022,7 @@ export const onDeleteRequestEmployee = /* GraphQL */ `
       employee {
         id
         name
+        username
         officeId
         services {
           nextToken
@@ -958,145 +1053,6 @@ export const onDeleteRequestEmployee = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
-      }
-      createdAt
-    }
-  }
-`;
-export const onCreateRequestService = /* GraphQL */ `
-  subscription OnCreateRequestService {
-    onCreateRequestService {
-      id
-      request {
-        id
-        companyId
-        resposible {
-          nextToken
-        }
-        service {
-          nextToken
-        }
-        product {
-          nextToken
-        }
-        resposibleName
-        customerName
-        state
-        deleted
-        deletedAt
-        createdAt
-        owner
-      }
-      service {
-        id
-        name
-        cost
-        employees {
-          nextToken
-        }
-        companies {
-          nextToken
-        }
-        request {
-          nextToken
-        }
-        deleted
-        deletedAt
-        createdAt
-        owner
-      }
-      createdAt
-    }
-  }
-`;
-export const onUpdateRequestService = /* GraphQL */ `
-  subscription OnUpdateRequestService {
-    onUpdateRequestService {
-      id
-      request {
-        id
-        companyId
-        resposible {
-          nextToken
-        }
-        service {
-          nextToken
-        }
-        product {
-          nextToken
-        }
-        resposibleName
-        customerName
-        state
-        deleted
-        deletedAt
-        createdAt
-        owner
-      }
-      service {
-        id
-        name
-        cost
-        employees {
-          nextToken
-        }
-        companies {
-          nextToken
-        }
-        request {
-          nextToken
-        }
-        deleted
-        deletedAt
-        createdAt
-        owner
-      }
-      createdAt
-    }
-  }
-`;
-export const onDeleteRequestService = /* GraphQL */ `
-  subscription OnDeleteRequestService {
-    onDeleteRequestService {
-      id
-      request {
-        id
-        companyId
-        resposible {
-          nextToken
-        }
-        service {
-          nextToken
-        }
-        product {
-          nextToken
-        }
-        resposibleName
-        customerName
-        state
-        deleted
-        deletedAt
-        createdAt
-        owner
-      }
-      service {
-        id
-        name
-        cost
-        employees {
-          nextToken
-        }
-        companies {
-          nextToken
-        }
-        request {
-          nextToken
-        }
-        deleted
-        deletedAt
-        createdAt
-        owner
       }
       createdAt
     }
@@ -1124,7 +1080,6 @@ export const onCreateRequestProduct = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       product {
         id
@@ -1167,7 +1122,6 @@ export const onUpdateRequestProduct = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       product {
         id
@@ -1210,7 +1164,6 @@ export const onDeleteRequestProduct = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
-        owner
       }
       product {
         id
@@ -1228,114 +1181,6 @@ export const onDeleteRequestProduct = /* GraphQL */ `
         owner
       }
       createdAt
-    }
-  }
-`;
-export const onCreateRequest = /* GraphQL */ `
-  subscription OnCreateRequest($owner: String) {
-    onCreateRequest(owner: $owner) {
-      id
-      companyId
-      resposible {
-        items {
-          id
-          createdAt
-        }
-        nextToken
-      }
-      service {
-        items {
-          id
-          createdAt
-        }
-        nextToken
-      }
-      product {
-        items {
-          id
-          createdAt
-        }
-        nextToken
-      }
-      resposibleName
-      customerName
-      state
-      deleted
-      deletedAt
-      createdAt
-      owner
-    }
-  }
-`;
-export const onUpdateRequest = /* GraphQL */ `
-  subscription OnUpdateRequest($owner: String, $resposibleName: String) {
-    onUpdateRequest(owner: $owner, resposibleName: $resposibleName) {
-      id
-      companyId
-      resposible {
-        items {
-          id
-          createdAt
-        }
-        nextToken
-      }
-      service {
-        items {
-          id
-          createdAt
-        }
-        nextToken
-      }
-      product {
-        items {
-          id
-          createdAt
-        }
-        nextToken
-      }
-      resposibleName
-      customerName
-      state
-      deleted
-      deletedAt
-      createdAt
-      owner
-    }
-  }
-`;
-export const onDeleteRequest = /* GraphQL */ `
-  subscription OnDeleteRequest($owner: String) {
-    onDeleteRequest(owner: $owner) {
-      id
-      companyId
-      resposible {
-        items {
-          id
-          createdAt
-        }
-        nextToken
-      }
-      service {
-        items {
-          id
-          createdAt
-        }
-        nextToken
-      }
-      product {
-        items {
-          id
-          createdAt
-        }
-        nextToken
-      }
-      resposibleName
-      customerName
-      state
-      deleted
-      deletedAt
-      createdAt
-      owner
     }
   }
 `;
