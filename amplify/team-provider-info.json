@@ -18,5 +18,25 @@
                 }
             }
         }
+    },
+    "prod": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-littystyle-prod-94755-authRole",
+            "UnauthRoleArn": "arn:aws:iam::239210452034:role/amplify-littystyle-prod-94755-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::239210452034:role/amplify-littystyle-prod-94755-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-littystyle-prod-94755-deployment",
+            "UnauthRoleName": "amplify-littystyle-prod-94755-unauthRole",
+            "StackName": "amplify-littystyle-prod-94755",
+            "StackId": "arn:aws:cloudformation:us-east-1:239210452034:stack/amplify-littystyle-prod-94755/36632010-0648-11eb-af41-1225390e8313",
+            "AmplifyAppId": "d34ay3shu4lvjp"
+        },
+        "categories": {
+            "auth": {
+                "littystyle0826a386": {
+                    "hostedUIProviderCreds": "[]"
+                }
+            }
+        }
     }
 }
