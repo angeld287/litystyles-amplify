@@ -1,0 +1,11 @@
+{
+    "AppSyncApiName": "littystyle",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": "false",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authlittystyle0826a386",
+            "Outputs.UserPoolId"
+        ]
+    }
+}

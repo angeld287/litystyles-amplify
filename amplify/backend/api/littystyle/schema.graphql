@@ -1,0 +1,194 @@
+#admin
+#company_admin
+#customer
+#employee
+
+# se debe permitir el acceso a los datos de la compania solo al creador de la misma, 
+type Company
+    @model
+    @auth(rules: [
+        # Defaults to use the "owner" field.
+        { allow: owner },
+
+        # Roles users can access any operation.
+        { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["company_admin"] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: groups, groups: ["employee"], operations: [read] }
+    ]) {
+    id: ID!
+    name: String!
+    assistant: String
+    offices: [Office] @connection
+    services: [CompanyService] @connection(name: "cs")
+    products: [CompanyProduct] @connection(name: "cp")
+    deleted: Boolean
+    deletedAt: String
+    createdAt: String
+}
+
+# se ha creado una relacion de n a n entre compania y servicio para tener un control de los servicios creados. Las companias seleccionaran los servicios que brindan
+# y estos servicios seran creados por la administraccion del software. Lo mismo para los productos
+type CompanyService @model(queries: null) {
+  id: ID!
+  comapny: Company @connection(name: "cs")
+  service: Service @connection(name: "sc")
+  createdAt: String
+}
+
+type CompanyProduct @model(queries: null) {
+  id: ID!
+  comapny: Company @connection(name: "cp")
+  product: Product @connection(name: "pc")
+  createdAt: String
+}
+
+type Office
+    @model
+    @auth(rules: [
+        # Defaults to use the "owner" field.
+        { allow: owner },
+
+        # Roles users can access any operation.
+        { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["company_admin"] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: groups, groups: ["employee"], operations: [read] }
+    ]) {
+    id: ID!
+    administrator: String
+    employees: [Employee] @connection
+    location: String!
+    deleted: Boolean
+    deletedAt: String
+    createdAt: String
+}
+
+type Product
+    @model
+    @auth(rules: [
+        # Defaults to use the "owner" field.
+        { allow: owner },
+
+        # Roles users can access any operation.
+        { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["company_admin"], operations: [read] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: groups, groups: ["employee"], operations: [read] }
+    ]) {
+    id: ID!
+    name: String
+    cost: String
+    companies: [CompanyProduct] @connection(name: "pc")
+    request: [RequestProduct] @connection(name: "pr")
+    deleted: Boolean
+    deletedAt: String
+    createdAt: String
+}
+
+type Service
+    @model
+    @auth(rules: [
+        # Defaults to use the "owner" field.
+        { allow: owner },
+
+        # Roles users can access any operation.
+        { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["company_admin"], operations: [read] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: groups, groups: ["employee"], operations: [read] }
+    ]) {
+    id: ID!
+    name: String
+    cost: String
+    employees: [EmployeeService] @connection(name: "see")
+    companies: [CompanyService] @connection(name: "sc")
+    request: [RequestService] @connection(name: "sr")
+    deleted: Boolean
+    deletedAt: String
+    createdAt: String
+}
+
+type EmployeeService @model(queries: null) {
+  id: ID!
+  employee: Employee @connection(name: "ess")
+  service: Service @connection(name: "see")
+  createdAt: String
+}
+
+type Employee
+    @model
+    @auth(rules: [
+        # Defaults to use the "owner" field.
+        { allow: owner },
+
+        # Roles users can access any operation.
+        { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: groups, groups: ["company_admin"], operations: [create] },
+        { allow: owner, ownerField: "name", operations: [update, read] },  
+    ]) {
+    id: ID!
+    name: String
+    username: String
+    officeId: String
+    services: [EmployeeService] @connection(name: "ess")
+    request: [RequestEmployee] @connection(name: "er")
+    deleted: Boolean
+    deletedAt: String
+    createdAt: String
+}
+
+enum State { IN_PROCESS FINISHED CANCELED ON_HOLD }
+
+type RequestEmployee @model(queries: null) {
+  id: ID!
+  employee: Employee @connection(name: "er")
+  request: Request @connection(name: "re")
+  createdAt: String
+}
+
+type RequestService @model(queries: null, subscriptions: null) {
+  id: ID!
+  request: Request @connection(name: "rs")
+  service: Service @connection(name: "sr")
+  resposibleName: String!
+  createdAt: String
+}
+
+type RequestProduct @model(queries: null) {
+  id: ID!
+  request: Request @connection(name: "rp")
+  product: Product @connection(name: "pr")
+  createdAt: String
+}
+
+type Request
+    @model(subscriptions: null)
+    @auth(rules: [
+        # Defaults to use the "owner" field.
+        { allow: owner },
+
+        # Roles users can access any operation.
+        { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["customer"] },
+        { allow: groups, groups: ["company_admin"], operations: [update, read] },
+        { allow: owner, ownerField: "resposibleName", operations: [update, read] },
+    ]) {
+    id: ID!
+    companyId: String!
+    resposible: [RequestEmployee] @connection(name: "re")
+    service: [RequestService] @connection(name: "rs")
+    product: [RequestProduct] @connection(name: "rp")
+    resposibleName: String
+    customerName: String!
+    state: State
+    deleted: Boolean
+    deletedAt: String
+    createdAt: String
+}
+
+type Subscription {
+  onCreateRequest(resposibleName: String): Request @aws_subscribe(mutations: ["createRequest"])
+  onCreateRequestService(resposibleName: String): RequestService @aws_subscribe(mutations: ["createRequestService"])
+}
