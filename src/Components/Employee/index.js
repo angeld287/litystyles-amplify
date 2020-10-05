@@ -18,7 +18,7 @@ const Employee = (props) => {
 	const { requests, requestInProcess, FinishRequest, nextRequest, inProcessLoading, finishLoading } = useEmployee(props);
 
 	const _requests = (requests !== null)?([].concat(requests)
-		//.sort((a, b) => a.name.localeCompare(b.name))
+		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
 		.map((item,i)=>
 			(
 				<tr key={i}>
@@ -31,7 +31,7 @@ const Employee = (props) => {
 	const _service = requests.length > 0 ? requests[0].service.items.length > 0 ? requests[0].service.items[0].service.name : "No Service"  : "No Request";
 //(hasService ? requests[0].service.items[0].service.name : "No Service")
 	const _inTurn = requests.length > 0 ? (
-		<Card interactive={true} elevation={Elevation.TWO}>
+		<Card interactive={true} elevation={Elevation.FOUR}>
 			<h5>Cliente En Turno / Proximo</h5>
 			<p>Nombre: {requests[0].customerName}</p>
 			<p>Servicio: {requests[0].service.items.length > 0 ? requests[0].service.items[0].service.name : ""}</p>
@@ -51,7 +51,7 @@ const Employee = (props) => {
 				{_inTurn}
 			</div>
 			<div style={{margin: 10}}>
-				<Card interactive={true} elevation={Elevation.TWO}>
+				<Card interactive={true} elevation={Elevation.FOUR}>
 					<table className="bp3-html-table bp3-html-table-striped">
 						<thead>
 							<tr>

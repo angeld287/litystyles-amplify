@@ -66,6 +66,31 @@ export const listEmployees = `
   }
 `;
 
+export const listEmployeesFromOffice = `
+query Office($id: String!) {
+  getOffice(id: $id) {
+    employees {
+      items {
+        name
+        id
+        username
+        services {
+          items {
+            id
+            service {
+              cost
+              name
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+`;
+
 export const listRequests = /* GraphQL */ `
   query ListRequests(
     $filter: ModelRequestFilterInput
