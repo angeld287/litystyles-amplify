@@ -83,10 +83,16 @@ const Customer = (props) => {
 			case 3:
 				if (isService) {
 					setService(d);
-					setStep(param)
+					const serviceEmployees = employees.filter(i => i.services.items.filter(s => s.service.id === d.id).length !== 0 );
+					if(serviceEmployees.length === 1){
+						setEmployee(serviceEmployees[0]);
+						setStep(4);
+					}else{
+						setStep(param);
+					}
 				}else {
 					setProduct(d);
-					setStep(4)
+					setStep(4);
 				}
 				//setStep(param);
 				break;

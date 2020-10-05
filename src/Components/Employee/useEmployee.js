@@ -42,7 +42,7 @@ const useEmployee = (props) => {
 					setRequestToFinish(requestsApi.data.listRequests.items[0].id)
 					setRequestInProcess(true);
 				}
-				setRequests(requestsApi.data.listRequests.items);
+				setRequests(requestsApi.data.listRequests.items.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
 				setLoading(false);
 			}
 		};
