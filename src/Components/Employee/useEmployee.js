@@ -39,7 +39,7 @@ const useEmployee = (props) => {
 
 			if (!didCancel) {
 				if(requestsApi.data.listRequests.items.filter(e => e.state === "IN_PROCESS").length > 0){
-					setRequestToFinish(requestsApi.data.listRequests.items[0].id)
+					setRequestToFinish(requestsApi.data.listRequests.items.filter(e => e.state === "IN_PROCESS")[0].id)
 					setRequestInProcess(true);
 				}
 				setRequests(requestsApi.data.listRequests.items.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
@@ -87,7 +87,10 @@ const useEmployee = (props) => {
 		setInProcessLoading(true);
 		API.graphql(graphqlOperation(updateRequest, { input: { id: requests[0].id, state: 'IN_PROCESS' } }))
 		.then(r => {
-			//requests.splice(requests.findIndex(e => e.id === requestToInProcess), 1);
+			const editObject = requests[requests.findIndex(e => e.id === r.data.updateRequest.id)];
+			requests.splice(requests.findIndex(e => e.id === r.data.updateRequest.id), 1);
+			editObject.state = 'IN_PROCESS';
+			requests.unshift(editObject);
 			setRequestToFinish(requests[0].id);
 			setRequestInProcess(true);
 			setInProcessLoading(false);
