@@ -17,6 +17,7 @@ export const onCreateRequest = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -24,6 +25,7 @@ export const onCreateRequest = /* GraphQL */ `
       product {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -79,6 +81,7 @@ export const onCreateRequestService = /* GraphQL */ `
         owner
       }
       resposibleName
+      cost
       createdAt
     }
   }
@@ -104,6 +107,7 @@ export const onCreateCompany = /* GraphQL */ `
       services {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -111,6 +115,7 @@ export const onCreateCompany = /* GraphQL */ `
       products {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -143,6 +148,7 @@ export const onUpdateCompany = /* GraphQL */ `
       services {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -150,6 +156,7 @@ export const onUpdateCompany = /* GraphQL */ `
       products {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -182,6 +189,7 @@ export const onDeleteCompany = /* GraphQL */ `
       services {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -189,6 +197,7 @@ export const onDeleteCompany = /* GraphQL */ `
       products {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -240,6 +249,7 @@ export const onCreateCompanyService = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -284,6 +294,7 @@ export const onUpdateCompanyService = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -328,6 +339,7 @@ export const onDeleteCompanyService = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -369,6 +381,7 @@ export const onCreateCompanyProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -410,6 +423,7 @@ export const onUpdateCompanyProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -451,6 +465,7 @@ export const onDeleteCompanyProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -542,6 +557,7 @@ export const onCreateProduct = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -549,6 +565,7 @@ export const onCreateProduct = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -569,6 +586,7 @@ export const onUpdateProduct = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -576,6 +594,7 @@ export const onUpdateProduct = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -596,6 +615,7 @@ export const onDeleteProduct = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -603,6 +623,7 @@ export const onDeleteProduct = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -630,6 +651,7 @@ export const onCreateService = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -638,6 +660,7 @@ export const onCreateService = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -665,6 +688,7 @@ export const onUpdateService = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -673,6 +697,7 @@ export const onUpdateService = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -700,6 +725,7 @@ export const onDeleteService = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -708,6 +734,7 @@ export const onDeleteService = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -1096,6 +1123,7 @@ export const onCreateRequestProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -1138,6 +1166,7 @@ export const onUpdateRequestProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -1180,6 +1209,7 @@ export const onDeleteRequestProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }

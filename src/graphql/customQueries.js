@@ -10,6 +10,7 @@
             cost
             id
           }
+          cost
         }
       }
       products {
@@ -19,6 +20,7 @@
             cost
             id
           }
+          cost
         }
       }
     }
@@ -141,6 +143,16 @@ export const listRequestsPerDay = /* GraphQL */ `
               name
               cost
             }
+            cost
+          }
+        }
+        product {
+          items {
+            product {
+              name
+              cost
+            }
+            cost
           }
         }
         customerName
