@@ -36,11 +36,12 @@ const Administration = () => {
 		//.sort((a, b) => a.name.localeCompare(b.name))
 		.map((item,i)=>
 			(
-				<tr key={i}>
+				<tr key={i} className={item.product.items.length > 0 ? "table-danger" : "none"}>
 					<td>{i+1}</td>
 					<td>{item.customerName}</td>
-					<td>{item.service.items[0].service.name}</td>
-					<td>{item.service.items[0].service.cost}</td>
+					<td>{item.service.items.length > 0 ? item.service.items[0].service.name : item.product.items.length > 0 ? item.product.items[0].product.name : "n/a"}</td>
+					<td>{item.service.items.length > 0 ? item.service.items[0].service.cost : item.product.items.length > 0 ? item.product.items[0].product.cost : "n/a"}</td>
+					{/* <td>{item.service.items.length > 0 ? item.service.items[0].cost : item.product.items.length > 0 ? item.product.items[0].cost : "n/a"}</td> */}
 				</tr>
 			)
 		)):(<td></td>)
@@ -66,8 +67,9 @@ const Administration = () => {
 								<tr>
 									<th>No.</th>
 									<th>Cliente</th>
-									<th>Servicio</th>
+									<th>Servicio / Producto</th>
 									<th>Costo</th>
+									{/* <th>Costo</th> */}
 								</tr>
 							</thead>
 							<tbody>

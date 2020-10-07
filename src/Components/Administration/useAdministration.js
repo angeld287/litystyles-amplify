@@ -69,7 +69,7 @@ const useAdministration = () => {
 		})
 		.catch(e => {
 			setCancelError(true);
-			setCancelLoading(false)
+			setCancelLoading(false);
 			setCancelErrorMessage(e);
 		});
 	}
@@ -87,6 +87,7 @@ const useAdministration = () => {
 				},
 				limit: 500
 			}))
+			
 			setRequestsSearch(r.data.listRequests.items)
 		} catch (e) {
 			setSearchLoading(false);
