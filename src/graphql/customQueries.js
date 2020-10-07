@@ -125,3 +125,28 @@ export const listRequests = /* GraphQL */ `
     }
   }
 `;
+
+export const listRequestsPerDay = /* GraphQL */ `
+  query ListRequests(
+    $filter: ModelRequestFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRequests(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        service {
+          items {
+            service {
+              name
+              cost
+            }
+          }
+        }
+        customerName
+        createdAt
+      }
+      nextToken
+    }
+  }
+`;
