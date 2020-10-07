@@ -24,7 +24,6 @@ const Employee = (props) => {
 				<tr key={i} className={item.state === "IN_PROCESS" ? "table-danger" : "table-light"}>
 					<td>{i+1}</td>
 					<td style={{width: 200}}>{item.customerName}</td>
-					<td style={{width: 200}}>{item.state}</td>
 				</tr>
 			)
 		)):(<td></td>)
@@ -59,7 +58,6 @@ const Employee = (props) => {
                             <tr>
                                 <th scope="col"><b>No.</b></th>
                                 <th scope="col"><b>Cliente</b></th>
-                                <th scope="col"><b>Estado</b></th>
                             </tr>
                         </thead>
                         <tbody>
