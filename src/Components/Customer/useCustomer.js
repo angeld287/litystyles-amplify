@@ -52,19 +52,19 @@ const useCustomer = (props, finishRequest, setStep) => {
 		try {
 			setLoading(true);
 			var request = {};
-			ri.createdAt = moment(new Date).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z';
+			ri.createdAt = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z';
 			request = await API.graphql(graphqlOperation(createRequest, {input: ri}));
 
 			if (isService) {
 				rei.requestEmployeeRequestId = request.data.createRequest.id;
 				rsi.requestServiceRequestId = request.data.createRequest.id;
-				rpi.createdAt = moment(new Date).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z';
+				rpi.createdAt = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z';
 				rsi.resposibleName = ri.resposibleName;
 				await API.graphql(graphqlOperation(createRequestEmployee, {input: rei}));
 				await API.graphql(graphqlOperation(createRequestService, {input: rsi}));
 			} else {
 				rpi.requestProductRequestId = request.data.createRequest.id;
-				rpi.createdAt = moment(new Date).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z';
+				rpi.createdAt = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z';
 				await API.graphql(graphqlOperation(createRequestProduct, {input: rpi}));
 			}
 
