@@ -22,6 +22,7 @@ export const getCompany = /* GraphQL */ `
       services {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -29,6 +30,7 @@ export const getCompany = /* GraphQL */ `
       products {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -127,6 +129,7 @@ export const getProduct = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -134,6 +137,7 @@ export const getProduct = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -187,6 +191,7 @@ export const getService = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -195,6 +200,7 @@ export const getService = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -306,6 +312,7 @@ export const getRequest = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -313,6 +320,7 @@ export const getRequest = /* GraphQL */ `
       product {
         items {
           id
+          cost
           createdAt
         }
         nextToken

@@ -33,6 +33,7 @@ type CompanyService @model(queries: null) {
   id: ID!
   comapny: Company @connection(name: "cs")
   service: Service @connection(name: "sc")
+  cost: String
   createdAt: String
 }
 
@@ -40,6 +41,7 @@ type CompanyProduct @model(queries: null) {
   id: ID!
   comapny: Company @connection(name: "cp")
   product: Product @connection(name: "pc")
+  cost: String
   createdAt: String
 }
 
@@ -153,6 +155,7 @@ type RequestService @model(queries: null, subscriptions: null) {
   request: Request @connection(name: "rs")
   service: Service @connection(name: "sr")
   resposibleName: String!
+  cost: String
   createdAt: String
 }
 
@@ -160,6 +163,7 @@ type RequestProduct @model(queries: null) {
   id: ID!
   request: Request @connection(name: "rp")
   product: Product @connection(name: "pr")
+  cost: String
   createdAt: String
 }
 

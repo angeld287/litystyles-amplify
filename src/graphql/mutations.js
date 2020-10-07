@@ -25,6 +25,7 @@ export const createCompany = /* GraphQL */ `
       services {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -32,6 +33,7 @@ export const createCompany = /* GraphQL */ `
       products {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -67,6 +69,7 @@ export const updateCompany = /* GraphQL */ `
       services {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -74,6 +77,7 @@ export const updateCompany = /* GraphQL */ `
       products {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -109,6 +113,7 @@ export const deleteCompany = /* GraphQL */ `
       services {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -116,6 +121,7 @@ export const deleteCompany = /* GraphQL */ `
       products {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -170,6 +176,7 @@ export const createCompanyService = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -217,6 +224,7 @@ export const updateCompanyService = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -264,6 +272,7 @@ export const deleteCompanyService = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -308,6 +317,7 @@ export const createCompanyProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -352,6 +362,7 @@ export const updateCompanyProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -396,6 +407,7 @@ export const deleteCompanyProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -499,6 +511,7 @@ export const createProduct = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -506,6 +519,7 @@ export const createProduct = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -529,6 +543,7 @@ export const updateProduct = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -536,6 +551,7 @@ export const updateProduct = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -559,6 +575,7 @@ export const deleteProduct = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -566,6 +583,7 @@ export const deleteProduct = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -596,6 +614,7 @@ export const createService = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -604,6 +623,7 @@ export const createService = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -634,6 +654,7 @@ export const updateService = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -642,6 +663,7 @@ export const updateService = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -672,6 +694,7 @@ export const deleteService = /* GraphQL */ `
       companies {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -680,6 +703,7 @@ export const deleteService = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -1102,6 +1126,7 @@ export const createRequestService = /* GraphQL */ `
         owner
       }
       resposibleName
+      cost
       createdAt
     }
   }
@@ -1151,6 +1176,7 @@ export const updateRequestService = /* GraphQL */ `
         owner
       }
       resposibleName
+      cost
       createdAt
     }
   }
@@ -1200,6 +1226,7 @@ export const deleteRequestService = /* GraphQL */ `
         owner
       }
       resposibleName
+      cost
       createdAt
     }
   }
@@ -1245,6 +1272,7 @@ export const createRequestProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -1290,6 +1318,7 @@ export const updateRequestProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -1335,6 +1364,7 @@ export const deleteRequestProduct = /* GraphQL */ `
         createdAt
         owner
       }
+      cost
       createdAt
     }
   }
@@ -1358,6 +1388,7 @@ export const createRequest = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -1365,6 +1396,7 @@ export const createRequest = /* GraphQL */ `
       product {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1397,6 +1429,7 @@ export const updateRequest = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -1404,6 +1437,7 @@ export const updateRequest = /* GraphQL */ `
       product {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1436,6 +1470,7 @@ export const deleteRequest = /* GraphQL */ `
         items {
           id
           resposibleName
+          cost
           createdAt
         }
         nextToken
@@ -1443,6 +1478,7 @@ export const deleteRequest = /* GraphQL */ `
       product {
         items {
           id
+          cost
           createdAt
         }
         nextToken
