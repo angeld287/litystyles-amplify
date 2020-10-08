@@ -1,23 +1,23 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listRequests } from './../../graphql/queries';
-import { listRequestsPerDay } from './../../graphql/customQueries';
 import { updateRequest } from '../../graphql/mutations';
+import { listServices, listProducts, listOffices, listRequests, listEmployees} from '../../graphql/queries';
 
-import moment from "moment";
-
-const useAdministration = () => {
+const useAdministration = (props) => {
     const [ requests, setRequests ] = useState([]);
-    const [ requestsSearch, setRequestsSearch ] = useState([]);
-	const [ date, setDate ] = useState('');
+    const [ companyServices, setCompanyServices ] = useState([]);
+    const [ companyProducts, setCompanyProducts ] = useState([]);
+    const [ offices, setOffices ] = useState([]);
+    const [ services, setServices ] = useState([]);
+    const [ products, setProducts ] = useState([]);
 	
-	const [ loading, setLoading ] = useState(true);
-	const [ error, setError ] = useState(false);
-	const [ errorMessage, setErrorMessage ] = useState('');
-
-	const [ searchLoading, setSearchLoading ] = useState(false);
-	const [ searchError, setSearchError ] = useState(false);
-	const [ searcherrorMessage, setSearchErrorMessage ] = useState('');
+	const [ loading, setLoading ] = useState({
+		type: ''
+	});
+	const [ error, setError ] = useState({
+		type: '',
+		message: ''
+	});
 
 	const [ requestToCancel, setRequestToCancel ] = useState('');
 	const [ cancelOverlay, setCancelOverlay ] = useState(false);
@@ -29,30 +29,114 @@ const useAdministration = () => {
 	useEffect(() => {
 		let didCancel = false;
 
-		const fetch = async () => {
-            setLoading(true);
-			var requestsApi = [];
-
-			try {
-                requestsApi = await API.graphql(graphqlOperation(listRequests, { filter: {state: { eq: "ON_HOLD"}}}));
-			} catch (e) {
-				setLoading(false);
-				setError(true);
-				setErrorMessage(e);
-			}
-
-			if (!didCancel) {
-                setRequests(requestsApi.data.listRequests.items);
-				setLoading(false);
-			}
-		};
-
-		fetch();
+		
 
 		return () => {
 			didCancel = true;
 		};
 	}, []);
+
+	const onSelectTab = (e) => {
+		switch (e) {
+			case 'requests':
+				_requests();
+				break;
+			case 'offices':
+				_offices();
+				break;
+			case 'services':
+				_companyServices();
+				break;
+			case 'products':
+				_companyProducts();
+				break;
+			case 'employees':
+				_employees();
+				break;
+		
+			default:
+				break;
+		}
+	}
+
+	//solo se podra llamar cuando se necesite crear o editar un servicio de la compania
+	const _services = async () => {
+		try {
+			setLoading({type: 'services'})
+			const api = await API.graphql(graphqlOperation(listServices));
+			setServices(api.data.listServices.items);
+			setLoading({type: ''})
+		} catch (e) {
+			setError({
+				type: 'services',
+				message: 'Error al buscar los servicios'
+			})
+			setLoading({type: ''})
+		}
+	}
+
+	const _products = async () => {
+
+	}
+
+	const _requests = async () => {
+
+	}
+
+	const _offices = async () => {
+
+	}
+
+	const _companyServices = async () => {
+
+	}
+
+	const _companyProducts = async () => {
+
+	}
+
+	const _employees = async () => {
+
+	}
+
+
+	const ap = {
+		req: {
+			requests,
+			setRequests
+		},
+		cser: {
+			companyServices,
+			setCompanyServices,
+			_services
+		},
+		cpro: {
+			companyProducts,
+			setCompanyProducts,
+			_products
+		},
+		off: {
+			offices,
+			setOffices
+		},
+		ser: {
+			services,
+			setServices,
+		},
+		pro: {
+			products,
+			setProducts
+		},
+		load: {
+			loading,
+			setLoading
+		},
+		err: {
+			error,
+			setError
+		}
+	};
+
 
 	const cancelRequest = (id) => {
 		setRequestToCancel(id);
@@ -74,32 +158,7 @@ const useAdministration = () => {
 		});
 	}
 
-	const getRequestsByDay = async () => {
-
-		try {
-			setSearchLoading(true);
-			const r = await API.graphql(graphqlOperation(listRequestsPerDay, {
-				filter: {
-				  and: [
-					{createdAt: {gt: String(moment(date).format('YYYY-MM-DDT')+'00:00:00.000')}}, 
-					{createdAt: {lt: String(moment(date).format('YYYY-MM-DDT')+'23:59:59.000')}},
-				  ]
-				},
-				limit: 500
-			}))
-			
-			setRequestsSearch(r.data.listRequests.items)
-		} catch (e) {
-			setSearchLoading(false);
-			setSearchError(true);
-			setSearchErrorMessage('Ha ocurrido un error interno en la busqueda');
-			console.log(e);
-		}
-		
-		setSearchLoading(false);
-	}
-
-	return { requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay, requests, cancelRequest, cancelOverlay, cancelLoading, cancelerror, cancelerrorMessage, confirmCancelRequest, setCancelOverlay, loading, error, errorMessage };
+	return { ap, onSelectTab, requests, cancelRequest, cancelOverlay, cancelLoading, cancelerror, cancelerrorMessage, confirmCancelRequest, setCancelOverlay, loading, errorMessage };
 };
 
 export default useAdministration;
