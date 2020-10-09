@@ -6,7 +6,7 @@ import useServices from './useServices';
 
 const Services = (props) => {
 
-    const { add, serviceName, handleAddService, handleEditService, setCost, handleDelete, handleClose, handleShow, edit, show, so, cost, setService } = useServices(props);
+    const { add, serviceName, handleAddService, handleEditService, setCost, handleDelete, handleClose, handleShow, edit, show, cost, setService } = useServices(props);
  
     const list = (props.ap.cser.companyServices !== null)?([].concat(props.ap.cser.companyServices)
 		.map((item,i)=>

@@ -6,7 +6,7 @@ import useProducts from './useProducts';
 
 const Products = (props) => {
 
-    const { add, productName, handleAddProduct, handleEditProduct, setCost, handleDelete, handleClose, handleShow, edit, show, so, cost, setProduct } = useProducts(props);
+    const { add, productName, handleAddProduct, handleEditProduct, setCost, handleDelete, handleClose, handleShow, edit, show, cost, setProduct } = useProducts(props);
  
     const list = (props.ap.cpro.companyProducts !== null)?([].concat(props.ap.cpro.companyProducts)
 		.map((item,i)=>
