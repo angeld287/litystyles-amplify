@@ -1,24 +1,15 @@
 import React from 'react';
-import { Button, Spinner, Callout, Alert, FormGroup } from "@blueprintjs/core";
+import { Button, Spinner, Callout, Alert, Icon } from "@blueprintjs/core";
 import { Tabs, Tab, Table } from 'react-bootstrap';
 
-import { DateInput } from "@blueprintjs/datetime";
-import moment from "moment";
-
 import useAdministration from './useAdministration';
+import Services from './Services';
+import Products from './Products';
 
-const Administration = () => {
+const Administration = (props) => {
 
-	const { requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay, requests, cancelRequest, confirmCancelRequest, setCancelOverlay, cancelOverlay, cancelLoading, cancelerror, cancelerrorMessage } = useAdministration();
+	const { ap, onSelectTab, requests, cancelRequest, confirmCancelRequest, setCancelOverlay, cancelOverlay, cancelLoading, cancelerror, cancelerrorMessage } = useAdministration(props);
 	
-	const getMomentFormatter = (format) => {
-		// note that locale argument comes from locale prop and may be undefined
-		return {
-			formatDate: (date, locale) => moment(date).locale(locale).format(format),
-			parseDate: (str, locale) => moment(str, format).locale(locale).toDate(),
-			placeholder: format,
-		}
-	};
 
 	const _requests = (requests !== null)?([].concat(requests)
 		//.sort((a, b) => a.name.localeCompare(b.name))
@@ -31,77 +22,57 @@ const Administration = () => {
 				</tr>
 			)
 		)):(<td></td>)
-
-	const _requestsSearch = (requestsSearch !== null)?([].concat(requestsSearch)
-		//.sort((a, b) => a.name.localeCompare(b.name))
-		.map((item,i)=>
-			(
-				<tr key={i} className={item.product.items.length > 0 ? "table-danger" : "none"}>
-					<td>{i+1}</td>
-					<td>{item.customerName}</td>
-					<td>{item.service.items.length > 0 ? item.service.items[0].service.name : item.product.items.length > 0 ? item.product.items[0].product.name : "n/a"}</td>
-					<td>{item.service.items.length > 0 ? item.service.items[0].service.cost : item.product.items.length > 0 ? item.product.items[0].product.cost : "n/a"}</td>
-					{/* <td>{item.service.items.length > 0 ? item.service.items[0].cost : item.product.items.length > 0 ? item.product.items[0].cost : "n/a"}</td> */}
-				</tr>
-			)
-		)):(<td></td>)
 	
 	return (
-		<div align="center" style={{marginTop: 20}}>
-			<Tabs defaultActiveKey="registers" id="uncontrolled-tab-example">
-				<Tab eventKey="registers" title="Registros">
-					<div style={{marginTop:20}}>
-						<FormGroup>
-							<DateInput onChange={e => setDate(e)} {...getMomentFormatter("LL")} locale="de" />
-							<Button onClick={(e) => { e.preventDefault(); getRequestsByDay();}} variant="primary" loading={searchLoading}>Buscar</Button>
-						</FormGroup>
-						<div className="m-2">
-							{searchError &&
-								<Alert variant="danger">
-									{searcherrorMessage}
-								</Alert>	
-							}
+		<div align="center" style={{marginTop: 5}}>
+			<Tabs defaultActiveKey="requests" id="uncontrolled-tab-example" onSelect={e => onSelectTab(e)}>
+				<Tab eventKey="requests" title={<Icon icon="numbered-list" />}>
+					<div style={{marginTop: 5}}>
+						<h5>Solicitudes Activas</h5>
+						<div style={{marginTop:20}}>
+							<Table striped bordered hover>
+								<thead>
+									<tr>
+										<th>No.</th>
+										<th>Cliente</th>
+										<th>Acciones</th>
+									</tr>
+								</thead>
+								<tbody>
+									{_requests}
+								</tbody>
+							</Table>
 						</div>
-						<Table striped bordered hover>
-							<thead>
-								<tr>
-									<th>No.</th>
-									<th>Cliente</th>
-									<th>Servicio / Producto</th>
-									<th>Costo</th>
-									{/* <th>Costo</th> */}
-								</tr>
-							</thead>
-							<tbody>
-								{_requestsSearch}
-							</tbody>
-						</Table>
+						<div>
+							<Alert isOpen={cancelOverlay} align="center" canOutsideClickCancel={true} onClose={e => {setCancelOverlay(e)}} cancelButtonText="Cancelar"
+									confirmButtonText="Confirmar" onConfirm={confirmCancelRequest}>
+										Deseas Cancelar La Solicitud?
+										<div style={{marginBottom: 10}}>
+											{cancelerror && <Callout intent="danger">{cancelerrorMessage}</Callout>}
+										</div>
+										<div hidden={!cancelLoading}><Spinner intent="primary" size={30} /></div> 
+							</Alert>
+						</div>
 					</div>
 				</Tab>
-				<Tab eventKey="registerControl" title="Registros Activos">
-					<div style={{marginTop:20}}>
-						<Table striped bordered hover>
-							<thead>
-								<tr>
-									<th>No.</th>
-									<th>Cliente</th>
-									<th>Acciones</th>
-								</tr>
-							</thead>
-							<tbody>
-								{_requests}
-							</tbody>
-						</Table>
+				<Tab eventKey="offices" title={<Icon icon="office" />}>
+					<div style={{marginTop: 5}}>
+						<h5>Oficinas</h5>
 					</div>
-					<div>
-						<Alert isOpen={cancelOverlay} align="center" canOutsideClickCancel={true} onClose={e => {setCancelOverlay(e)}} cancelButtonText="Cancelar"
-								confirmButtonText="Confirmar" onConfirm={confirmCancelRequest}>
-									Deseas Cancelar La Solicitud?
-									<div style={{marginBottom: 10}}>
-										{cancelerror && <Callout intent="danger">{cancelerrorMessage}</Callout>}
-									</div>
-									<div hidden={!cancelLoading}><Spinner intent="primary" size={30} /></div> 
-						</Alert>
+				</Tab>
+				<Tab eventKey="services" title={<Icon icon="cog" />}>
+					<div style={{marginTop: 5}}>
+						<Services ap={ap}/>
+					</div>
+				</Tab>
+				<Tab eventKey="products" title={<Icon icon="shopping-cart" />}>
+					<div style={{marginTop: 5}}>
+						<Products ap={ap}/>
+					</div>
+				</Tab>
+				<Tab eventKey="employees" title={<Icon icon="inherited-group" />}>
+					<div style={{marginTop: 5}}>
+						<h5>Empleados</h5>
 					</div>
 				</Tab>
 			</Tabs>

@@ -5,6 +5,7 @@
       name
       services {
         items {
+          id
           service {
             name
             cost
@@ -15,6 +16,7 @@
       }
       products {
         items {
+          id
           product {
             name
             cost
