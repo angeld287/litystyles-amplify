@@ -92,7 +92,7 @@ const App = () => {
 
     }).catch(e => {
       setError(true);
-      setErrorMessage(e);
+      setErrorMessage('appjs error');
       setLoading(false);
     });
   };

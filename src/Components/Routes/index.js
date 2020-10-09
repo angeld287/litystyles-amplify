@@ -6,12 +6,14 @@ import Home from './../Home';
 import Administration from '../Administration';
 import Customer from '../Customer';
 import Employee from '../Employee';
+import Reports from '../Reports';
 import AuthComponent from './../Authentication/AuthComponent';
 
 export const Routes = ({ cp }) => (
 	<Switch>
 		<ProtectedRoute exact path="/" render={Home} props={cp} />
 		<ProtectedRouteAdmin exact path="/administration" render={Administration} props={cp} />
+		<ProtectedRouteAdmin exact path="/reports" render={Reports} props={cp} />
 		<ProtectedRouteEmployee exact path="/stylist" render={Employee} props={cp} />
 		<ProtectedRouteCustomer exact path="/customer" render={Customer} props={cp} />
 		<ProppedRoute exact path="/signin" render={AuthComponent} props={cp} />
