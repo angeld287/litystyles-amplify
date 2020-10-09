@@ -6,48 +6,48 @@ import useProducts from './useProducts';
 
 const Products = (props) => {
 
-    const { add, serviceName, handleAddService, handleEditService, setCost, handleDelete, handleClose, handleShow, edit, show, so, cost, setService } = useProducts(props);
+    const { add, productName, handleAddProduct, handleEditProduct, setCost, handleDelete, handleClose, handleShow, edit, show, so, cost, setProduct } = useProducts(props);
  
-    const list = (props.ap.cser.companyServices !== null)?([].concat(props.ap.cser.companyServices)
+    const list = (props.ap.cpro.companyProducts !== null)?([].concat(props.ap.cpro.companyProducts)
 		.map((item,i)=>
 			(
 				<tr key={i}>
 					{/* <td>{i+1}</td> */}
-					<td style={{width: 200}}>{item.service.name}</td>
+					<td style={{width: 200}}>{item.product.name}</td>
 					<td>
                         <ButtonGroup size="sm">
                             <Button intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('view', item);}} ><Icon icon="eye-open"/></Button>
                             <Button intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('edit', item);}} ><Icon icon="edit"/></Button>
-                            <Button intent={"Primary"} onClick={e => { e.preventDefault(); handleDelete(item.id, i);}} loading={props.ap.load.loading.type === 'deleteservice'+i} ><Icon icon="trash"/></Button>
+                            <Button intent={"Primary"} onClick={e => { e.preventDefault(); handleDelete(item.id, i);}} loading={props.ap.load.loading.type === 'deleteproduct'+i} ><Icon icon="trash"/></Button>
                         </ButtonGroup>
                     </td>
 				</tr>
 			)
         )):(<td></td>)
 
-    const servicesList = (props.ap.ser.services !== null)?([].concat(props.ap.ser.services)
+    const productsList = (props.ap.pro.products !== null)?([].concat(props.ap.pro.products)
 	    .map((item,i)=>
 		(
             <option key={i} value={item.id}>{item.name}</option>
 		)
      )):(<td></td>)
 
-    if(props.ap.err.error.type === 'services') return(<div style={{marginTop: 5}}><h5>{props.ap.err.error.message}</h5></div>)
+    if(props.ap.err.error.type === 'products') return(<div style={{marginTop: 5}}><h5>{props.ap.err.error.message}</h5></div>)
     
-    if(props.ap.load.loading.type === 'services') return(<Spinner/>)
+    if(props.ap.load.loading.type === 'products') return(<Spinner/>)
         
     return(<Container fluid>
 
         <Row>
             <Col sm={4}>
                 <Form.Group>
-                    <Form.Control as="select" id="services" onChange={e => setService(e.target.value)}>
+                    <Form.Control as="select" id="products" onChange={e => setProduct(e.target.value)}>
                         <option>Seleccione...</option>
-                        {servicesList}
+                        {productsList}
                     </Form.Control>
                 </Form.Group>
             </Col>
-            <Col sm={2}><Button loading={props.ap.load.loading.type === 'addservice'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShow('add', {});}} icon="add"></Button></Col>
+            <Col sm={2}><Button loading={props.ap.load.loading.type === 'addproduct'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShow('add', {});}} icon="add"></Button></Col>
         </Row>
 
         <div style={{marginTop:20}}>
@@ -55,7 +55,7 @@ const Products = (props) => {
 				<thead>
 					<tr>
 						{/* <th>No.</th> */}
-						<th>Servicio</th>
+						<th>Producto</th>
 						<th>Acciones</th>
 					</tr>
 				</thead>
@@ -65,15 +65,15 @@ const Products = (props) => {
 			</Table>
 		</div>
 
-        {/* Modal para editar y ver detalle de servicios */}
+        {/* Modal para editar y ver detalle de productos */}
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>{edit ? 'Editar Servicio' : add ? 'Agregar Servicio' : 'Ver Servicio'}</Modal.Title>
+                <Modal.Title>{edit ? 'Editar Producto' : add ? 'Agregar Producto' : 'Ver Producto'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form.Group controlId="name">
                     <Form.Label>Nombre</Form.Label>
-                    <Form.Control readOnly={true} type="text" value={serviceName} />
+                    <Form.Control readOnly={true} type="text" value={productName} />
                 </Form.Group>
                 <Form.Group controlId="cost">
                     <Form.Label>Costo</Form.Label>
@@ -85,7 +85,7 @@ const Products = (props) => {
                     Cerrar
                 </Button>
                 {(edit || add) &&
-                    <Button variant="primary" loading={props.ap.load.loading.type === 'addservice' || props.ap.load.loading.type === 'editservice'} onClick={ add ? handleAddService : handleEditService }>
+                    <Button variant="primary" loading={props.ap.load.loading.type === 'addproduct' || props.ap.load.loading.type === 'editproduct'} onClick={ add ? handleAddProduct : handleEditProduct }>
                         Guardar
                     </Button>
                 }

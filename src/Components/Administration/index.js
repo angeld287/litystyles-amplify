@@ -4,6 +4,7 @@ import { Tabs, Tab, Table } from 'react-bootstrap';
 
 import useAdministration from './useAdministration';
 import Services from './Services';
+import Products from './Products';
 
 const Administration = (props) => {
 
@@ -66,7 +67,7 @@ const Administration = (props) => {
 				</Tab>
 				<Tab eventKey="products" title={<Icon icon="shopping-cart" />}>
 					<div style={{marginTop: 5}}>
-						<h5>Productos</h5>
+						<Products ap={ap}/>
 					</div>
 				</Tab>
 				<Tab eventKey="employees" title={<Icon icon="inherited-group" />}>

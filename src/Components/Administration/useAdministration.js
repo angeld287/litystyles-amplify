@@ -52,6 +52,7 @@ const useAdministration = (props) => {
 				break;
 			case 'products':
 				_getCompanyData(e);
+				_products();
 				break;
 			case 'employees':
 				_employees();

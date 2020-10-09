@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { deleteCompanyService, createCompanyService, updateCompanyService } from '../../../graphql/mutations';
+import { deleteCompanyProduct, createCompanyProduct, updateCompanyProduct } from '../../../graphql/mutations';
 
 import swal from 'sweetalert';
 
@@ -10,11 +10,11 @@ const useProducts = (props) => {
     const [edit, setEdit] = useState(false);
     const [add, setAdd] = useState(false);
 
-    const [ so, setSelectedObject ] = useState({ service: { name: ''  } });
+    const [ so, setSelectedObject ] = useState({ product: { name: ''  } });
 
-    const [ service, setService ] = useState('');
+    const [ product, setProduct ] = useState('');
     const [ cost, setCost ] = useState('');
-    const [ serviceName, setServiceName ] = useState('');
+    const [ productName, setProductName ] = useState('');
 
     const handleClose = () => setShow(false);
 
@@ -25,7 +25,7 @@ const useProducts = (props) => {
                 setCost(object.cost);
                 setEdit(true);
                 setAdd(false);
-                setServiceName(object.service.name);
+                setProductName(object.product.name);
                 setShow(true);
                 
                 break;
@@ -35,14 +35,14 @@ const useProducts = (props) => {
                 setCost(object.cost);
                 setEdit(false);
                 setAdd(false);
-                setServiceName(object.service.name);
+                setProductName(object.product.name);
                 setShow(true);
                 
                 break;
 
             case 'add':
-                if(service === '')  {
-                    swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+                if(product === '')  {
+                    swal({ title: "Agregar Producto!", text: "Debe seleccionar un producto.", type: "error", timer: 2000 });
                     break;
                 }
     
@@ -50,9 +50,9 @@ const useProducts = (props) => {
                 setCost('0');
                 setEdit(false);
                 setAdd(true);
-                var lists = props.ap.ser.services;
+                var lists = props.ap.pro.products;
                 
-                setServiceName(lists[lists.findIndex(e => e.id === service)].name);
+                setProductName(lists[lists.findIndex(e => e.id === product)].name);
                 setShow(true);
 
                 break;
@@ -63,19 +63,19 @@ const useProducts = (props) => {
     };
     
     const handleDelete = async (id, i) => {
-        swal({ title: "Esta seguro que desea eliminar el servicio?", icon: "warning", buttons: true, dangerMode: true })
+        swal({ title: "Esta seguro que desea eliminar el producto?", icon: "warning", buttons: true, dangerMode: true })
         .then( async (willDelete) => {
            if (willDelete) {
 
             try {
-                props.ap.load.setLoading({ type: 'deleteservice'+i });
+                props.ap.load.setLoading({ type: 'deleteproduct'+i });
     
-                var list = props.ap.cser.companyServices;
+                var list = props.ap.cpro.companyProducts;
     
-                await API.graphql(graphqlOperation(deleteCompanyService, {input: {id: id}}));
+                await API.graphql(graphqlOperation(deleteCompanyProduct, {input: {id: id}}));
                 list.splice(list.findIndex(e => e.id === id), 1);
                 
-                props.ap.cser.setCompanyServices(list);
+                props.ap.cpro.setCompanyProducts(list);
                 props.ap.load.setLoading({ type: '' });
     
             } catch (e) {
@@ -83,43 +83,43 @@ const useProducts = (props) => {
     
                 props.ap.load.setLoading({ type: '' });
     
-                swal({ title: "Agregar Servicio!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
+                swal({ title: "Agregar Producto!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
             }
              
-            swal({ title: "El registro ha sido eliminado!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+            swal({ title: "El registro ha sido eliminado!", text: "Debe seleccionar un producto.", type: "error", timer: 2000 });
 
            } else {
-            swal({ title: "Eliminacion Cancelada!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+            swal({ title: "Eliminacion Cancelada!", text: "Debe seleccionar un producto.", type: "error", timer: 2000 });
            }
          });
     }
 
-    const handleAddService = async () => {
+    const handleAddProduct = async () => {
         try {
 
-             if(service === '') {
-                 swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+             if(product === '') {
+                 swal({ title: "Agregar Producto!", text: "Debe seleccionar un producto.", type: "error", timer: 2000 });
                 return;
              }
 
              if(cost.match(/^[0-9]+$/) === null) {
-                swal({ title: "Agregar Servicio!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
+                swal({ title: "Agregar Producto!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
                 return;
              }
 
-             var list = props.ap.cser.companyServices;
+             var list = props.ap.cpro.companyProducts;
 
-             if(list[list.findIndex(e => e.service.id === service)] !== undefined) {
-                swal({title: "Agregar Servicio!", text: "Este servicio ya existe!", type: "error", timer: 2000 });
+             if(list[list.findIndex(e => e.product.id === product)] !== undefined) {
+                swal({title: "Agregar Producto!", text: "Este producto ya existe!", type: "error", timer: 2000 });
                 return;
              }
 
-             props.ap.load.setLoading({type: 'addservice'});
+             props.ap.load.setLoading({type: 'addproduct'});
     
-             const api = await API.graphql(graphqlOperation(createCompanyService, {input: {companyServiceServiceId: service, companyServiceComapnyId: props.ap.state.company.id, cost: cost}}));
-             list.push(api.data.createCompanyService);
+             const api = await API.graphql(graphqlOperation(createCompanyProduct, {input: {companyProductProductId: product, companyProductComapnyId: props.ap.state.company.id, cost: cost}}));
+             list.push(api.data.createCompanyProduct);
 
-             props.ap.cser.setCompanyServices(list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
+             props.ap.cpro.setCompanyProducts(list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
     
              props.ap.load.setLoading({type: ''});
 
@@ -132,30 +132,30 @@ const useProducts = (props) => {
 
             handleClose()
 
-            swal({title: "Agregar Servicio!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
+            swal({title: "Agregar Producto!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
 
         }
     }
 
-    const handleEditService = async () => {
+    const handleEditProduct = async () => {
         try {
 
             if(cost.match(/^[0-9]+$/) === null) {
-               swal({ title: "Editar Servicio!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
+               swal({ title: "Editar Producto!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
                return;
             }
 
-            props.ap.load.setLoading({type: 'editservice'});
+            props.ap.load.setLoading({type: 'editproduct'});
 
-            var list = props.ap.cser.companyServices;
+            var list = props.ap.cpro.companyProducts;
    
-            const api = await API.graphql(graphqlOperation(updateCompanyService, {input: {id: so.id, cost: cost}}));
+            const api = await API.graphql(graphqlOperation(updateCompanyProduct, {input: {id: so.id, cost: cost}}));
 
             list.splice(list.findIndex(e => e.id === so.id), 1);
 
-            list.push(api.data.updateCompanyService);
+            list.push(api.data.updateCompanyProduct);
 
-            props.ap.cser.setCompanyServices(list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
+            props.ap.cpro.setCompanyProducts(list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
    
             props.ap.load.setLoading({type: ''});
 
@@ -168,12 +168,12 @@ const useProducts = (props) => {
 
            handleClose()
 
-           swal({title: "Editar Servicio!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
+           swal({title: "Editar Producto!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
 
        }
     }
 
-	return {  add, serviceName, handleAddService, handleEditService, handleDelete, handleClose, handleShow, edit, show, so, cost, setService, setCost };
+	return {  add, productName, handleAddProduct, handleEditProduct, handleDelete, handleClose, handleShow, edit, show, so, cost, setProduct, setCost };
 };
 
 export default useProducts;
