@@ -4,7 +4,7 @@ import { deleteCompanyService, createCompanyService, updateCompanyService } from
 
 import swal from 'sweetalert';
 
-const useServices = (props) => {
+const useProducts = (props) => {
 
     const [show, setShow] = useState(false);
     const [edit, setEdit] = useState(false);
@@ -176,5 +176,5 @@ const useServices = (props) => {
 	return {  add, serviceName, handleAddService, handleEditService, handleDelete, handleClose, handleShow, edit, show, so, cost, setService, setCost };
 };
 
-export default useServices;
+export default useProducts;
 

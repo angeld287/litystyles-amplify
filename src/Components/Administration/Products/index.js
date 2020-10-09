@@ -2,11 +2,11 @@ import React from 'react';
 import { Table, Container, Row, Col, ButtonGroup, Modal, Form } from 'react-bootstrap';
 import { Button, Spinner, Icon } from "@blueprintjs/core";
 
-import useServices from './useServices';
+import useProducts from './useProducts';
 
-const Services = (props) => {
+const Products = (props) => {
 
-    const { add, serviceName, handleAddService, handleEditService, setCost, handleDelete, handleClose, handleShow, edit, show, so, cost, setService } = useServices(props);
+    const { add, serviceName, handleAddService, handleEditService, setCost, handleDelete, handleClose, handleShow, edit, show, so, cost, setService } = useProducts(props);
  
     const list = (props.ap.cser.companyServices !== null)?([].concat(props.ap.cser.companyServices)
 		.map((item,i)=>
@@ -94,4 +94,4 @@ const Services = (props) => {
     </Container>)
 }
 
-export default Services;
+export default Products;

@@ -29,12 +29,12 @@ const useAdministration = (props) => {
 
 	
 	useEffect(() => {
-		let didCancel = false;
+		//let didCancel = false;
 
 		
 
 		return () => {
-			didCancel = true;
+		//	didCancel = true;
 		};
 	}, []);
 
@@ -136,8 +136,8 @@ const useAdministration = (props) => {
 			if(companyProducts.length === 0 || companyServices.length === 0){
 				setLoading({type: type})
 				const api = await API.graphql(graphqlOperation(getCompanyProductsAndServices, {id: props.state.company.id}));
-				setCompanyProducts(api.data.getCompany.products.items);
-				setCompanyServices(api.data.getCompany.services.items);
+				setCompanyProducts(api.data.getCompany.products.items.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
+				setCompanyServices(api.data.getCompany.services.items.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
 				setLoading({type: ''})
 			}
 		} catch (e) {
@@ -203,7 +203,8 @@ const useAdministration = (props) => {
 		err: {
 			error,
 			setError
-		}
+		},
+		state: props.state,
 	};
 
 
