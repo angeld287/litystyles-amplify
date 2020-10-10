@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listRequestsPerDay } from '../../graphql/customQueries';
-import { listRequests } from '../../graphql/queries';
 
 import swal from 'sweetalert';
 
@@ -14,6 +13,11 @@ const useReports = () => {
 	const [ year, setYear ] = useState('');
 
 	const [ results, setResults ] = useState([]); 
+	const [ gearnings, setEarnings ] = useState([]); 
+	const [ grequests, setRequests ] = useState([]); 
+
+	const [ gservicesn, setEargingByServicesn ] = useState([]); 
+	const [ gservices, setEargingByServices ] = useState([]); 
 
 	const [ loading, setLoading ] = useState({
 		type: '',
@@ -48,23 +52,35 @@ const useReports = () => {
 		setSearchLoading(false);
 	}
 
-	const requests = async (f) => await API.graphql(graphqlOperation(listRequests, { filter: f, limit: 1000 }));
+	const requests = async (f) => await API.graphql(graphqlOperation(listRequestsPerDay, { filter: f, limit: 1000 }));
 
 	const getMonthResults = async () => {
-		console.log(results)
-		if(month === '' || year === '' || month === 'Seleccione el mes...' | year === 'Seleccione el año...')  {
+		if(month === '' || year === '' || month.match(/^[0-9]+$/) === null || year.match(/^[0-9]+$/) === null || month === 'Seleccione el mes...' | year === 'Seleccione el año...')  {
 			swal({ title: "Reportes!", text: "Debe seleccionar el año y el mes.", type: "error", timer: 2000 });
 			return;
 		}
-		var _results = results;
 
 		const start = year+"-"+month+"-01T00:00:00.000";
+		var _date = new Date(start); //dd-mm-YYYY
+		
+		var today = new Date();
+
+		if(_date > today) {
+			swal({ title: "Reportes!", text: "Debe seleccionar una fecha anterior a la fecha actual.", type: "error", timer: 2000 });
+			return;
+		}
+
+		setLoading({type: 'getrequests'});
+		var _results = results;
+
 		const end = year+"-"+month+"-"+getLastDay(month)+"T23:59:59.000";
 
 		var prior_request = _results[_results.findIndex(e => e.id === start)];
 
 		if(prior_request !== undefined){
+			setData(prior_request.data);
 
+			setLoading({type: ''});
 		}else{
 
 			const filter = {
@@ -83,12 +99,49 @@ const useReports = () => {
 
 			_results.push(result);
 
+			setData(r.data.listRequests.items)
+
 			setResults(_results);
+
+			setLoading({type: ''});
 		}
 	}
 
-	const getLastDay = (m) => {
+	const setData = (data) => {
+		var rresult = [];
+		var eresult = [];
+		var snresult = [];
+		var sresult = [];
 
+		for (let i = 0; i <= parseInt(getLastDay(month)); i++) {
+			rresult.push(0);
+			eresult.push(0);
+		}
+		
+		data.forEach(e => {
+			//console.log(e);
+			var date = new Date(e.createdAt);
+			var service = e.service.items[0].service.name;
+			var cost = e.service.items[0].service.cost;
+			
+			if(snresult.findIndex(e => e === service) === -1){
+				snresult.push(service);
+				sresult.push(parseInt(cost));
+			}else{
+				sresult[snresult.findIndex(e => e === service)] = sresult[snresult.findIndex(e => e === service)] + parseInt(cost);
+			}
+
+			rresult[(date.getDate() - 1)] = rresult[(date.getDate() - 1)] + 1;
+			eresult[(date.getDate() - 1)] = eresult[(date.getDate() - 1)] + parseInt(cost);
+		});
+
+		setRequests(rresult)
+		setEarnings(eresult)
+		setEargingByServicesn(snresult);
+		setEargingByServices(sresult);
+	} 
+
+	const getLastDay = (m) => {
 		if ( m === '01' || m === '03' || m === '05' || m === '07' || m === '08' || m === '10' || m === '12') {
 			return '31'
 		} else if(m === '04' || m === '06' || m === '09' || m === '11'){
@@ -98,11 +151,20 @@ const useReports = () => {
 		}
 	}
 
+	const daysArray = (m) => {
+		var days = [];
+		var mds = getLastDay(m);
+		for (let i = 0; i <= parseInt(mds); i++) {
+			days.push(i.toString());
+		}
+		return days;
+	}
+
 	const lineData = {
-		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+		labels: daysArray(month),
 		datasets: [
 		  {
-			label: 'My First dataset',
+			label: 'Ingresos por dia durante el mes '+month,
 			fill: false,
 			lineTension: 0.1,
 			backgroundColor: 'rgba(75,192,192,0.4)',
@@ -120,34 +182,30 @@ const useReports = () => {
 			pointHoverBorderWidth: 2,
 			pointRadius: 1,
 			pointHitRadius: 10,
-			data: [65, 59, 80, 81, 56, 55, 40]
+			data: gearnings
 		  }
 		]
 	};
 
 	const barData = {
-		labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30' ],
+		labels: daysArray(month),
 		datasets: [
 		  {
-			label: 'Servicios Solicitados por Mes',
+			label: 'Solicitudes de Servicios por Mes',
 			backgroundColor: 'rgba(255,99,132,0.2)',
 			borderColor: 'rgba(255,99,132,1)',
 			borderWidth: 1,
 			hoverBackgroundColor: 'rgba(255,99,132,0.4)',
 			hoverBorderColor: 'rgba(255,99,132,1)',
-			data: [65, 59, 80, 81, 56, 55, 40]
+			data: grequests
 		  }
 		]
 	}
 
 	const pieData = {
-		labels: [
-		  'Red',
-		  'Green',
-		  'Yellow'
-		],
+		labels: gservicesn,
 		datasets: [{
-		  data: [300, 50, 100],
+		  data: gservices,
 		  backgroundColor: [
 		  '#FF6384',
 		  '#36A2EB',
@@ -189,6 +247,14 @@ const useReports = () => {
 		return monthsObjects
 	}
 
+
+	const setInitialStates = () => {
+		setEarnings([]);
+		setRequests([]);
+		setEargingByServices([]);
+		setEargingByServicesn([]);
+	}
+
 	
 
 	const rp = {
@@ -203,7 +269,8 @@ const useReports = () => {
 		load: {
 			loading,
 			setLoading
-		}
+		},
+		setInitialStates,
 	}
 
 	return { rp, barData, pieData, lineData, requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay };

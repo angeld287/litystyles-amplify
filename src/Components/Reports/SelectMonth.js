@@ -12,7 +12,7 @@ const SelectMonth = (props) => {
         <Row style={{marginBottom: 30, marginTop: 30}}>
           <Col sm={5}>
             <Form.Group>
-              <Form.Control as="select" id="years" onChange={e => rp.date.setYear(e.target.value)}>
+              <Form.Control as="select" id="years" onChange={e => {e.preventDefault(); rp.date.setYear(e.target.value); rp.setInitialStates();}}>
                   <option>Seleccione el año...</option>
                   {_years}
               </Form.Control>
@@ -20,7 +20,7 @@ const SelectMonth = (props) => {
           </Col>
           <Col sm={5}>
             <Form.Group>
-              <Form.Control as="select" id="months" onChange={e => rp.date.setMonth(e.target.value)}>
+              <Form.Control as="select" id="months" onChange={e => {e.preventDefault(); rp.date.setMonth(e.target.value); rp.setInitialStates();}}>
                   <option>Seleccione el mes...</option>
                   {_months}
               </Form.Control>

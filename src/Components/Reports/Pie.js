@@ -1,4 +1,5 @@
 import { Pie as P} from 'react-chartjs-2';
+import { Container } from 'react-bootstrap'
 import React from 'react';
 
 const options = {
@@ -13,11 +14,14 @@ const options = {
 }
 
 const Pie = (props) => {
+  const { SelectMonth, rp } = props;
+
     return(
-      <div>
-        <h2>Grafico de Pastel</h2>
+      <Container>
+        <h2>Ingresos por Servicio</h2>
+        <SelectMonth rp={rp} />
         <P data={props.data} options={options}/>
-      </div>
+      </Container>
     );
 }
 
