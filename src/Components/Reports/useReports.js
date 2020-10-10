@@ -13,6 +13,7 @@ const useReports = () => {
 	const [ year, setYear ] = useState('');
 
 	const [ results, setResults ] = useState([]); 
+	const [ dayResults, setDayResults ] = useState([]); 
 	const [ gearnings, setEarnings ] = useState([]); 
 	const [ grequests, setRequests ] = useState([]); 
 
@@ -31,17 +32,37 @@ const useReports = () => {
 
 		try {
 			setSearchLoading(true);
-			const r = await API.graphql(graphqlOperation(listRequestsPerDay, {
-				filter: {
-				  and: [
-					{createdAt: {gt: String(moment(date).format('YYYY-MM-DDT')+'00:00:00.000')}}, 
-					{createdAt: {lt: String(moment(date).format('YYYY-MM-DDT')+'23:59:59.000')}},
-				  ]
-				},
-				limit: 500
-			}))
-			
-			setRequestsSearch(r.data.listRequests.items)
+
+			var _results = dayResults;
+			var _date = String(moment(date).format('YYYY-MM-DDT')+'00:00:00.000');
+
+			var prior_request = _results[_results.findIndex(e => e.id === _date)];
+
+			if(prior_request !== undefined){
+				setRequestsSearch(prior_request.data)
+			}else{
+				
+
+				var result = {id: _date, data: []};
+
+				const r = await API.graphql(graphqlOperation(listRequestsPerDay, {
+					filter: {
+					  and: [
+						{createdAt: {gt: _date}}, 
+						{createdAt: {lt: String(moment(date).format('YYYY-MM-DDT')+'23:59:59.000')}},
+					  ]
+					},
+					limit: 1000
+				}))
+
+				result.data = r.data.listRequests.items;
+
+				_results.push(result);
+
+				setDayResults(_results);
+				
+				setRequestsSearch(r.data.listRequests.items)
+			}
 		} catch (e) {
 			setSearchLoading(false);
 			setSearchError(true);
