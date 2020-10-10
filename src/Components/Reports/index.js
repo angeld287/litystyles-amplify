@@ -1,15 +1,20 @@
 import React from 'react';
-import { Button, Alert, FormGroup } from "@blueprintjs/core";
+import { Button, Alert, FormGroup, Icon } from "@blueprintjs/core";
 import { Tabs, Tab, Table } from 'react-bootstrap';
 
 import { DateInput } from "@blueprintjs/datetime";
 import moment from "moment";
 
 import useReports from './useReports';
+import Line from './Line';
+import Bar from './Bar';
+import Pie from './Pie';
+
+import SelectMonth from './SelectMonth';
 
 const Reports = () => {
 
-	const { requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay, } = useReports();
+	const { rp, barData, pieData, lineData, requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay, } = useReports();
 	
 	const getMomentFormatter = (format) => {
 		// note that locale argument comes from locale prop and may be undefined
@@ -37,7 +42,7 @@ const Reports = () => {
 	return (
 		<div align="center" style={{marginTop: 20}}>
 			<Tabs defaultActiveKey="registers" id="uncontrolled-tab-example">
-				<Tab eventKey="registers" title="Registros">
+				<Tab eventKey="registers" title={<Icon icon="list"/>}>
 					<div style={{marginTop:20}}>
 						<FormGroup>
 							<DateInput onChange={e => setDate(e)} {...getMomentFormatter("LL")} locale="de" />
@@ -65,6 +70,15 @@ const Reports = () => {
 							</tbody>
 						</Table>
 					</div>
+				</Tab>
+				<Tab eventKey="timeline-line-chart" title={<Icon icon="timeline-line-chart"/>}>
+					<Line rp={rp} data={lineData} SelectMonth={SelectMonth}/>
+				</Tab>
+				<Tab eventKey="timeline-bar-chart" title={<Icon icon="timeline-bar-chart"/>}>
+					<Bar rp={rp} data={barData} SelectMonth={SelectMonth}/>
+				</Tab>
+				<Tab eventKey="pie-chart" title={<Icon icon="pie-chart"/>}>
+					<Pie rp={rp} data={pieData} SelectMonth={SelectMonth}/>
 				</Tab>
 			</Tabs>
         </div>
