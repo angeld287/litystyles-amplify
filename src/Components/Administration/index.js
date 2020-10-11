@@ -18,6 +18,7 @@ const Administration = (props) => {
 				<tr key={i}>
 					<td>{i+1}</td>
 					<td style={{width: 200}}>{item.customerName}</td>
+					<td>{item.state}</td>
 					<td><Button intent="Danger" icon="delete" onClick={e => { e.preventDefault(); cancelRequest(item.id)}}>Anular Solicitud</Button></td>
 				</tr>
 			)
@@ -29,20 +30,28 @@ const Administration = (props) => {
 				<Tab eventKey="requests" title={<Icon icon="numbered-list" />}>
 					<div style={{marginTop: 5}}>
 						<h5>Solicitudes Activas</h5>
-						<div style={{marginTop:20}}>
-							<Table striped bordered hover>
-								<thead>
-									<tr>
-										<th>No.</th>
-										<th>Cliente</th>
-										<th>Acciones</th>
-									</tr>
-								</thead>
-								<tbody>
-									{_requests}
-								</tbody>
-							</Table>
-						</div>
+						{ap.load.loading.type !== 'requests' && 
+							<div style={{marginTop:20}}>
+								<Table striped bordered hover>
+									<thead>
+										<tr>
+											<th>No.</th>
+											<th>Cliente</th>
+											<th>State</th>
+											<th>Acciones</th>
+										</tr>
+									</thead>
+									<tbody>
+										{_requests}
+									</tbody>
+								</Table>
+							</div>
+						}
+						{ap.load.loading.type === 'requests' &&
+							<div style={{marginTop:20}}>
+								<Spinner/>
+							</div>
+						}
 						<div>
 							<Alert isOpen={cancelOverlay} align="center" canOutsideClickCancel={true} onClose={e => {setCancelOverlay(e)}} cancelButtonText="Cancelar"
 									confirmButtonText="Confirmar" onConfirm={confirmCancelRequest}>

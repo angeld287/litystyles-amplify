@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { updateRequest } from '../../graphql/mutations';
+import { updateRequest } from '../../graphql/customMutations';
 import { getCompanyProductsAndServices } from '../../graphql/customQueries';
 import { listServices, listProducts, listOffices, listRequests, listEmployees} from '../../graphql/queries';
 
@@ -31,17 +31,41 @@ const useAdministration = (props) => {
 	useEffect(() => {
 		//let didCancel = false;
 
-		
+		const _requests = async () => {
+			try {
+				const filter = {
+					and: [
+						{state: {ne: 'FINISHED'}},
+						{state: {ne: 'CANCELED'}},
+					]
+				}
+
+				if(requests.length === 0){
+					setLoading({type: 'requests'})
+					const api = await API.graphql(graphqlOperation(listRequests, { filter: filter, limit: 1000 } ));
+					setRequests(api.data.listRequests.items);
+					setLoading({type: ''})
+				}
+			} catch (e) {
+				setError({
+					type: 'requests',
+					message: 'Error al buscar las solicitudes'
+				})
+				setLoading({type: ''})
+			}
+		}
+
+		_requests();
 
 		return () => {
 		//	didCancel = true;
 		};
-	}, []);
+	}, [requests]);
 
 	const onSelectTab = (e) => {
 		switch (e) {
 			case 'requests':
-				_requests();
+				//_requests();
 				break;
 			case 'offices':
 				_offices();
@@ -98,23 +122,6 @@ const useAdministration = (props) => {
 		}
 	}
 
-	const _requests = async () => {
-		try {
-			if(requests.length === 0){
-				setLoading({type: 'requests'})
-				const api = await API.graphql(graphqlOperation(listRequests));
-				setRequests(api.data.listRequests.items);
-				setLoading({type: ''})
-			}
-		} catch (e) {
-			setError({
-				type: 'requests',
-				message: 'Error al buscar las solicitudes'
-			})
-			setLoading({type: ''})
-		}
-	}
-
 	const _offices = async () => {
 		try {
 			if(offices.length === 0){
@@ -149,7 +156,6 @@ const useAdministration = (props) => {
 			})
 			setLoading({type: ''})
 		}
-
 	}
 
 	const _employees = async () => {
@@ -225,7 +231,8 @@ const useAdministration = (props) => {
 		.catch(e => {
 			setCancelError(true);
 			setCancelLoading(false);
-			setCancelErrorMessage(e);
+			console.log(e)
+			setCancelErrorMessage('Ha ocurrido un error al cancelar la solicitud');
 		});
 	}
 
@@ -233,4 +240,3 @@ const useAdministration = (props) => {
 };
 
 export default useAdministration;
-
