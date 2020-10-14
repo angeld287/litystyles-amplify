@@ -58,6 +58,7 @@ type Office
         { allow: groups, groups: ["employee"], operations: [read] }
     ]) {
     id: ID!
+    name: String
     administrator: String
     employees: [Employee] @connection
     location: String!

@@ -6,6 +6,7 @@ import { listServices, listProducts, listOffices, listRequests, listEmployees} f
 
 const useAdministration = (props) => {
     const [ requests, setRequests ] = useState([]);
+    const [ requested, setRequested ] = useState(false);
     const [ companyServices, setCompanyServices ] = useState([]);
     const [ companyProducts, setCompanyProducts ] = useState([]);
     const [ offices, setOffices ] = useState([]);
@@ -39,11 +40,13 @@ const useAdministration = (props) => {
 						{state: {ne: 'CANCELED'}},
 					]
 				}
-
-				if(requests.length === 0){
+	
+				if(requests.length === 0 || !requested){
 					setLoading({type: 'requests'})
 					const api = await API.graphql(graphqlOperation(listRequests, { filter: filter, limit: 1000 } ));
+					
 					setRequests(api.data.listRequests.items);
+					setRequested(true);
 					setLoading({type: ''})
 				}
 			} catch (e) {
@@ -92,7 +95,7 @@ const useAdministration = (props) => {
 		try {
 			if(services.length === 0){
 				//setLoading({type: 'services'})
-				const api = await API.graphql(graphqlOperation(listServices));
+				const api = await API.graphql(graphqlOperation(listServices, {filter: {deleted: {ne: true}}}));
 				setServices(api.data.listServices.items);
 				setLoading({type: ''})
 			}
@@ -109,7 +112,7 @@ const useAdministration = (props) => {
 		try {
 			if(products.length === 0){
 				setLoading({type: 'products'})
-				const api = await API.graphql(graphqlOperation(listProducts));
+				const api = await API.graphql(graphqlOperation(listProducts, {filter: {deleted: {ne: true}}}));
 				setProducts(api.data.listProducts.items);
 				setLoading({type: ''})
 			}
@@ -126,7 +129,7 @@ const useAdministration = (props) => {
 		try {
 			if(offices.length === 0){
 				setLoading({type: 'offices'})
-				const api = await API.graphql(graphqlOperation(listOffices));
+				const api = await API.graphql(graphqlOperation(listOffices, {filter: {deleted: {ne: true}}}));
 				setOffices(api.data.listOffices.items);
 				setLoading({type: ''})
 			}
@@ -162,7 +165,7 @@ const useAdministration = (props) => {
 		try {
 			if(employees.length === 0){
 				setLoading({type: 'employees'})
-				const api = await API.graphql(graphqlOperation(listEmployees));
+				const api = await API.graphql(graphqlOperation(listEmployees, {filter: {deleted: {ne: true}}}));
 				setEmployees(api.data.listEmployees.items);
 				setLoading({type: ''})
 			}

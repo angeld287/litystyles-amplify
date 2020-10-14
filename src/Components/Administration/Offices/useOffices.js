@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { deleteCompanyService, createCompanyService, updateCompanyService } from '../../../graphql/mutations';
+import { updateOffice, createOffice } from '../../../graphql/mutations';
 
 import swal from 'sweetalert';
 
@@ -12,9 +12,8 @@ const useOffices = (props) => {
 
     const [ so, setSelectedObject ] = useState({ service: { name: ''  } });
 
-    const [ service, setService ] = useState('');
-    const [ cost, setCost ] = useState('');
-    const [ serviceName, setServiceName ] = useState('');
+    const [ name, setName ] = useState('');
+    const [ location, setLocation ] = useState('');
 
     const handleClose = () => setShow(false);
 
@@ -41,18 +40,10 @@ const useOffices = (props) => {
                 break;
 
             case 'add':
-                if(service === '')  {
-                    swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
-                    break;
-                }
-    
-                setSelectedObject(object);
-                setCost('0');
+                setName('');
+                setLocation('');
                 setEdit(false);
                 setAdd(true);
-                //var lists = props.ap.ser.services;
-                
-                //setServiceName(lists[lists.findIndex(e => e.id === service)].name);
                 setShow(true);
 
                 break;
@@ -63,19 +54,19 @@ const useOffices = (props) => {
     };
     
     const handleDelete = async (id, i) => {
-        swal({ title: "Esta seguro que desea eliminar el servicio?", icon: "warning", buttons: true, dangerMode: true })
+        swal({ title: "Esta seguro que desea eliminar la oficina?", icon: "warning", buttons: true, dangerMode: true })
         .then( async (willDelete) => {
            if (willDelete) {
 
             try {
-                props.ap.load.setLoading({ type: 'deleteservice'+i });
+                props.ap.load.setLoading({ type: 'deleteoffice'+i });
     
-                var list = props.ap.cser.companyServices;
+                var list = props.ap.off.offices;
     
-                await API.graphql(graphqlOperation(deleteCompanyService, {input: {id: id}}));
+                await API.graphql(graphqlOperation(updateOffice, {input: {id: id, deleted: true, deletedAt: moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z'}}));
                 list.splice(list.findIndex(e => e.id === id), 1);
                 
-                props.ap.cser.setCompanyServices(list);
+                props.ap.off.setOffices(list);
                 props.ap.load.setLoading({ type: '' });
     
             } catch (e) {
@@ -83,43 +74,49 @@ const useOffices = (props) => {
     
                 props.ap.load.setLoading({ type: '' });
     
-                swal({ title: "Agregar Servicio!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
+                swal({ title: "Agregar Oficina!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
             }
              
-            swal({ title: "El registro ha sido eliminado!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+            swal({ title: "El registro ha sido eliminado!", text: "La oficina se ha eliminado correctamente.", type: "error", timer: 2000 });
 
            } else {
-            swal({ title: "Eliminacion Cancelada!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+            swal({ title: "Eliminacion Cancelada!", text: "La eliminacion de la oficina se ha cancelado.", type: "error", timer: 2000 });
            }
          });
     }
 
-    const handleAddService = async () => {
+    const handleAdd = async () => {
         try {
 
-             if(service === '') {
-                 swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+             /* if(service === '') {
+                 swal({ title: "Agregar Oficina!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
                 return;
              }
 
              if(cost.match(/^[0-9]+$/) === null) {
-                swal({ title: "Agregar Servicio!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
+                swal({ title: "Agregar Oficina!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
+                return;
+             } */
+
+             var list = props.ap.off.offices;
+
+             if(list[list.findIndex(e => e.location === location)] !== undefined) {
+                swal({title: "Agregar Oficina!", text: "Ya existe una oficina con esta ubicacion!", type: "error", timer: 2000 });
                 return;
              }
 
-             var list = props.ap.cser.companyServices;
-
-             if(list[list.findIndex(e => e.service.id === service)] !== undefined) {
-                swal({title: "Agregar Servicio!", text: "Este servicio ya existe!", type: "error", timer: 2000 });
+             if(list[list.findIndex(e => e.name === name)] !== undefined) {
+                swal({title: "Agregar Oficina!", text: "Ya existe una oficina con este nombre!", type: "error", timer: 2000 });
                 return;
              }
 
-             props.ap.load.setLoading({type: 'addservice'});
+             props.ap.load.setLoading({type: 'addoffice'});
     
-             const api = await API.graphql(graphqlOperation(createCompanyService, {input: {companyServiceServiceId: service, companyServiceComapnyId: props.ap.state.company.id, cost: cost}}));
-             list.push(api.data.createCompanyService);
+             const api = await API.graphql(graphqlOperation(createOffice, {input: { name: name, location: location }}));
 
-             props.ap.cser.setCompanyServices(list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
+             list.push(api.data.createOffice);
+
+             props.ap.off.setOffices(list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
     
              props.ap.load.setLoading({type: ''});
 
@@ -132,20 +129,20 @@ const useOffices = (props) => {
 
             handleClose()
 
-            swal({title: "Agregar Servicio!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
+            swal({title: "Agregar Oficina!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
 
         }
     }
 
-    const handleEditService = async () => {
+    const handleEdit = async () => {
         try {
 
             if(cost.match(/^[0-9]+$/) === null) {
-               swal({ title: "Editar Servicio!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
+               swal({ title: "Editar Oficina!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
                return;
             }
 
-            props.ap.load.setLoading({type: 'editservice'});
+            props.ap.load.setLoading({type: 'editoffice'});
 
             var list = props.ap.cser.companyServices;
    
@@ -168,12 +165,12 @@ const useOffices = (props) => {
 
            handleClose()
 
-           swal({title: "Editar Servicio!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
+           swal({title: "Editar Oficina!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
 
        }
     }
 
-	return {  add, serviceName, handleAddService, handleEditService, handleDelete, handleClose, handleShow, edit, show, so, cost, setService, setCost };
+	return {  add, serviceName, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, so, cost, setService, setCost };
 };
 
 export default useOffices;
