@@ -6,14 +6,14 @@ import useOffices from './useOffices';
 
 const Offices = (props) => {
 
-    const { add, serviceName, handleAddService, handleEditService, setCost, handleDelete, handleClose, handleShow, edit, show, cost, setService } = useServices(props);
+    const { add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name } = useOffices(props);
  
-    const list = (props.ap.cser.companyServices !== null)?([].concat(props.ap.cser.companyServices)
+    const list = (props.ap.off.offices !== null)?([].concat(props.ap.off.offices)
 		.map((item,i)=>
 			(
 				<tr key={i}>
 					{/* <td>{i+1}</td> */}
-					<td style={{width: 200}}>{item.service.name}</td>
+					<td style={{width: 200}}>{item.name}</td>
 					<td>
                         <ButtonGroup size="sm">
                             <Button intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('view', item);}} ><Icon icon="eye-open"/></Button>
@@ -25,29 +25,14 @@ const Offices = (props) => {
 			)
         )):(<td></td>)
 
-    const servicesList = (props.ap.ser.services !== null)?([].concat(props.ap.ser.services)
-	    .map((item,i)=>
-		(
-            <option key={i} value={item.id}>{item.name}</option>
-		)
-     )):(<td></td>)
-
-    if(props.ap.err.error.type === 'services') return(<div style={{marginTop: 5}}><h5>{props.ap.err.error.message}</h5></div>)
+    if(props.ap.err.error.type === 'offices') return(<div style={{marginTop: 5}}><h5>{props.ap.err.error.message}</h5></div>)
     
-    if(props.ap.load.loading.type === 'services') return(<Spinner/>)
+    if(props.ap.load.loading.type === 'offices') return(<Spinner/>)
         
     return(<Container fluid>
 
         <Row>
-            <Col sm={4}>
-                <Form.Group>
-                    <Form.Control as="select" id="services" onChange={e => setService(e.target.value)}>
-                        <option>Seleccione...</option>
-                        {servicesList}
-                    </Form.Control>
-                </Form.Group>
-            </Col>
-            <Col sm={2}><Button loading={props.ap.load.loading.type === 'addservice'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShow('add', {});}} icon="add"></Button></Col>
+            <Col sm={2}><Button loading={props.ap.load.loading.type === 'addoffice'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShow('add', {});}} icon="add"></Button></Col>
         </Row>
 
         <div style={{marginTop:20}}>
@@ -55,7 +40,7 @@ const Offices = (props) => {
 				<thead>
 					<tr>
 						{/* <th>No.</th> */}
-						<th>Servicio</th>
+						<th>Oficina</th>
 						<th>Acciones</th>
 					</tr>
 				</thead>
@@ -68,16 +53,16 @@ const Offices = (props) => {
         {/* Modal para editar y ver detalle de servicios */}
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>{edit ? 'Editar Servicio' : add ? 'Agregar Servicio' : 'Ver Servicio'}</Modal.Title>
+                <Modal.Title>{edit ? 'Editar Oficina' : add ? 'Agregar Oficina' : 'Ver Oficina'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form.Group controlId="name">
                     <Form.Label>Nombre</Form.Label>
-                    <Form.Control readOnly={true} type="text" value={serviceName} />
+                    <Form.Control type="text" value={name} onChange={ e => setName(e.target.value)}/>
                 </Form.Group>
-                <Form.Group controlId="cost">
-                    <Form.Label>Costo</Form.Label>
-                    <Form.Control readOnly={!edit && !add} type="text" value={cost} onChange={ e => setCost(e.target.value)}/>
+                <Form.Group controlId="location">
+                    <Form.Label>Ubicacion</Form.Label>
+                    <Form.Control readOnly={!edit && !add} type="text" value={location} onChange={ e => setLocation(e.target.value)}/>
                 </Form.Group>
             </Modal.Body>
             <Modal.Footer>
@@ -85,7 +70,7 @@ const Offices = (props) => {
                     Cerrar
                 </Button>
                 {(edit || add) &&
-                    <Button variant="primary" loading={props.ap.load.loading.type === 'addservice' || props.ap.load.loading.type === 'editservice'} onClick={ add ? handleAddService : handleEditService }>
+                    <Button variant="primary" loading={props.ap.load.loading.type === 'addoffice' || props.ap.load.loading.type === 'editoffice'} onClick={ add ? handleAdd : handleEdit }>
                         Guardar
                     </Button>
                 }

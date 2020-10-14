@@ -128,7 +128,7 @@ type Employee
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
         { allow: groups, groups: ["customer"], operations: [read] },
-        { allow: groups, groups: ["company_admin"], operations: [create] },
+        { allow: groups, groups: ["company_admin"], operations: [create, read, update] },
         { allow: owner, ownerField: "name", operations: [update, read] },  
     ]) {
     id: ID!

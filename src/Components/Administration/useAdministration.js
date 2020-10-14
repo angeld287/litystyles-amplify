@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { updateRequest } from '../../graphql/customMutations';
-import { getCompanyProductsAndServices } from '../../graphql/customQueries';
-import { listServices, listProducts, listOffices, listRequests, listEmployees} from '../../graphql/queries';
+import { getCompanyProductsAndServices, listOffices } from '../../graphql/customQueries';
+import { listServices, listProducts, listRequests, listEmployees} from '../../graphql/queries';
 
 const useAdministration = (props) => {
     const [ requests, setRequests ] = useState([]);
@@ -63,7 +63,7 @@ const useAdministration = (props) => {
 		return () => {
 		//	didCancel = true;
 		};
-	}, [requests]);
+	}, [requests, requested]);
 
 	const onSelectTab = (e) => {
 		switch (e) {

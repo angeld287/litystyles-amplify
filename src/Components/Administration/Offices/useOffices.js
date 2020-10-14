@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { updateOffice, createOffice } from '../../../graphql/mutations';
 
+import moment from 'moment';
+
 import swal from 'sweetalert';
 
 const useOffices = (props) => {
@@ -10,7 +12,7 @@ const useOffices = (props) => {
     const [edit, setEdit] = useState(false);
     const [add, setAdd] = useState(false);
 
-    const [ so, setSelectedObject ] = useState({ service: { name: ''  } });
+    const [ so, setSelectedObject ] = useState({});
 
     const [ name, setName ] = useState('');
     const [ location, setLocation ] = useState('');
@@ -21,7 +23,8 @@ const useOffices = (props) => {
         switch (action) {
             case 'edit':
                 setSelectedObject(object);
-                setCost(object.cost);
+                setName(object.name);
+                setLocation(object.location);
                 setEdit(true);
                 setAdd(false);
                 //setServiceName(object.service.name);
@@ -31,7 +34,8 @@ const useOffices = (props) => {
 
             case 'view':
                 setSelectedObject(object);
-                setCost(object.cost);
+                setName(object.name);
+                setLocation(object.location);
                 setEdit(false);
                 setAdd(false);
                 //setServiceName(object.service.name);
@@ -54,14 +58,27 @@ const useOffices = (props) => {
     };
     
     const handleDelete = async (id, i) => {
+        var list = props.ap.off.offices;
+
+        var office = list[list.findIndex(e => e.id === id)]
+
+        if(props.ap.off.offices.length === 1) {
+            swal({title: "Eliminar Oficina!", text: "Esta es la unica oficina que existe, no puede ser eliminada", type: "error", timer: 3000 });
+            return;
+        }
+
+        if(office.employees.items.length > 0) {
+            swal({title: "Eliminar Oficina!", text: "Borre los empleados asignados a esta oficina antes de eliminarla", type: "error", timer: 3000 });
+            return;
+        }
+
+
         swal({ title: "Esta seguro que desea eliminar la oficina?", icon: "warning", buttons: true, dangerMode: true })
         .then( async (willDelete) => {
            if (willDelete) {
 
             try {
                 props.ap.load.setLoading({ type: 'deleteoffice'+i });
-    
-                var list = props.ap.off.offices;
     
                 await API.graphql(graphqlOperation(updateOffice, {input: {id: id, deleted: true, deletedAt: moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z'}}));
                 list.splice(list.findIndex(e => e.id === id), 1);
@@ -137,22 +154,17 @@ const useOffices = (props) => {
     const handleEdit = async () => {
         try {
 
-            if(cost.match(/^[0-9]+$/) === null) {
-               swal({ title: "Editar Oficina!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
-               return;
-            }
-
             props.ap.load.setLoading({type: 'editoffice'});
 
-            var list = props.ap.cser.companyServices;
+            var list = props.ap.off.offices;
    
-            const api = await API.graphql(graphqlOperation(updateCompanyService, {input: {id: so.id, cost: cost}}));
+            const api = await API.graphql(graphqlOperation(updateOffice, {input: {id: so.id, location: location, name: name}}));
 
             list.splice(list.findIndex(e => e.id === so.id), 1);
 
-            list.push(api.data.updateCompanyService);
+            list.push(api.data.updateOffice);
 
-            props.ap.cser.setCompanyServices(list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
+            props.ap.off.setOffices(list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
    
             props.ap.load.setLoading({type: ''});
 
@@ -170,7 +182,7 @@ const useOffices = (props) => {
        }
     }
 
-	return {  add, serviceName, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, so, cost, setService, setCost };
+	return {  add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, so, setLocation, setName, location, name };
 };
 
 export default useOffices;
