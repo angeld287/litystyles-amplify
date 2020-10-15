@@ -81,9 +81,6 @@ const useAdministration = (props) => {
 				_getCompanyData(e);
 				_products();
 				break;
-			case 'employees':
-				_employees();
-				break;
 		
 			default:
 				break;
@@ -161,23 +158,6 @@ const useAdministration = (props) => {
 		}
 	}
 
-	const _employees = async () => {
-		try {
-			if(employees.length === 0){
-				setLoading({type: 'employees'})
-				const api = await API.graphql(graphqlOperation(listEmployees, {filter: {deleted: {ne: true}}}));
-				setEmployees(api.data.listEmployees.items);
-				setLoading({type: ''})
-			}
-		} catch (e) {
-			setError({
-				type: 'employees',
-				message: 'Error al buscar los empleados'
-			})
-			setLoading({type: ''})
-		}
-	}
-
 
 	const ap = {
 		req: {
@@ -197,6 +177,10 @@ const useAdministration = (props) => {
 		off: {
 			offices,
 			setOffices
+		},
+		emp: {
+			employees,
+			setEmployees
 		},
 		ser: {
 			services,

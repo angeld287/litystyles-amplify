@@ -179,6 +179,17 @@ export const listOffices = /* GraphQL */ `
         employees {
           items {
             id
+            name
+            username
+            officeId
+            services {
+              items {
+                service {
+                  name
+                  id
+                }
+              }
+            }
           }
         }
         location

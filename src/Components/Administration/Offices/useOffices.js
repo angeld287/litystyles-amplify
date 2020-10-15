@@ -16,6 +16,7 @@ const useOffices = (props) => {
 
     const [ name, setName ] = useState('');
     const [ location, setLocation ] = useState('');
+    const [ employees, setEmployess ] = useState([]);
 
     const handleClose = () => setShow(false);
 
@@ -36,6 +37,7 @@ const useOffices = (props) => {
                 setSelectedObject(object);
                 setName(object.name);
                 setLocation(object.location);
+                setEmployess(object.employees.items)
                 setEdit(false);
                 setAdd(false);
                 //setServiceName(object.service.name);
@@ -182,7 +184,7 @@ const useOffices = (props) => {
        }
     }
 
-	return {  add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, so, setLocation, setName, location, name };
+	return {  add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, so, setLocation, setName, location, name, employees };
 };
 
 export default useOffices;

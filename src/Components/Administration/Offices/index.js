@@ -3,10 +3,11 @@ import { Table, Container, Row, Col, ButtonGroup, Modal, Form } from 'react-boot
 import { Button, Spinner, Icon } from "@blueprintjs/core";
 
 import useOffices from './useOffices';
+import Employess from './Employees/Employess';
 
 const Offices = (props) => {
 
-    const { add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name } = useOffices(props);
+    const { add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees } = useOffices(props);
  
     const list = (props.ap.off.offices !== null)?([].concat(props.ap.off.offices)
 		.map((item,i)=>
@@ -58,12 +59,13 @@ const Offices = (props) => {
             <Modal.Body>
                 <Form.Group controlId="name">
                     <Form.Label>Nombre</Form.Label>
-                    <Form.Control type="text" value={name} onChange={ e => setName(e.target.value)}/>
+                    <Form.Control readOnly={!edit && !add} type="text" value={name} onChange={ e => setName(e.target.value)}/>
                 </Form.Group>
                 <Form.Group controlId="location">
                     <Form.Label>Ubicacion</Form.Label>
                     <Form.Control readOnly={!edit && !add} type="text" value={location} onChange={ e => setLocation(e.target.value)}/>
                 </Form.Group>
+                <Employess employess={employees} ap={props.ap}/>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
