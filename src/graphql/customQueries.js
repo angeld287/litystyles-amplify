@@ -184,6 +184,7 @@ export const listOffices = /* GraphQL */ `
             officeId
             services {
               items {
+                id
                 service {
                   name
                   id

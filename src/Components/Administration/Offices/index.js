@@ -3,7 +3,7 @@ import { Table, Container, Row, Col, ButtonGroup, Modal, Form } from 'react-boot
 import { Button, Spinner, Icon } from "@blueprintjs/core";
 
 import useOffices from './useOffices';
-import Employess from './Employees/Employess';
+import Employess from './Employees/Employees';
 
 const Offices = (props) => {
 
@@ -17,9 +17,9 @@ const Offices = (props) => {
 					<td style={{width: 200}}>{item.name}</td>
 					<td>
                         <ButtonGroup size="sm">
-                            <Button intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('view', item);}} ><Icon icon="eye-open"/></Button>
-                            <Button intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('edit', item);}} ><Icon icon="edit"/></Button>
-                            <Button intent={"Primary"} onClick={e => { e.preventDefault(); handleDelete(item.id, i);}} loading={props.ap.load.loading.type === 'deleteservice'+i} ><Icon icon="trash"/></Button>
+                            <Button style={{marginRight: 1}} intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('view', item);}} ><Icon icon="eye-open"/></Button>
+                            <Button style={{marginRight: 1}} intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('edit', item);}} ><Icon icon="edit"/></Button>
+                            <Button style={{marginRight: 1}} intent={"Primary"} onClick={e => { e.preventDefault(); handleDelete(item.id, i);}} loading={props.ap.load.loading.type === 'deleteservice'+i} ><Icon icon="trash"/></Button>
                         </ButtonGroup>
                     </td>
 				</tr>

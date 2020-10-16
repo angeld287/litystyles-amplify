@@ -20,7 +20,7 @@ const Administration = (props) => {
 					<td>{i+1}</td>
 					<td style={{width: 200}}>{item.customerName}</td>
 					<td>{item.state}</td>
-					<td><Button intent="Danger" icon="delete" onClick={e => { e.preventDefault(); cancelRequest(item.id)}}>Anular Solicitud</Button></td>
+					<td><Button style={{marginRight: 1}} intent="Danger" icon="delete" onClick={e => { e.preventDefault(); cancelRequest(item.id)}}>Anular Solicitud</Button></td>
 				</tr>
 			)
 		)):(<td></td>)

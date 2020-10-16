@@ -26,6 +26,7 @@ const useOffices = (props) => {
                 setSelectedObject(object);
                 setName(object.name);
                 setLocation(object.location);
+                setEmployess(object.employees.items)
                 setEdit(true);
                 setAdd(false);
                 //setServiceName(object.service.name);

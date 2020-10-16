@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { updateRequest } from '../../graphql/customMutations';
 import { getCompanyProductsAndServices, listOffices } from '../../graphql/customQueries';
-import { listServices, listProducts, listRequests, listEmployees} from '../../graphql/queries';
+import { listServices, listProducts, listRequests, /* listEmployees */} from '../../graphql/queries';
 
 const useAdministration = (props) => {
     const [ requests, setRequests ] = useState([]);
@@ -72,6 +72,7 @@ const useAdministration = (props) => {
 				break;
 			case 'offices':
 				_offices();
+				_getCompanyData('services');
 				break;
 			case 'services':
 				_getCompanyData(e);
