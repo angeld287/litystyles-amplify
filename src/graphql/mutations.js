@@ -13,6 +13,7 @@ export const createCompany = /* GraphQL */ `
       offices {
         items {
           id
+          name
           administrator
           location
           deleted
@@ -57,6 +58,7 @@ export const updateCompany = /* GraphQL */ `
       offices {
         items {
           id
+          name
           administrator
           location
           deleted
@@ -101,6 +103,7 @@ export const deleteCompany = /* GraphQL */ `
       offices {
         items {
           id
+          name
           administrator
           location
           deleted
@@ -419,6 +422,7 @@ export const createOffice = /* GraphQL */ `
   ) {
     createOffice(input: $input, condition: $condition) {
       id
+      name
       administrator
       employees {
         items {
@@ -448,6 +452,7 @@ export const updateOffice = /* GraphQL */ `
   ) {
     updateOffice(input: $input, condition: $condition) {
       id
+      name
       administrator
       employees {
         items {
@@ -477,6 +482,7 @@ export const deleteOffice = /* GraphQL */ `
   ) {
     deleteOffice(input: $input, condition: $condition) {
       id
+      name
       administrator
       employees {
         items {

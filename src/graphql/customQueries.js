@@ -164,3 +164,42 @@ export const listRequestsPerDay = /* GraphQL */ `
     }
   }
 `;
+
+export const listOffices = /* GraphQL */ `
+  query ListOffices(
+    $filter: ModelOfficeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listOffices(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        administrator
+        employees {
+          items {
+            id
+            name
+            username
+            officeId
+            services {
+              items {
+                id
+                service {
+                  name
+                  id
+                }
+              }
+            }
+          }
+        }
+        location
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;

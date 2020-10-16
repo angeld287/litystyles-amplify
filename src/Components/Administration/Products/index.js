@@ -16,9 +16,9 @@ const Products = (props) => {
 					<td style={{width: 200}}>{item.product.name}</td>
 					<td>
                         <ButtonGroup size="sm">
-                            <Button intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('view', item);}} ><Icon icon="eye-open"/></Button>
-                            <Button intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('edit', item);}} ><Icon icon="edit"/></Button>
-                            <Button intent={"Primary"} onClick={e => { e.preventDefault(); handleDelete(item.id, i);}} loading={props.ap.load.loading.type === 'deleteproduct'+i} ><Icon icon="trash"/></Button>
+                            <Button style={{marginRight: 1}} intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('view', item);}} ><Icon icon="eye-open"/></Button>
+                            <Button style={{marginRight: 1}} intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('edit', item);}} ><Icon icon="edit"/></Button>
+                            <Button style={{marginRight: 1}} intent={"Primary"} onClick={e => { e.preventDefault(); handleDelete(item.id, i);}} loading={props.ap.load.loading.type === 'deleteproduct'+i} ><Icon icon="trash"/></Button>
                         </ButtonGroup>
                     </td>
 				</tr>

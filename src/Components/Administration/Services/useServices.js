@@ -83,13 +83,13 @@ const useServices = (props) => {
     
                 props.ap.load.setLoading({ type: '' });
     
-                swal({ title: "Agregar Servicio!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
+                swal({ title: "Eliminar Servicio!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
             }
              
-            swal({ title: "El registro ha sido eliminado!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+            swal({ title: "El registro ha sido eliminado!", text: "Se ha eliminado el servicio correctamente.", type: "error", timer: 2000 });
 
            } else {
-            swal({ title: "Eliminacion Cancelada!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+            swal({ title: "Eliminacion Cancelada!", text: "Se ha cancelado la eliminacion del servicio.", type: "error", timer: 2000 });
            }
          });
     }

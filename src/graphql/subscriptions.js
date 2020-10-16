@@ -95,6 +95,7 @@ export const onCreateCompany = /* GraphQL */ `
       offices {
         items {
           id
+          name
           administrator
           location
           deleted
@@ -136,6 +137,7 @@ export const onUpdateCompany = /* GraphQL */ `
       offices {
         items {
           id
+          name
           administrator
           location
           deleted
@@ -177,6 +179,7 @@ export const onDeleteCompany = /* GraphQL */ `
       offices {
         items {
           id
+          name
           administrator
           location
           deleted
@@ -474,6 +477,7 @@ export const onCreateOffice = /* GraphQL */ `
   subscription OnCreateOffice($owner: String) {
     onCreateOffice(owner: $owner) {
       id
+      name
       administrator
       employees {
         items {
@@ -500,6 +504,7 @@ export const onUpdateOffice = /* GraphQL */ `
   subscription OnUpdateOffice($owner: String) {
     onUpdateOffice(owner: $owner) {
       id
+      name
       administrator
       employees {
         items {
@@ -526,6 +531,7 @@ export const onDeleteOffice = /* GraphQL */ `
   subscription OnDeleteOffice($owner: String) {
     onDeleteOffice(owner: $owner) {
       id
+      name
       administrator
       employees {
         items {

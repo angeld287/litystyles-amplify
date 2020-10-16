@@ -12,6 +12,9 @@ const Line = (props) =>  {
           <h2>Ingresos Mensuales</h2>
           <SelectMonth rp={rp} />
           <L useRef="chart" data={props.data} />
+          <div style={{marginTop: 20}}>
+              <h5>Total de Ingresos: RD$ {rp.tgearnings}.00</h5>
+          </div>
         </Container>
       </div>
     );
