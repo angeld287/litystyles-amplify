@@ -11,10 +11,12 @@ import {
     Position,
 } from "@blueprintjs/core";
 
+import { AuthState } from '@aws-amplify/ui-components';
+
 export default class HeaderLinks extends Component {
 	handlesignOut = () => {
 		Auth.signOut().then((d) => {
-			window.location.reload();
+			//window.location.reload();
 		});
     };
     
@@ -26,7 +28,7 @@ export default class HeaderLinks extends Component {
 
         const userMenu = (
             <Menu>
-                <MenuItem icon="log-out" text="LogOut" onClick={this.handlesignOut} />
+                <MenuItem icon="log-out" text="LogOut" onClick={ (e) => { e.preventDefault(); this.handlesignOut();}} />
             </Menu>
         );
 
@@ -43,12 +45,11 @@ export default class HeaderLinks extends Component {
                 </Navbar.Group>
                 <Navbar.Group align={Alignment.RIGHT}>
                     <Navbar.Divider />
-                    {this.props.cp.isLoggedIn && ( 
+                    {this.props.cp.authState === AuthState.SignedIn && ( 
                         <Popover content={userMenu} position={Position.BOTTOM}>
                             <Button icon="user" text=""/>
                         </Popover>
                     )}
-                    {!this.props.cp.isLoggedIn && (<Button onClick={(e) => {e.preventDefault(); this.redirect('/signin')}} className="bp3-minimal" text="Login" />)}
                 </Navbar.Group>
             </Navbar>
 		);

@@ -14,7 +14,7 @@
         "categories": {
             "auth": {
                 "littystyle0826a386": {
-                    "hostedUIProviderCreds": "[]"
+                    "hostedUIProviderCreds": "[{\"ProviderName\":\"Google\",\"client_id\":\"514896478290-kobem1vjg4onrqr44vm4dfb5en7mksam.apps.googleusercontent.com\",\"client_secret\":\"GKmoJZVcM_MB83q0ThbEKY_B\"}]"
                 }
             }
         }
