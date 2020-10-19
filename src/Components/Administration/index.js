@@ -5,6 +5,7 @@ import { Tabs, Tab, Table } from 'react-bootstrap';
 import useAdministration from './useAdministration';
 import Services from './Services';
 import Products from './Products';
+import Offices from './Offices';
 
 const Administration = (props) => {
 
@@ -18,7 +19,8 @@ const Administration = (props) => {
 				<tr key={i}>
 					<td>{i+1}</td>
 					<td style={{width: 200}}>{item.customerName}</td>
-					<td><Button intent="Danger" icon="delete" onClick={e => { e.preventDefault(); cancelRequest(item.id)}}>Anular Solicitud</Button></td>
+					<td>{item.state}</td>
+					<td><Button style={{marginRight: 1}} intent="Danger" icon="delete" onClick={e => { e.preventDefault(); cancelRequest(item.id)}}>Anular Solicitud</Button></td>
 				</tr>
 			)
 		)):(<td></td>)
@@ -29,20 +31,28 @@ const Administration = (props) => {
 				<Tab eventKey="requests" title={<Icon icon="numbered-list" />}>
 					<div style={{marginTop: 5}}>
 						<h5>Solicitudes Activas</h5>
-						<div style={{marginTop:20}}>
-							<Table striped bordered hover>
-								<thead>
-									<tr>
-										<th>No.</th>
-										<th>Cliente</th>
-										<th>Acciones</th>
-									</tr>
-								</thead>
-								<tbody>
-									{_requests}
-								</tbody>
-							</Table>
-						</div>
+						{ap.load.loading.type !== 'requests' && 
+							<div style={{marginTop:20}}>
+								<Table striped bordered hover>
+									<thead>
+										<tr>
+											<th>No.</th>
+											<th>Cliente</th>
+											<th>State</th>
+											<th>Acciones</th>
+										</tr>
+									</thead>
+									<tbody>
+										{_requests}
+									</tbody>
+								</Table>
+							</div>
+						}
+						{ap.load.loading.type === 'requests' &&
+							<div style={{marginTop:20}}>
+								<Spinner/>
+							</div>
+						}
 						<div>
 							<Alert isOpen={cancelOverlay} align="center" canOutsideClickCancel={true} onClose={e => {setCancelOverlay(e)}} cancelButtonText="Cancelar"
 									confirmButtonText="Confirmar" onConfirm={confirmCancelRequest}>
@@ -57,7 +67,8 @@ const Administration = (props) => {
 				</Tab>
 				<Tab eventKey="offices" title={<Icon icon="office" />}>
 					<div style={{marginTop: 5}}>
-						<h5>Oficinas</h5>
+						<h4>Esta parte esta en fase de construccion</h4>
+						{/* <Offices ap={ap}/> */}
 					</div>
 				</Tab>
 				<Tab eventKey="services" title={<Icon icon="cog" />}>

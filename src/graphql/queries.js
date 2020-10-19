@@ -10,6 +10,7 @@ export const getCompany = /* GraphQL */ `
       offices {
         items {
           id
+          name
           administrator
           location
           deleted
@@ -75,6 +76,7 @@ export const getOffice = /* GraphQL */ `
   query GetOffice($id: ID!) {
     getOffice(id: $id) {
       id
+      name
       administrator
       employees {
         items {
@@ -106,6 +108,7 @@ export const listOffices = /* GraphQL */ `
     listOffices(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        name
         administrator
         employees {
           nextToken

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { updateRequest } from '../../graphql/mutations';
-import { getCompanyProductsAndServices } from '../../graphql/customQueries';
-import { listServices, listProducts, listOffices, listRequests, listEmployees} from '../../graphql/queries';
+import { updateRequest } from '../../graphql/customMutations';
+import { getCompanyProductsAndServices, listOffices } from '../../graphql/customQueries';
+import { listServices, listProducts, listRequests, /* listEmployees */} from '../../graphql/queries';
 
 const useAdministration = (props) => {
     const [ requests, setRequests ] = useState([]);
+    const [ requested, setRequested ] = useState(false);
     const [ companyServices, setCompanyServices ] = useState([]);
     const [ companyProducts, setCompanyProducts ] = useState([]);
     const [ offices, setOffices ] = useState([]);
@@ -31,20 +32,47 @@ const useAdministration = (props) => {
 	useEffect(() => {
 		//let didCancel = false;
 
-		
+		const _requests = async () => {
+			try {
+				const filter = {
+					and: [
+						{state: {ne: 'FINISHED'}},
+						{state: {ne: 'CANCELED'}},
+					]
+				}
+	
+				if(requests.length === 0 || !requested){
+					setLoading({type: 'requests'})
+					const api = await API.graphql(graphqlOperation(listRequests, { filter: filter, limit: 1000 } ));
+					
+					setRequests(api.data.listRequests.items);
+					setRequested(true);
+					setLoading({type: ''})
+				}
+			} catch (e) {
+				setError({
+					type: 'requests',
+					message: 'Error al buscar las solicitudes'
+				})
+				setLoading({type: ''})
+			}
+		}
+
+		_requests();
 
 		return () => {
 		//	didCancel = true;
 		};
-	}, []);
+	}, [requests, requested]);
 
 	const onSelectTab = (e) => {
 		switch (e) {
 			case 'requests':
-				_requests();
+				//_requests();
 				break;
 			case 'offices':
 				_offices();
+				_getCompanyData('services');
 				break;
 			case 'services':
 				_getCompanyData(e);
@@ -53,9 +81,6 @@ const useAdministration = (props) => {
 			case 'products':
 				_getCompanyData(e);
 				_products();
-				break;
-			case 'employees':
-				_employees();
 				break;
 		
 			default:
@@ -68,7 +93,7 @@ const useAdministration = (props) => {
 		try {
 			if(services.length === 0){
 				//setLoading({type: 'services'})
-				const api = await API.graphql(graphqlOperation(listServices));
+				const api = await API.graphql(graphqlOperation(listServices, {filter: {deleted: {ne: true}}}));
 				setServices(api.data.listServices.items);
 				setLoading({type: ''})
 			}
@@ -85,7 +110,7 @@ const useAdministration = (props) => {
 		try {
 			if(products.length === 0){
 				setLoading({type: 'products'})
-				const api = await API.graphql(graphqlOperation(listProducts));
+				const api = await API.graphql(graphqlOperation(listProducts, {filter: {deleted: {ne: true}}}));
 				setProducts(api.data.listProducts.items);
 				setLoading({type: ''})
 			}
@@ -98,28 +123,11 @@ const useAdministration = (props) => {
 		}
 	}
 
-	const _requests = async () => {
-		try {
-			if(requests.length === 0){
-				setLoading({type: 'requests'})
-				const api = await API.graphql(graphqlOperation(listRequests));
-				setRequests(api.data.listRequests.items);
-				setLoading({type: ''})
-			}
-		} catch (e) {
-			setError({
-				type: 'requests',
-				message: 'Error al buscar las solicitudes'
-			})
-			setLoading({type: ''})
-		}
-	}
-
 	const _offices = async () => {
 		try {
 			if(offices.length === 0){
 				setLoading({type: 'offices'})
-				const api = await API.graphql(graphqlOperation(listOffices));
+				const api = await API.graphql(graphqlOperation(listOffices, {filter: {deleted: {ne: true}}}));
 				setOffices(api.data.listOffices.items);
 				setLoading({type: ''})
 			}
@@ -149,24 +157,6 @@ const useAdministration = (props) => {
 			})
 			setLoading({type: ''})
 		}
-
-	}
-
-	const _employees = async () => {
-		try {
-			if(employees.length === 0){
-				setLoading({type: 'employees'})
-				const api = await API.graphql(graphqlOperation(listEmployees));
-				setEmployees(api.data.listEmployees.items);
-				setLoading({type: ''})
-			}
-		} catch (e) {
-			setError({
-				type: 'employees',
-				message: 'Error al buscar los empleados'
-			})
-			setLoading({type: ''})
-		}
 	}
 
 
@@ -188,6 +178,10 @@ const useAdministration = (props) => {
 		off: {
 			offices,
 			setOffices
+		},
+		emp: {
+			employees,
+			setEmployees
 		},
 		ser: {
 			services,
@@ -225,7 +219,8 @@ const useAdministration = (props) => {
 		.catch(e => {
 			setCancelError(true);
 			setCancelLoading(false);
-			setCancelErrorMessage(e);
+			console.log(e)
+			setCancelErrorMessage('Ha ocurrido un error al cancelar la solicitud');
 		});
 	}
 
@@ -233,4 +228,3 @@ const useAdministration = (props) => {
 };
 
 export default useAdministration;
-

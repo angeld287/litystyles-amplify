@@ -13,8 +13,11 @@ const useReports = () => {
 	const [ year, setYear ] = useState('');
 
 	const [ results, setResults ] = useState([]); 
+	const [ dayResults, setDayResults ] = useState([]); 
 	const [ gearnings, setEarnings ] = useState([]); 
+	const [ tgearnings, setTotalEarnings ] = useState(0); 
 	const [ grequests, setRequests ] = useState([]); 
+	const [ tgrequests, setTotalRequests ] = useState(0); 
 
 	const [ gservicesn, setEargingByServicesn ] = useState([]); 
 	const [ gservices, setEargingByServices ] = useState([]); 
@@ -31,17 +34,37 @@ const useReports = () => {
 
 		try {
 			setSearchLoading(true);
-			const r = await API.graphql(graphqlOperation(listRequestsPerDay, {
-				filter: {
-				  and: [
-					{createdAt: {gt: String(moment(date).format('YYYY-MM-DDT')+'00:00:00.000')}}, 
-					{createdAt: {lt: String(moment(date).format('YYYY-MM-DDT')+'23:59:59.000')}},
-				  ]
-				},
-				limit: 500
-			}))
-			
-			setRequestsSearch(r.data.listRequests.items)
+
+			var _results = dayResults;
+			var _date = String(moment(date).format('YYYY-MM-DDT')+'00:00:00.000');
+
+			var prior_request = _results[_results.findIndex(e => e.id === _date)];
+
+			if(prior_request !== undefined){
+				setRequestsSearch(prior_request.data)
+			}else{
+				
+
+				var result = {id: _date, data: []};
+
+				const r = await API.graphql(graphqlOperation(listRequestsPerDay, {
+					filter: {
+					  and: [
+						{createdAt: {gt: _date}}, 
+						{createdAt: {lt: String(moment(date).format('YYYY-MM-DDT')+'23:59:59.000')}},
+					  ]
+					},
+					limit: 1000
+				}))
+
+				result.data = r.data.listRequests.items;
+
+				_results.push(result);
+
+				setDayResults(_results);
+				
+				setRequestsSearch(r.data.listRequests.items)
+			}
 		} catch (e) {
 			setSearchLoading(false);
 			setSearchError(true);
@@ -112,6 +135,8 @@ const useReports = () => {
 		var eresult = [];
 		var snresult = [];
 		var sresult = [];
+		var totalR = data.length;
+		var totalE = 0;
 
 		for (let i = 0; i <= parseInt(getLastDay(month)); i++) {
 			rresult.push(0);
@@ -122,8 +147,10 @@ const useReports = () => {
 			//console.log(e);
 			var date = new Date(e.createdAt);
 			var service = e.service.items[0].service.name;
-			var cost = e.service.items[0].service.cost;
+			var cost = e.service.items[0].cost === null ? e.service.items[0].service.cost : e.service.items[0].cost;
 			
+			totalE = parseInt(cost) + parseInt(totalE);
+
 			if(snresult.findIndex(e => e === service) === -1){
 				snresult.push(service);
 				sresult.push(parseInt(cost));
@@ -139,6 +166,8 @@ const useReports = () => {
 		setEarnings(eresult)
 		setEargingByServicesn(snresult);
 		setEargingByServices(sresult);
+		setTotalEarnings(totalE);
+		setTotalRequests(totalR);
 	} 
 
 	const getLastDay = (m) => {
@@ -253,6 +282,8 @@ const useReports = () => {
 		setRequests([]);
 		setEargingByServices([]);
 		setEargingByServicesn([]);
+		setTotalEarnings(0);
+		setTotalRequests(0);
 	}
 
 	
@@ -271,6 +302,8 @@ const useReports = () => {
 			setLoading
 		},
 		setInitialStates,
+		tgearnings,
+		tgrequests
 	}
 
 	return { rp, barData, pieData, lineData, requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay };
