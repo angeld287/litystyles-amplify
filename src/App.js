@@ -21,12 +21,10 @@ Amplify.configure(aws_exports);
 
 const AuthStateApp = () => {
   const [authState, setAuthState] = useState();
-  const [user, setUser] = useState();
 
   useEffect(() => {
       return onAuthUIStateChange((nextAuthState, authData) => {
           setAuthState(nextAuthState);
-          setUser(authData);
       });
   }, []);
   
@@ -36,7 +34,7 @@ const AuthStateApp = () => {
     Auth.federatedSignIn({provider: "Google"});
   };
 
-  return authState === AuthState.SignedIn && user ? (
+  return authState === AuthState.SignedIn ? (
       <div>
           <AppWithRouter authState={authState}/>
           {/* <AmplifySignOut /> */}
@@ -47,7 +45,7 @@ const AuthStateApp = () => {
       :(<div style={{marginTop: 30}}>
         <div align="center" style={{width: 300, margin: 'auto'}}>
           <Card interactive={true} elevation={Elevation.TWO}>
-            <button onClick={(e) => {e.preventDefault(); googleFederated();}} class="loginBtn loginBtn--google">
+            <button onClick={(e) => {e.preventDefault(); googleFederated();}} className="loginBtn loginBtn--google">
               Login with Google
             </button>
           </Card>

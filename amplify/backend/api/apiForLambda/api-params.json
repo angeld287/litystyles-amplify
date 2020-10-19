@@ -1,0 +1,34 @@
+{
+    "paths": [
+        {
+            "name": "/addUserToGroup",
+            "lambdaFunction": "littyStylesFunctions",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "apiForLambda",
+    "apiName": "apiForLambda",
+    "functionArns": [
+        {
+            "lambdaFunction": "littyStylesFunctions"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-littystyle-dev-114547-authRole",
+        "unAuthRoleName": "amplify-littystyle-dev-114547-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "littyStylesFunctions",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
