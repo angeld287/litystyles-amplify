@@ -67,7 +67,8 @@ const Administration = (props) => {
 				</Tab>
 				<Tab eventKey="offices" title={<Icon icon="office" />}>
 					<div style={{marginTop: 5}}>
-						<Offices ap={ap}/>
+						<h4>Esta parte esta en fase de construccion</h4>
+						{/* <Offices ap={ap}/> */}
 					</div>
 				</Tab>
 				<Tab eventKey="services" title={<Icon icon="cog" />}>
