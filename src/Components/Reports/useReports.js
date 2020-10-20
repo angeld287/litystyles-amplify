@@ -6,7 +6,8 @@ import swal from 'sweetalert';
 
 import moment from "moment";
 
-const useReports = () => {
+const useReports = (props) => {
+	
     const [ requestsSearch, setRequestsSearch ] = useState([]);
 	const [ date, setDate ] = useState(new Date());
 	const [ month, setMonth ] = useState('');
@@ -43,7 +44,6 @@ const useReports = () => {
 			if(prior_request !== undefined){
 				setRequestsSearch(prior_request.data)
 			}else{
-				
 
 				var result = {id: _date, data: []};
 
@@ -52,6 +52,7 @@ const useReports = () => {
 					  and: [
 						{createdAt: {gt: _date}}, 
 						{createdAt: {lt: String(moment(date).format('YYYY-MM-DDT')+'23:59:59.000')}},
+						{companyId: {eq: props.state.company.id}},
 					  ]
 					},
 					limit: 1000
@@ -111,6 +112,7 @@ const useReports = () => {
 					{createdAt: {gt: String(start)}}, 
 					{createdAt: {lt: String(end)}},
 					{state: {eq: 'FINISHED'}},
+					{companyId: {eq: props.state.company.id}},
 				]
 			}
 			
@@ -276,7 +278,6 @@ const useReports = () => {
 		return monthsObjects
 	}
 
-
 	const setInitialStates = () => {
 		setEarnings([]);
 		setRequests([]);
@@ -285,8 +286,6 @@ const useReports = () => {
 		setTotalEarnings(0);
 		setTotalRequests(0);
 	}
-
-	
 
 	const rp = {
 		date: {

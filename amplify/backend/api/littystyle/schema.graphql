@@ -12,7 +12,6 @@ type Company
 
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
-        { allow: groups, groups: ["company_admin"] },
         { allow: groups, groups: ["customer"], operations: [read] },
         { allow: groups, groups: ["employee"], operations: [read] }
     ]) {
@@ -53,7 +52,6 @@ type Office
 
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
-        { allow: groups, groups: ["company_admin"] },
         { allow: groups, groups: ["customer"], operations: [read] },
         { allow: groups, groups: ["employee"], operations: [read] }
     ]) {

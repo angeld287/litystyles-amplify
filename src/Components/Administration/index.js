@@ -67,8 +67,7 @@ const Administration = (props) => {
 				</Tab>
 				<Tab eventKey="offices" title={<Icon icon="office" />}>
 					<div style={{marginTop: 5}}>
-						<h4>Esta parte esta en fase de construccion</h4>
-						{/* <Offices ap={ap}/> */}
+						<Offices ap={ap}/>
 					</div>
 				</Tab>
 				<Tab eventKey="services" title={<Icon icon="cog" />}>
@@ -81,11 +80,11 @@ const Administration = (props) => {
 						<Products ap={ap}/>
 					</div>
 				</Tab>
-				<Tab eventKey="employees" title={<Icon icon="inherited-group" />}>
+				{/* <Tab eventKey="employees" title={<Icon icon="inherited-group" />}>
 					<div style={{marginTop: 5}}>
 						<h5>Empleados</h5>
 					</div>
-				</Tab>
+				</Tab> */}
 			</Tabs>
         </div>
 	);

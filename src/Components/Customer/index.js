@@ -131,7 +131,7 @@ const Customer = (props) => {
 			<ControlGroup fill={true} vertical={false}>
 				{ step === 0 &&
 					<div>
-						{ ((products.length > 0) || (services.length > 0)) &&
+						{ (((products.length > 0) || (services.length > 0)) && (employees.length > 0)) &&
 							<ControlGroup fill={true} vertical={true} style={{margin: 50}}/* onMouseEnter={} */>
 								<InputGroup
 									style={{fontSize: "70px", margin: 10, height: 100}}
@@ -149,7 +149,14 @@ const Customer = (props) => {
 						{ (!(products.length > 0) && !(services.length > 0)) &&
 							<div>
 								<Callout style={{ marginTop: "40px"}} title="ESTA EMPRESA NO TIENE PRODUCTO NI SERVICIOS REGISTRADOS!" intent="Danger" >
-									Debe solicitar al administrador de la empresa que registre los servicios y productos para que muestren en esta pantalla.
+									Debe solicitar al administrador de la empresa que registre los servicios y productos para que se muestren en esta pantalla.
+								</Callout>
+							</div>
+						}
+						{ !(employees.length > 0) &&
+							<div>
+								<Callout style={{ marginTop: "40px"}} title="ESTA EMPRESA NO TIENE EMPLEADOS REGISTRADOS!" intent="Danger" >
+									Debe solicitar al administrador de la empresa que registre los emplados para que muestren se en esta pantalla.
 								</Callout>
 							</div>
 						}

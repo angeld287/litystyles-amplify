@@ -3,6 +3,14 @@
     getCompany(id: $id) {
       id
       name
+      offices {
+        items {
+          name
+          location
+          id
+          administrator
+        }
+      }
       services {
         items {
           id

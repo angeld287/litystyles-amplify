@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { updateRequest } from '../../graphql/customMutations';
-import { getCompanyProductsAndServices, listOffices } from '../../graphql/customQueries';
+import { getCompanyProductsAndServices/* , listOffices */ } from '../../graphql/customQueries';
 import { listServices, listProducts, listRequests, /* listEmployees */} from '../../graphql/queries';
 
 const useAdministration = (props) => {
@@ -38,6 +38,7 @@ const useAdministration = (props) => {
 					and: [
 						{state: {ne: 'FINISHED'}},
 						{state: {ne: 'CANCELED'}},
+						{companyId: {eq: props.state.company.id}},
 					]
 				}
 	
@@ -63,7 +64,7 @@ const useAdministration = (props) => {
 		return () => {
 		//	didCancel = true;
 		};
-	}, [requests, requested]);
+	}, [requests, requested, props]);
 
 	const onSelectTab = (e) => {
 		switch (e) {
@@ -71,8 +72,8 @@ const useAdministration = (props) => {
 				//_requests();
 				break;
 			case 'offices':
-				_offices();
-				_getCompanyData('services');
+				//_offices();
+				_getCompanyData('offices');
 				break;
 			case 'services':
 				_getCompanyData(e);
@@ -123,7 +124,7 @@ const useAdministration = (props) => {
 		}
 	}
 
-	const _offices = async () => {
+	/* const _offices = async () => {
 		try {
 			if(offices.length === 0){
 				setLoading({type: 'offices'})
@@ -138,15 +139,16 @@ const useAdministration = (props) => {
 			})
 			setLoading({type: ''})
 		}
-	}
+	} */
 
 	const _getCompanyData = async (type) => {
 		try {
-			if(companyProducts.length === 0 || companyServices.length === 0){
+			if(companyProducts.length === 0 || companyServices.length === 0 || offices.length === 0){
 				setLoading({type: type})
 				const api = await API.graphql(graphqlOperation(getCompanyProductsAndServices, {id: props.state.company.id}));
 				setCompanyProducts(api.data.getCompany.products.items.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
 				setCompanyServices(api.data.getCompany.services.items.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
+				setOffices(api.data.getCompany.offices.items);
 				setLoading({type: ''})
 			}
 		} catch (e) {

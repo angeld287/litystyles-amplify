@@ -12,9 +12,9 @@ import Pie from './Pie';
 
 import SelectMonth from './SelectMonth';
 
-const Reports = () => {
+const Reports = (props) => {
 
-	const { rp, barData, pieData, lineData, requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay, } = useReports();
+	const { rp, barData, pieData, lineData, requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay, } = useReports(props);
 	
 	const getMomentFormatter = (format) => {
 		// note that locale argument comes from locale prop and may be undefined

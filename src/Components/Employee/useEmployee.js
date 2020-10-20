@@ -30,7 +30,7 @@ const useEmployee = (props) => {
 			var requestsApi = [];
 
 			try {
-                requestsApi = await API.graphql(graphqlOperation(listRequests, {limit: 400, filter:{ and: [ { or: [ {state: { eq: "ON_HOLD"} }, {state: { eq: "IN_PROCESS"} }]}, {resposibleName: { eq: props.state.username} }]}}));
+                requestsApi = await API.graphql(graphqlOperation(listRequests, {limit: 400, filter:{ and: [ { or: [ {state: { eq: "ON_HOLD"} }, {state: { eq: "IN_PROCESS"} }]}, {companyId: {eq: props.state.company.id}}, {resposibleName: { eq: props.state.username} }]}}));
 			} catch (e) {
 				setLoading(false);
 				setError(true);
@@ -81,7 +81,7 @@ const useEmployee = (props) => {
 		return () => {
 			didCancel = true;
 		};
-	}, [props.state.username]);
+	}, [props]);
 
 	const nextRequest = () => {
 		setInProcessLoading(true);
