@@ -6,6 +6,13 @@
             "privacy": {
                 "open": true
             }
+        },
+        {
+            "name": "/findUser",
+            "lambdaFunction": "littyStylesFunctions",
+            "privacy": {
+                "open": true
+            }
         }
     ],
     "resourceName": "apiForLambda",
@@ -30,5 +37,6 @@
                 "Arn"
             ]
         }
-    ]
+    ],
+    "uuid": "a23b7831"
 }

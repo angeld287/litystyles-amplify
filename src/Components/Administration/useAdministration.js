@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { updateRequest } from '../../graphql/customMutations';
-import { getCompanyProductsAndServices/* , listOffices */ } from '../../graphql/customQueries';
+import { getCompanyOfficesProductsAndServices/* , listOffices */ } from '../../graphql/customQueries';
 import { listServices, listProducts, listRequests, /* listEmployees */} from '../../graphql/queries';
 
 const useAdministration = (props) => {
@@ -145,7 +145,7 @@ const useAdministration = (props) => {
 		try {
 			if(companyProducts.length === 0 || companyServices.length === 0 || offices.length === 0){
 				setLoading({type: type})
-				const api = await API.graphql(graphqlOperation(getCompanyProductsAndServices, {id: props.state.company.id}));
+				const api = await API.graphql(graphqlOperation(getCompanyOfficesProductsAndServices, {id: props.state.company.id}));
 				setCompanyProducts(api.data.getCompany.products.items.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
 				setCompanyServices(api.data.getCompany.services.items.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
 				setOffices(api.data.getCompany.offices.items);
