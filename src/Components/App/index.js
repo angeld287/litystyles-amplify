@@ -23,6 +23,7 @@ const App = (props) => {
   const [ email, setEmail ] = useState("");
   const [ phonenumber, setPhonenumber ] = useState("");
   const [ user_roles, setUser_rolls ] = useState([]);
+  const [ firstSteps, setFirstSteps] = useState(false);
 
   const addUserToGroup = useCallback( 
     async (username) => {
@@ -74,6 +75,9 @@ const App = (props) => {
         if(roles.indexOf('company_admin') !== -1){
           companyApi = await API.graphql(graphqlOperation(listCompanys));
           setCompany(companyApi.data.listCompanys.items[0]);
+          if (companyApi.data.listCompanys.items.length === 0) {
+            setFirstSteps(true);
+          }
         }
 
         setUsername(user.accessToken.payload.username);
@@ -100,6 +104,7 @@ const App = (props) => {
   }; 
 
   const cp = {
+    firstSteps: firstSteps,
     authState: props.authState,
     isLoggedIn: props.authState === AuthState.SignedIn,
     //onUserSignIn: handleUserSignIn,
