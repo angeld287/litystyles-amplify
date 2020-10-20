@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listEmployees } from '../../../../graphql/queries';
-import { createEmployeeService, deleteEmployeeService, /* updateEmployeeService, */ updateEmployee } from '../../../../graphql/mutations';
+import { createEmployee, updateEmployee } from '../../../../graphql/customMutations';
+import { createEmployeeService, deleteEmployeeService, /* updateEmployeeService, */ } from '../../../../graphql/mutations';
 
 //import moment from 'moment';
 
@@ -49,6 +50,8 @@ const useEmployees = (props) => {
 
             case 'add':
                 setSelectedObject({});
+                setEmail('');
+                setCognitoUsers([]);
                 setName('');
                 setEdit(false);
                 setAdd(true);
@@ -202,44 +205,75 @@ const useEmployees = (props) => {
 
     
     const handleLinkEmployee = async (item, i) => {
-        //console.log(item);
-        
-        //con el username en cognito identificado, se buscara el usuario en la db
-        const employee = await API.graphql(graphqlOperation(listEmployees, {filter: {username: {eq: item.Username}}}));
-        const _employee = employee.data.listEmployees.items;
-        if (_employee.length > 0) {
-            //si esta asociado a una oficina mostrara un mensaje indicando que ya esta en una oficina
-            if (_employee[0].officeId !== 'nan' && _employee[0].officeId !== '') {
-                swal({title: "Asociar Empleado!", text: "Este empleado ya esta asociado a una empresa.", type: "error", timer: 2000 });
-                return;
-            }
 
-            //si no esta asiciado en ninguna oficina entonses sera actualizado agregando las respectivas asociaciones    
-            //var id = _employee[0].id;
+        try {
 
-            //var oi = props.ap.off.offices.findIndex(e => e.id === item.officeId);
+            var oi = props.ap.off.offices.findIndex(e => e.id === props.office.id);
 
-            //var officeList = props.ap.off.offices;
+            var officeList = props.ap.off.offices;
 
-            //var office = officeList[oi];
+            var office = officeList[oi];
 
-            //var employeesList = office.employees.items;
+            var employeesList = office.employees.items;
 
-            //props.ap.load.setLoading({type: 'linkemployee'+i});
-   
-            //await API.graphql(graphqlOperation(updateEmployee, {input: {id: id, officeEmployeesId: 'nan', officeId: 'nan'}}));
+            //con el username en cognito identificado, se buscara el usuario en la db
+            const employee = await API.graphql(graphqlOperation(listEmployees, {filter: {username: {eq: item.Username}}}));
+            const _employee = employee.data.listEmployees.items;
+            if (_employee.length > 0) {
+                //si esta asociado a una oficina mostrara un mensaje indicando que ya esta en una oficina
+                if (_employee[0].officeId !== 'nan' && _employee[0].officeId !== '') {
+                    swal({title: "Asociar Empleado!", text: "Este empleado ya esta asociado a una empresa.", type: "error", timer: 2000 });
+                    return;
+                }
 
-            //employeesList.splice(employeesList.findIndex(e => e.id === item.id), 1);
-   
+                props.ap.load.setLoading({type: 'linkemployee'+i});
+
+                var id = _employee[0].id
+
+                //si no esta asiciado en ninguna oficina entonses sera actualizado agregando las respectivas asociaciones    
+    
+                const eemployee = await API.graphql(graphqlOperation(updateEmployee, {input: {id: id, officeEmployeesId: props.office.id, officeId: props.office.id}}));
+
+                employeesList.push(eemployee.data.updateEmployee);
+    
+                props.ap.load.setLoading({type: ''});
+
+                handleClose();
+
+            }else {
+                //si no existe en la db sera creado con las respectivas asociaciones e informaciones
+                props.ap.load.setLoading({type: 'linkemployee'+i});
+
+                const ei = {
+                    officeEmployeesId: props.office.id,
+                    name: item.Attributes[0].Value,
+                    officeId: props.office.id,
+                    username: item.Username
+                };
+
+                const cemployee = await API.graphql(graphqlOperation(createEmployee, {input: ei}));
+
+                employeesList.push(cemployee.data.createEmployee);
+
+                handleClose();
+
+            }    
+
+            swal({ title: "Asociar Empleado!", text: "Empleado Asociado Correctamente!", type: "success", timer: 2500 });
+
             props.ap.load.setLoading({type: ''});
 
-            //handleClose();
+            
+        } catch (e) {
+            console.log(e);
 
-        }else {
-            //si no existe en la db sera creado con las respectivas asociaciones e informaciones
-            console.log(props.office);
+            props.ap.load.setLoading({type: ''});
 
-        }    
+            swal({title: "Asociar Empleado!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
+            
+        }
+        
+        
     }
 
 	return { lookingforuser, handleLinkEmployee, cognitoUsers, handleFindUser, add, handleClose, handleShow, email, setEmail, edit, show, so, name, setName, setService, addServiceToEmployee, handleDelete, handleUnlinkEmployee };

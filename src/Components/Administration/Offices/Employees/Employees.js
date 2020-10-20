@@ -95,7 +95,7 @@ const Employess = (props) => {
                 <Modal.Title>{edit ? 'Editar Empleado' : add ? 'Agregar Empleado' : 'Ver Empleado'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-				{ edit &&
+				{ !add && !edit &&
                     (<div>
                         <Form.Group controlId="name">
                             <Form.Label>Nombre</Form.Label>
