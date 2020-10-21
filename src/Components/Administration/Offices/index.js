@@ -7,7 +7,7 @@ import Employess from './Employees/Employees';
 
 const Offices = (props) => {
 
-    const { add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees } = useOffices(props);
+    const { so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees } = useOffices(props);
  
     const list = (props.ap.off.offices !== null)?([].concat(props.ap.off.offices)
 		.map((item,i)=>
@@ -19,7 +19,7 @@ const Offices = (props) => {
                         <ButtonGroup size="sm">
                             <Button style={{marginRight: 1}} intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('view', item);}} ><Icon icon="eye-open"/></Button>
                             <Button style={{marginRight: 1}} intent={"Primary"} onClick={e => { e.preventDefault(); handleShow('edit', item);}} ><Icon icon="edit"/></Button>
-                            <Button style={{marginRight: 1}} intent={"Primary"} onClick={e => { e.preventDefault(); handleDelete(item.id, i);}} loading={props.ap.load.loading.type === 'deleteservice'+i} ><Icon icon="trash"/></Button>
+                            { props.ap.off.offices.length > 1 && <Button style={{marginRight: 1}} intent={"Primary"} onClick={e => { e.preventDefault(); handleDelete(item.id, i);}} loading={props.ap.load.loading.type === 'deleteservice'+i} ><Icon icon="trash"/></Button>}
                         </ButtonGroup>
                     </td>
 				</tr>
@@ -65,7 +65,7 @@ const Offices = (props) => {
                     <Form.Label>Ubicacion</Form.Label>
                     <Form.Control readOnly={!edit && !add} type="text" value={location} onChange={ e => setLocation(e.target.value)}/>
                 </Form.Group>
-                <Employess employess={employees} ap={props.ap}/>
+                <Employess employess={employees} ap={props.ap} office={so} cp={props.cp}/>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>

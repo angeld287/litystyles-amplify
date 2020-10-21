@@ -66,6 +66,7 @@ const AuthStateApp = () => {
             formFields={[
               { type: "email" },
               { type: "password" },
+              { type: "name", label: "Name", placeholder: "Enter your full name", hint: null, required: true, },
               { type: "phone_number" },
             ]}
           />}

@@ -16,6 +16,7 @@ export const getCompany = /* GraphQL */ `
           deleted
           deletedAt
           createdAt
+          companyId
           owner
         }
         nextToken
@@ -37,9 +38,9 @@ export const getCompany = /* GraphQL */ `
         nextToken
       }
       deleted
+      owner
       deletedAt
       createdAt
-      owner
     }
   }
 `;
@@ -64,9 +65,9 @@ export const listCompanys = /* GraphQL */ `
           nextToken
         }
         deleted
+        owner
         deletedAt
         createdAt
-        owner
       }
       nextToken
     }
@@ -95,6 +96,7 @@ export const getOffice = /* GraphQL */ `
       deleted
       deletedAt
       createdAt
+      companyId
       owner
     }
   }
@@ -117,6 +119,7 @@ export const listOffices = /* GraphQL */ `
         deleted
         deletedAt
         createdAt
+        companyId
         owner
       }
       nextToken

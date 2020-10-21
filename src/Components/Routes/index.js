@@ -7,12 +7,14 @@ import Administration from '../Administration';
 import Customer from '../Customer';
 import Employee from '../Employee';
 import Reports from '../Reports';
+import FirstSteps from '../FirstSteps';
 //import AuthComponent from './../Authentication/AuthComponent';
 
 export const Routes = ({ cp }) => (
 	<Switch>
 		<ProtectedRoute exact path="/" render={Home} props={cp} />
 		<ProtectedRouteAdmin exact path="/administration" render={Administration} props={cp} />
+		<ProtectedRouteAdminFS exact path="/firststeps" render={FirstSteps} props={cp} />
 		<ProtectedRouteAdmin exact path="/reports" render={Reports} props={cp} />
 		<ProtectedRouteEmployee exact path="/stylist" render={Employee} props={cp} />
 		<ProtectedRouteAdmin exact path="/customer" render={Customer} props={cp} />
@@ -26,7 +28,27 @@ export const ProtectedRouteAdmin = ({ render: C, props: cp, ...rest }) =>
 		{...rest}
 		render={
 			(rProps) =>
-				cp.isLoggedIn && cp.state.user_roles.length !== 0 ? 
+				!cp.firstSteps && cp.state.user_roles.length !== 0 ? 
+				(
+					cp.state.user_roles.indexOf('company_admin') !== -1 ? (
+						<C {...rProps} {...cp} />
+					) : (
+						<Redirect to="/" />
+					)
+				) : (
+					<Redirect to={"/firststeps"} />
+				)
+			}
+	/>
+);
+
+export const ProtectedRouteAdminFS = ({ render: C, props: cp, ...rest }) => 
+(
+	<Route
+		{...rest}
+		render={
+			(rProps) =>
+				cp.firstSteps && cp.state.user_roles.length !== 0 ?
 				(
 					cp.state.user_roles.indexOf('company_admin') !== -1 ? (
 						<C {...rProps} {...cp} />
@@ -61,10 +83,7 @@ export const ProtectedRouteEmployee = ({ render: C, props: cp, ...rest }) =>
 );
 
 export const ProtectedRouteCustomer = ({ render: C, props: cp, ...rest }) => 
-{
-	console.log(cp.state.user_roles);
-	debugger
-	return (
+(
 	<Route
 		{...rest}
 		render={
@@ -81,16 +100,16 @@ export const ProtectedRouteCustomer = ({ render: C, props: cp, ...rest }) =>
 				)
 			}
 	/>
-)};
+);
 
 export const ProtectedRoute = ({ render: C, props: cp, ...rest }) => (
 	<Route
 		{...rest}
 		render={(rProps) =>
-			cp.isLoggedIn ? (
+			!cp.firstSteps ? (
 				<C {...rProps} {...cp} />
 			) : (
-				<Redirect to={"/"} />
+				<Redirect to={"/firststeps"} />
 			)}
 	/>
 );

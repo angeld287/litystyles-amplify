@@ -6,6 +6,20 @@
             "privacy": {
                 "open": true
             }
+        },
+        {
+            "name": "/findUser",
+            "lambdaFunction": "littyStylesFunctions",
+            "privacy": {
+                "open": true
+            }
+        },
+        {
+            "name": "/removeUserFromGroup",
+            "lambdaFunction": "littyStylesFunctions",
+            "privacy": {
+                "open": true
+            }
         }
     ],
     "resourceName": "apiForLambda",
@@ -30,5 +44,6 @@
                 "Arn"
             ]
         }
-    ]
+    ],
+    "uuid": "669c516c"
 }

@@ -14,6 +14,7 @@ import {
 import { AuthState } from '@aws-amplify/ui-components';
 
 export default class HeaderLinks extends Component {
+
 	handlesignOut = () => {
 		Auth.signOut().then((d) => {
 			//window.location.reload();
@@ -28,6 +29,7 @@ export default class HeaderLinks extends Component {
 
         const userMenu = (
             <Menu>
+                <MenuItem text={this.props.cp.state.name} />
                 <MenuItem icon="log-out" text="LogOut" onClick={ (e) => { e.preventDefault(); this.handlesignOut();}} />
             </Menu>
         );

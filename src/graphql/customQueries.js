@@ -1,8 +1,37 @@
-  export const getCompanyProductsAndServices = /* GraphQL */ `
+  export const getCompanyOfficesProductsAndServices = /* GraphQL */ `
   query getCompanyProductsAndServices($id: ID!) {
     getCompany(id: $id) {
       id
       name
+      offices {
+        items {
+          id
+          name
+          administrator
+          employees {
+            items {
+              id
+              name
+              username
+              officeId
+              services {
+                items {
+                  id
+                  service {
+                    name
+                    id
+                  }
+                }
+              }
+            }
+          }
+          location
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+      }
       services {
         items {
           id
@@ -29,9 +58,44 @@
   }
 `;
 
+export const getCompanyProductsAndServices = /* GraphQL */ `
+query getCompanyProductsAndServices($id: ID!) {
+  getCompany(id: $id) {
+    id
+    name
+    services {
+      items {
+        id
+        service {
+          name
+          cost
+          id
+        }
+        cost
+      }
+    }
+    products {
+      items {
+        id
+        product {
+          name
+          cost
+          id
+        }
+        cost
+      }
+    }
+  }
+}
+`;
+
 export const listCompanys = /* GraphQL */ `
-  query ListCompanys {
-    listCompanys {
+  query ListCompanys(
+    $filter: ModelCompanyFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         name
@@ -45,8 +109,8 @@ export const listCompanys = /* GraphQL */ `
         }
       }
     }
-  }`
-;
+  }
+`;
 
 export const listEmployees = `
   query Employees($id: String!) {

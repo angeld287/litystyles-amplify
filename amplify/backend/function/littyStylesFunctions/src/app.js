@@ -71,6 +71,64 @@ app.post('/addUserToGroup', async function(req, res) {
   }
 });
 
+app.post('/removeUserFromGroup', async function(req, res) {
+  // Add your code here
+  try {
+    var origin = req.get('origin');
+
+    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+    const _response = null;
+    
+    const params = {
+      GroupName: req.body.GroupName,
+      UserPoolId: req.body.UserPoolId,
+      Username: req.body.Username
+    };
+
+    _response = await cognitoidentityserviceprovider.adminRemoveUserFromGroup(params).promise(); //adminAddUserToGroup(params).promise();
+    //(origin === origins_dev ? origins_dev : origins_prod)
+
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": '*' }, body: _response })
+
+  } catch (error) {
+
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": '*' }, body: error })
+
+  }
+});
+
+app.post('/findUser', async function(req, res) {
+
+  try {
+    var origin = req.get('origin');
+    const origins = origin === origins_dev ? origins_dev : origins_prod;
+    
+    AWS.config.update({region: 'us-east-1'});
+
+    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+
+    //COGNITO
+    var params = {
+      UserPoolId: req.body.UserPoolId,
+      AttributesToGet: [
+        'email',
+        'name',
+      ]
+    };
+
+    if (req.body.filterBy === 'email') { params.Filter = 'email^=\"'+req.body.value+'\"';}
+    if (req.body.filterBy === 'name') { params.Filter = 'name^=\"'+req.body.value+'\"';}
+
+    const result = await cognitoidentityserviceprovider.listUsers(params).promise();
+
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": "*" }, body: result })
+
+  } catch (error) {
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": "*" }, body: error })
+  }
+
+});
+
 app.post('/addUserToGroup/*', function(req, res) {
   // Add your code here
   res.json({success: 'post call succeed!', url: req.url, body: req.body})

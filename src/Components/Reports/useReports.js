@@ -6,7 +6,8 @@ import swal from 'sweetalert';
 
 import moment from "moment";
 
-const useReports = () => {
+const useReports = (props) => {
+	
     const [ requestsSearch, setRequestsSearch ] = useState([]);
 	const [ date, setDate ] = useState(new Date());
 	const [ month, setMonth ] = useState('');
@@ -43,7 +44,6 @@ const useReports = () => {
 			if(prior_request !== undefined){
 				setRequestsSearch(prior_request.data)
 			}else{
-				
 
 				var result = {id: _date, data: []};
 
@@ -52,6 +52,8 @@ const useReports = () => {
 					  and: [
 						{createdAt: {gt: _date}}, 
 						{createdAt: {lt: String(moment(date).format('YYYY-MM-DDT')+'23:59:59.000')}},
+						{companyId: {eq: props.state.company.id}},
+						{state: {eq: 'FINISHED'}},
 					  ]
 					},
 					limit: 1000
@@ -111,6 +113,7 @@ const useReports = () => {
 					{createdAt: {gt: String(start)}}, 
 					{createdAt: {lt: String(end)}},
 					{state: {eq: 'FINISHED'}},
+					{companyId: {eq: props.state.company.id}},
 				]
 			}
 			
@@ -144,8 +147,8 @@ const useReports = () => {
 		}
 		
 		data.forEach(e => {
-			//console.log(e);
 			var date = new Date(e.createdAt);
+
 			var service = e.service.items[0].service.name;
 			var cost = e.service.items[0].cost === null ? e.service.items[0].service.cost : e.service.items[0].cost;
 			
@@ -158,8 +161,8 @@ const useReports = () => {
 				sresult[snresult.findIndex(e => e === service)] = sresult[snresult.findIndex(e => e === service)] + parseInt(cost);
 			}
 
-			rresult[(date.getDate() - 1)] = rresult[(date.getDate() - 1)] + 1;
-			eresult[(date.getDate() - 1)] = eresult[(date.getDate() - 1)] + parseInt(cost);
+			rresult[(date.getDate())] = rresult[(date.getDate())] + 1;
+			eresult[(date.getDate())] = eresult[(date.getDate())] + parseInt(cost);
 		});
 
 		setRequests(rresult)
@@ -276,7 +279,6 @@ const useReports = () => {
 		return monthsObjects
 	}
 
-
 	const setInitialStates = () => {
 		setEarnings([]);
 		setRequests([]);
@@ -285,8 +287,6 @@ const useReports = () => {
 		setTotalEarnings(0);
 		setTotalRequests(0);
 	}
-
-	
 
 	const rp = {
 		date: {

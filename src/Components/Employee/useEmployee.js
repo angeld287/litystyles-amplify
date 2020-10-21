@@ -81,7 +81,7 @@ const useEmployee = (props) => {
 		return () => {
 			didCancel = true;
 		};
-	}, [props.state.username]);
+	}, [props]);
 
 	const nextRequest = () => {
 		setInProcessLoading(true);
