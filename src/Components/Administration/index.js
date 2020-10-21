@@ -14,7 +14,7 @@ const Administration = (props) => {
 
 	const _requests = (requests !== null)?([].concat(requests)
 		//.sort((a, b) => a.name.localeCompare(b.name))
-		.map((item,i)=>
+		.map((item,i) =>
 			(
 				<tr key={i}>
 					<td>{i+1}</td>
@@ -67,7 +67,7 @@ const Administration = (props) => {
 				</Tab>
 				<Tab eventKey="offices" title={<Icon icon="office" />}>
 					<div style={{marginTop: 5}}>
-						<Offices ap={ap}/>
+						<Offices ap={ap} cp={props}/>
 					</div>
 				</Tab>
 				<Tab eventKey="services" title={<Icon icon="cog" />}>

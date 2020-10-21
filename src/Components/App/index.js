@@ -20,6 +20,7 @@ const App = (props) => {
   const [ error, setError ] = useState(false);
   const [ errorMessage, setErrorMessage ] = useState(false);
   const [ username, setUsername ] = useState("");
+  const [ name, setName ] = useState("");
   const [ email, setEmail ] = useState("");
   const [ phonenumber, setPhonenumber ] = useState("");
   const [ user_roles, setUser_rolls ] = useState([]);
@@ -65,6 +66,8 @@ const App = (props) => {
         
         const user = await Auth.currentSession();
 
+        setName(user.idToken.payload.name);
+
         roles = user.accessToken.payload['cognito:groups'] !== undefined ? user.accessToken.payload['cognito:groups'] : [];
       
         const hasOnlyGoogleRole = roles !== undefined && roles.length === 1 && roles[0].toUpperCase().includes("GOOGLE");
@@ -73,8 +76,10 @@ const App = (props) => {
         if (roles === undefined || roles.length === 0) { await addUserToGroup(user.accessToken.payload.username); }
 
         if(roles.indexOf('company_admin') !== -1){
-          companyApi = await API.graphql(graphqlOperation(listCompanys));
+          companyApi = await API.graphql(graphqlOperation(listCompanys, {filter: {owner: {eq: user.accessToken.payload.username}}}));
+
           setCompany(companyApi.data.listCompanys.items[0]);
+
           if (companyApi.data.listCompanys.items.length === 0) {
             setFirstSteps(true);
           }
@@ -110,6 +115,7 @@ const App = (props) => {
     //onUserSignIn: handleUserSignIn,
     onUserLogOut: handleUserLogOut,
     state: {
+      name: name,
       username: username,
       phonenumber: phonenumber,
       email: email,

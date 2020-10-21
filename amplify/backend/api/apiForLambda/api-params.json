@@ -13,6 +13,13 @@
             "privacy": {
                 "open": true
             }
+        },
+        {
+            "name": "/removeUserFromGroup",
+            "lambdaFunction": "littyStylesFunctions",
+            "privacy": {
+                "open": true
+            }
         }
     ],
     "resourceName": "apiForLambda",
@@ -38,5 +45,5 @@
             ]
         }
     ],
-    "uuid": "a23b7831"
+    "uuid": "669c516c"
 }

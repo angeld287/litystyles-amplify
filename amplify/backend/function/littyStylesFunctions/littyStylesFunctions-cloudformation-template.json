@@ -63,7 +63,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-littystyle-dev-114547-deployment",
-					"S3Key": "amplify-builds/littyStylesFunctions-4d5a794a416f66306932-build.zip"
+					"S3Key": "amplify-builds/littyStylesFunctions-56343670706679305166-build.zip"
 				}
 			}
 		},

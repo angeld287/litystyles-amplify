@@ -21,6 +21,9 @@ const Pie = (props) => {
         <h2>Ingresos por Servicio</h2>
         <SelectMonth rp={rp} />
         <P data={props.data} options={options}/>
+        <div style={{marginTop: 20}}>
+              <h5>Total de Ingresos: RD$ {rp.tgearnings}.00</h5>
+        </div>
       </Container>
     );
 }

@@ -71,6 +71,32 @@ app.post('/addUserToGroup', async function(req, res) {
   }
 });
 
+app.post('/removeUserFromGroup', async function(req, res) {
+  // Add your code here
+  try {
+    var origin = req.get('origin');
+
+    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+    const _response = null;
+    
+    const params = {
+      GroupName: req.body.GroupName,
+      UserPoolId: req.body.UserPoolId,
+      Username: req.body.Username
+    };
+
+    _response = await cognitoidentityserviceprovider.adminRemoveUserFromGroup(params).promise(); //adminAddUserToGroup(params).promise();
+    //(origin === origins_dev ? origins_dev : origins_prod)
+
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": '*' }, body: _response })
+
+  } catch (error) {
+
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": '*' }, body: error })
+
+  }
+});
+
 app.post('/findUser', async function(req, res) {
 
   try {

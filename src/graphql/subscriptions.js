@@ -101,6 +101,7 @@ export const onCreateCompany = /* GraphQL */ `
           deleted
           deletedAt
           createdAt
+          companyId
           owner
         }
         nextToken
@@ -122,9 +123,9 @@ export const onCreateCompany = /* GraphQL */ `
         nextToken
       }
       deleted
+      owner
       deletedAt
       createdAt
-      owner
     }
   }
 `;
@@ -143,6 +144,7 @@ export const onUpdateCompany = /* GraphQL */ `
           deleted
           deletedAt
           createdAt
+          companyId
           owner
         }
         nextToken
@@ -164,9 +166,9 @@ export const onUpdateCompany = /* GraphQL */ `
         nextToken
       }
       deleted
+      owner
       deletedAt
       createdAt
-      owner
     }
   }
 `;
@@ -185,6 +187,7 @@ export const onDeleteCompany = /* GraphQL */ `
           deleted
           deletedAt
           createdAt
+          companyId
           owner
         }
         nextToken
@@ -206,9 +209,9 @@ export const onDeleteCompany = /* GraphQL */ `
         nextToken
       }
       deleted
+      owner
       deletedAt
       createdAt
-      owner
     }
   }
 `;
@@ -230,9 +233,9 @@ export const onCreateCompanyService = /* GraphQL */ `
           nextToken
         }
         deleted
+        owner
         deletedAt
         createdAt
-        owner
       }
       service {
         id
@@ -275,9 +278,9 @@ export const onUpdateCompanyService = /* GraphQL */ `
           nextToken
         }
         deleted
+        owner
         deletedAt
         createdAt
-        owner
       }
       service {
         id
@@ -320,9 +323,9 @@ export const onDeleteCompanyService = /* GraphQL */ `
           nextToken
         }
         deleted
+        owner
         deletedAt
         createdAt
-        owner
       }
       service {
         id
@@ -365,9 +368,9 @@ export const onCreateCompanyProduct = /* GraphQL */ `
           nextToken
         }
         deleted
+        owner
         deletedAt
         createdAt
-        owner
       }
       product {
         id
@@ -407,9 +410,9 @@ export const onUpdateCompanyProduct = /* GraphQL */ `
           nextToken
         }
         deleted
+        owner
         deletedAt
         createdAt
-        owner
       }
       product {
         id
@@ -449,9 +452,9 @@ export const onDeleteCompanyProduct = /* GraphQL */ `
           nextToken
         }
         deleted
+        owner
         deletedAt
         createdAt
-        owner
       }
       product {
         id
@@ -496,6 +499,7 @@ export const onCreateOffice = /* GraphQL */ `
       deleted
       deletedAt
       createdAt
+      companyId
       owner
     }
   }
@@ -523,6 +527,7 @@ export const onUpdateOffice = /* GraphQL */ `
       deleted
       deletedAt
       createdAt
+      companyId
       owner
     }
   }
@@ -550,6 +555,7 @@ export const onDeleteOffice = /* GraphQL */ `
       deleted
       deletedAt
       createdAt
+      companyId
       owner
     }
   }

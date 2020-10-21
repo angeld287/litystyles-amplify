@@ -65,7 +65,7 @@ const Offices = (props) => {
                     <Form.Label>Ubicacion</Form.Label>
                     <Form.Control readOnly={!edit && !add} type="text" value={location} onChange={ e => setLocation(e.target.value)}/>
                 </Form.Group>
-                <Employess employess={employees} ap={props.ap} office={so}/>
+                <Employess employess={employees} ap={props.ap} office={so} cp={props.cp}/>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
