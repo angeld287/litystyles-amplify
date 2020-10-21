@@ -12,6 +12,7 @@ export const getCompany = /* GraphQL */ `
           id
           name
           administrator
+          categoryId
           location
           deleted
           deletedAt
@@ -92,6 +93,7 @@ export const getOffice = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
       location
       deleted
       deletedAt
@@ -115,11 +117,61 @@ export const listOffices = /* GraphQL */ `
         employees {
           nextToken
         }
+        categoryId
         location
         deleted
         deletedAt
         createdAt
         companyId
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getCategory = /* GraphQL */ `
+  query GetCategory($id: ID!) {
+    getCategory(id: $id) {
+      id
+      name
+      offices {
+        items {
+          id
+          name
+          administrator
+          categoryId
+          location
+          deleted
+          deletedAt
+          createdAt
+          companyId
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const listCategorys = /* GraphQL */ `
+  query ListCategorys(
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCategorys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        offices {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
         owner
       }
       nextToken

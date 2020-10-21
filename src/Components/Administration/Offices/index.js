@@ -7,7 +7,7 @@ import Employess from './Employees/Employees';
 
 const Offices = (props) => {
 
-    const { so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees } = useOffices(props);
+    const { so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees, setCategory, category } = useOffices(props);
  
     const list = (props.ap.off.offices !== null)?([].concat(props.ap.off.offices)
 		.map((item,i)=>
@@ -25,6 +25,13 @@ const Offices = (props) => {
 				</tr>
 			)
         )):(<td></td>)
+
+    const categoryList = (props.ap.cat.categories !== null)?([].concat(props.ap.cat.categories)
+	    .map((item,i)=>
+		(
+            <option key={i} value={item.id}>{item.name}</option>
+		)
+     )):(<td></td>)
 
     if(props.ap.err.error.type === 'offices') return(<div style={{marginTop: 5}}><h5>{props.ap.err.error.message}</h5></div>)
     
@@ -61,11 +68,17 @@ const Offices = (props) => {
                     <Form.Label>Nombre</Form.Label>
                     <Form.Control readOnly={!edit && !add} type="text" value={name} onChange={ e => setName(e.target.value)}/>
                 </Form.Group>
+                <Form.Group>
+                    <Form.Control defaultValue={!add ? category : 0} readOnly={!edit && !add} as="select" id="category" onChange={e => setCategory(e.target.value)}>
+                        <option value="0">Seleccione...</option>
+                        {categoryList}
+                    </Form.Control>
+                </Form.Group>
                 <Form.Group controlId="location">
                     <Form.Label>Ubicacion</Form.Label>
                     <Form.Control readOnly={!edit && !add} type="text" value={location} onChange={ e => setLocation(e.target.value)}/>
                 </Form.Group>
-                <Employess employess={employees} ap={props.ap} office={so} cp={props.cp}/>
+                {!add && <Employess employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>

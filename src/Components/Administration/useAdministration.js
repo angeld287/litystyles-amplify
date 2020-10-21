@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { updateRequest } from '../../graphql/customMutations';
 import { getCompanyOfficesProductsAndServices/* , listOffices */ } from '../../graphql/customQueries';
-import { listServices, listProducts, listRequests, /* listEmployees */} from '../../graphql/queries';
+import { listCategorys, listServices, listProducts, listRequests, /* listEmployees */} from '../../graphql/queries';
 
 const useAdministration = (props) => {
     const [ requests, setRequests ] = useState([]);
@@ -13,6 +13,7 @@ const useAdministration = (props) => {
     const [ services, setServices ] = useState([]);
     const [ products, setProducts ] = useState([]);
     const [ employees, setEmployees ] = useState([]);
+    const [ categories, setCategories ] = useState([]);
 	
 	const [ loading, setLoading ] = useState({
 		type: ''
@@ -72,7 +73,7 @@ const useAdministration = (props) => {
 				//_requests();
 				break;
 			case 'offices':
-				//_offices();
+				_getCategories();
 				_getCompanyData('offices');
 				break;
 			case 'services':
@@ -93,7 +94,7 @@ const useAdministration = (props) => {
 	const _services = async () => {
 		try {
 			if(services.length === 0){
-				//setLoading({type: 'services'})
+				setLoading({type: 'services'})
 				const api = await API.graphql(graphqlOperation(listServices, {filter: {deleted: {ne: true}}}));
 				setServices(api.data.listServices.items);
 				setLoading({type: ''})
@@ -124,12 +125,12 @@ const useAdministration = (props) => {
 		}
 	}
 
-	/* const _offices = async () => {
+	const _getCategories = async () => {
 		try {
-			if(offices.length === 0){
-				setLoading({type: 'offices'})
-				const api = await API.graphql(graphqlOperation(listOffices, {filter: {deleted: {ne: true}}}));
-				setOffices(api.data.listOffices.items);
+			if(categories.length === 0){
+				setLoading({type: 'categories'})
+				const api = await API.graphql(graphqlOperation(listCategorys));
+				setCategories(api.data.listCategorys.items);
 				setLoading({type: ''})
 			}
 		} catch (e) {
@@ -139,7 +140,7 @@ const useAdministration = (props) => {
 			})
 			setLoading({type: ''})
 		}
-	} */
+	}
 
 	const _getCompanyData = async (type) => {
 		try {
@@ -180,6 +181,10 @@ const useAdministration = (props) => {
 		off: {
 			offices,
 			setOffices
+		},
+		cat: {
+			categories,
+			setCategories
 		},
 		emp: {
 			employees,

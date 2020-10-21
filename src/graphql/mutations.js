@@ -15,6 +15,7 @@ export const createCompany = /* GraphQL */ `
           id
           name
           administrator
+          categoryId
           location
           deleted
           deletedAt
@@ -61,6 +62,7 @@ export const updateCompany = /* GraphQL */ `
           id
           name
           administrator
+          categoryId
           location
           deleted
           deletedAt
@@ -107,6 +109,7 @@ export const deleteCompany = /* GraphQL */ `
           id
           name
           administrator
+          categoryId
           location
           deleted
           deletedAt
@@ -440,6 +443,7 @@ export const createOffice = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
       location
       deleted
       deletedAt
@@ -471,6 +475,7 @@ export const updateOffice = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
       location
       deleted
       deletedAt
@@ -502,11 +507,102 @@ export const deleteOffice = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
       location
       deleted
       deletedAt
       createdAt
       companyId
+      owner
+    }
+  }
+`;
+export const createCategory = /* GraphQL */ `
+  mutation CreateCategory(
+    $input: CreateCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    createCategory(input: $input, condition: $condition) {
+      id
+      name
+      offices {
+        items {
+          id
+          name
+          administrator
+          categoryId
+          location
+          deleted
+          deletedAt
+          createdAt
+          companyId
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const updateCategory = /* GraphQL */ `
+  mutation UpdateCategory(
+    $input: UpdateCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    updateCategory(input: $input, condition: $condition) {
+      id
+      name
+      offices {
+        items {
+          id
+          name
+          administrator
+          categoryId
+          location
+          deleted
+          deletedAt
+          createdAt
+          companyId
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const deleteCategory = /* GraphQL */ `
+  mutation DeleteCategory(
+    $input: DeleteCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    deleteCategory(input: $input, condition: $condition) {
+      id
+      name
+      offices {
+        items {
+          id
+          name
+          administrator
+          categoryId
+          location
+          deleted
+          deletedAt
+          createdAt
+          companyId
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
       owner
     }
   }

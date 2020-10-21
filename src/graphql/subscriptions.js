@@ -97,6 +97,7 @@ export const onCreateCompany = /* GraphQL */ `
           id
           name
           administrator
+          categoryId
           location
           deleted
           deletedAt
@@ -140,6 +141,7 @@ export const onUpdateCompany = /* GraphQL */ `
           id
           name
           administrator
+          categoryId
           location
           deleted
           deletedAt
@@ -183,6 +185,7 @@ export const onDeleteCompany = /* GraphQL */ `
           id
           name
           administrator
+          categoryId
           location
           deleted
           deletedAt
@@ -495,6 +498,7 @@ export const onCreateOffice = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
       location
       deleted
       deletedAt
@@ -523,6 +527,7 @@ export const onUpdateOffice = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
       location
       deleted
       deletedAt
@@ -551,11 +556,93 @@ export const onDeleteOffice = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
       location
       deleted
       deletedAt
       createdAt
       companyId
+      owner
+    }
+  }
+`;
+export const onCreateCategory = /* GraphQL */ `
+  subscription OnCreateCategory($owner: String) {
+    onCreateCategory(owner: $owner) {
+      id
+      name
+      offices {
+        items {
+          id
+          name
+          administrator
+          categoryId
+          location
+          deleted
+          deletedAt
+          createdAt
+          companyId
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onUpdateCategory = /* GraphQL */ `
+  subscription OnUpdateCategory($owner: String) {
+    onUpdateCategory(owner: $owner) {
+      id
+      name
+      offices {
+        items {
+          id
+          name
+          administrator
+          categoryId
+          location
+          deleted
+          deletedAt
+          createdAt
+          companyId
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onDeleteCategory = /* GraphQL */ `
+  subscription OnDeleteCategory($owner: String) {
+    onDeleteCategory(owner: $owner) {
+      id
+      name
+      offices {
+        items {
+          id
+          name
+          administrator
+          categoryId
+          location
+          deleted
+          deletedAt
+          createdAt
+          companyId
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
       owner
     }
   }
