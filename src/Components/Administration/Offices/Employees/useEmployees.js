@@ -156,6 +156,10 @@ const useEmployees = (props) => {
    
             await API.graphql(graphqlOperation(updateEmployee, {input: {id: id, officeEmployeesId: 'nan', officeId: 'nan'}}));
 
+            await addUserToRoll(item.username, 'customer');
+
+            await removeUserFromRoll(item.username, 'employee');
+
             employeesList.splice(employeesList.findIndex(e => e.id === item.id), 1);
    
             props.ap.load.setLoading({type: ''});
@@ -188,7 +192,7 @@ const useEmployees = (props) => {
             
             const _user = await API.post('apiForLambda', '/findUser', apiOptions);
 
-            setCognitoUsers(_user.body.Users);
+            setCognitoUsers(_user.body === null ? [] : _user.body.Users === undefined ? [] : _user.body.Users);
 
             setlookingforuser(false);
             
@@ -259,6 +263,10 @@ const useEmployees = (props) => {
 
             }    
 
+            await addUserToRoll(item.Username, 'employee');
+
+            await removeUserFromRoll(item.username, 'customer');
+
             swal({ title: "Asociar Empleado!", text: "Empleado Asociado Correctamente!", type: "success", timer: 2500 });
 
             props.ap.load.setLoading({type: ''});
@@ -274,6 +282,38 @@ const useEmployees = (props) => {
         }
         
         
+    }
+
+    const addUserToRoll = async (username, roll) => {
+        const apiOptions = {};
+
+        apiOptions['headers'] = {
+            'Content-Type': 'application/json'
+        };
+        
+        apiOptions['body'] = {
+          GroupName: roll,
+          UserPoolId: aws_exports.aws_user_pools_id,
+          Username: username
+        };
+
+        await API.post('apiForLambda', '/addUserToGroup', apiOptions);
+    }
+
+    const removeUserFromRoll = async (username, roll) => {
+        const apiOptions = {};
+
+        apiOptions['headers'] = {
+            'Content-Type': 'application/json'
+        };
+        
+        apiOptions['body'] = {
+          GroupName: roll,
+          UserPoolId: aws_exports.aws_user_pools_id,
+          Username: username
+        };
+
+        await API.post('apiForLambda', '/removeUserFromGroup', apiOptions);
     }
 
 	return { lookingforuser, handleLinkEmployee, cognitoUsers, handleFindUser, add, handleClose, handleShow, email, setEmail, edit, show, so, name, setName, setService, addServiceToEmployee, handleDelete, handleUnlinkEmployee };

@@ -90,8 +90,12 @@ query getCompanyProductsAndServices($id: ID!) {
 `;
 
 export const listCompanys = /* GraphQL */ `
-  query ListCompanys {
-    listCompanys {
+  query ListCompanys(
+    $filter: ModelCompanyFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         name
@@ -105,8 +109,8 @@ export const listCompanys = /* GraphQL */ `
         }
       }
     }
-  }`
-;
+  }
+`;
 
 export const listEmployees = `
   query Employees($id: String!) {

@@ -22,6 +22,7 @@ type Company
     services: [CompanyService] @connection(name: "cs")
     products: [CompanyProduct] @connection(name: "cp")
     deleted: Boolean
+    owner: String
     deletedAt: String
     createdAt: String
 }
@@ -63,6 +64,7 @@ type Office
     deleted: Boolean
     deletedAt: String
     createdAt: String
+    companyId: String
 }
 
 type Product

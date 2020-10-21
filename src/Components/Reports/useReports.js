@@ -53,6 +53,7 @@ const useReports = (props) => {
 						{createdAt: {gt: _date}}, 
 						{createdAt: {lt: String(moment(date).format('YYYY-MM-DDT')+'23:59:59.000')}},
 						{companyId: {eq: props.state.company.id}},
+						{state: {eq: 'FINISHED'}},
 					  ]
 					},
 					limit: 1000
@@ -146,8 +147,8 @@ const useReports = (props) => {
 		}
 		
 		data.forEach(e => {
-			//console.log(e);
 			var date = new Date(e.createdAt);
+
 			var service = e.service.items[0].service.name;
 			var cost = e.service.items[0].cost === null ? e.service.items[0].service.cost : e.service.items[0].cost;
 			
@@ -160,8 +161,8 @@ const useReports = (props) => {
 				sresult[snresult.findIndex(e => e === service)] = sresult[snresult.findIndex(e => e === service)] + parseInt(cost);
 			}
 
-			rresult[(date.getDate() - 1)] = rresult[(date.getDate() - 1)] + 1;
-			eresult[(date.getDate() - 1)] = eresult[(date.getDate() - 1)] + parseInt(cost);
+			rresult[(date.getDate())] = rresult[(date.getDate())] + 1;
+			eresult[(date.getDate())] = eresult[(date.getDate())] + parseInt(cost);
 		});
 
 		setRequests(rresult)
