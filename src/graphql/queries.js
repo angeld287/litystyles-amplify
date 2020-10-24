@@ -13,6 +13,7 @@ export const getCompany = /* GraphQL */ `
           name
           administrator
           categoryId
+          image
           location
           deleted
           deletedAt
@@ -94,6 +95,7 @@ export const getOffice = /* GraphQL */ `
         nextToken
       }
       categoryId
+      image
       location
       deleted
       deletedAt
@@ -118,6 +120,7 @@ export const listOffices = /* GraphQL */ `
           nextToken
         }
         categoryId
+        image
         location
         deleted
         deletedAt
@@ -140,6 +143,7 @@ export const getCategory = /* GraphQL */ `
           name
           administrator
           categoryId
+          image
           location
           deleted
           deletedAt

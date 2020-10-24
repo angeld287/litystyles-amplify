@@ -61,6 +61,7 @@ type Office
     administrator: String
     employees: [Employee] @connection
     categoryId: String
+    image: String
     location: String!
     deleted: Boolean
     deletedAt: String

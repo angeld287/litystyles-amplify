@@ -1,6 +1,6 @@
 {
     "identityPoolName": "littystyle0826a386_identitypool_0826a386",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "littys0826a386",
     "userPoolName": "littystyle0826a386_userpool_0826a386",
     "autoVerifiedAttributes": [

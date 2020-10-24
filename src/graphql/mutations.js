@@ -16,6 +16,7 @@ export const createCompany = /* GraphQL */ `
           name
           administrator
           categoryId
+          image
           location
           deleted
           deletedAt
@@ -63,6 +64,7 @@ export const updateCompany = /* GraphQL */ `
           name
           administrator
           categoryId
+          image
           location
           deleted
           deletedAt
@@ -110,6 +112,7 @@ export const deleteCompany = /* GraphQL */ `
           name
           administrator
           categoryId
+          image
           location
           deleted
           deletedAt
@@ -444,6 +447,7 @@ export const createOffice = /* GraphQL */ `
         nextToken
       }
       categoryId
+      image
       location
       deleted
       deletedAt
@@ -476,6 +480,7 @@ export const updateOffice = /* GraphQL */ `
         nextToken
       }
       categoryId
+      image
       location
       deleted
       deletedAt
@@ -508,6 +513,7 @@ export const deleteOffice = /* GraphQL */ `
         nextToken
       }
       categoryId
+      image
       location
       deleted
       deletedAt
@@ -531,6 +537,7 @@ export const createCategory = /* GraphQL */ `
           name
           administrator
           categoryId
+          image
           location
           deleted
           deletedAt
@@ -561,6 +568,7 @@ export const updateCategory = /* GraphQL */ `
           name
           administrator
           categoryId
+          image
           location
           deleted
           deletedAt
@@ -591,6 +599,7 @@ export const deleteCategory = /* GraphQL */ `
           name
           administrator
           categoryId
+          image
           location
           deleted
           deletedAt

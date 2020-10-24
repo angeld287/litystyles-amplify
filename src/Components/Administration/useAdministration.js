@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { updateRequest } from '../../graphql/customMutations';
 import { getCompanyOfficesProductsAndServices/* , listOffices */ } from '../../graphql/customQueries';
@@ -29,43 +29,37 @@ const useAdministration = (props) => {
 	const [ cancelerror, setCancelError ] = useState(false);
 	const [ cancelerrorMessage, setCancelErrorMessage ] = useState(false);
 
-	
-	useEffect(() => {
-		//let didCancel = false;
+	const _requests = useCallback(
+		async () => {
 
-		const _requests = async () => {
-			try {
-				const filter = {
-					and: [
-						{state: {ne: 'FINISHED'}},
-						{state: {ne: 'CANCELED'}},
-						{companyId: {eq: props.state.company.id}},
-					]
-				}
-	
-				if(requests.length === 0 || !requested){
-					setLoading({type: 'requests'})
-					const api = await API.graphql(graphqlOperation(listRequests, { filter: filter, limit: 1000 } ));
-					
-					setRequests(api.data.listRequests.items);
-					setRequested(true);
-					setLoading({type: ''})
-				}
-			} catch (e) {
-				setError({
-					type: 'requests',
-					message: 'Error al buscar las solicitudes'
-				})
+		try {
+			const filter = {
+				and: [
+					{state: {ne: 'FINISHED'}},
+					{state: {ne: 'CANCELED'}},
+					{companyId: {eq: props.state.company.id}},
+				]
+			}
+
+			if(requests.length === 0 && !requested){
+				setLoading({type: 'requests'})
+				const api = await API.graphql(graphqlOperation(listRequests, { filter: filter, limit: 1000 } ));
+				setRequests(api.data.listRequests.items);
+				setRequested(true);
 				setLoading({type: ''})
 			}
+		} catch (e) {
+			setError({
+				type: 'requests',
+				message: 'Error al buscar las solicitudes'
+			})
+			setLoading({type: ''})
 		}
+	},
+	[requests, props, requested]
+	);
 
-		_requests();
-
-		return () => {
-		//	didCancel = true;
-		};
-	}, [requests, requested, props]);
+	useEffect(() => { _requests()}, [_requests]);
 
 	const onSelectTab = (e) => {
 		switch (e) {

@@ -1,13 +1,16 @@
 import React from 'react';
 import { Table, Container, Row, Col, ButtonGroup, Modal, Form } from 'react-bootstrap';
 import { Button, Spinner, Icon } from "@blueprintjs/core";
+import Cropper from 'react-easy-crop'
 
 import useOffices from './useOffices';
 import Employess from './Employees/Employees';
 
+import ImageCrop from './ImageCrop';
+
 const Offices = (props) => {
 
-    const { so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees, setCategory, category } = useOffices(props);
+    const { crop, so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees, setCategory, category } = useOffices(props);
  
     const list = (props.ap.off.offices !== null)?([].concat(props.ap.off.offices)
 		.map((item,i)=>
@@ -74,6 +77,17 @@ const Offices = (props) => {
                         {categoryList}
                     </Form.Control>
                 </Form.Group>
+                {/* Agregar Imagen */}
+
+                { edit &&
+                    (<div class="input-group mb-3">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*"  onChange={e => {e.preventDefault(); crop.handleImageSelected(e)}} aria-describedby="inputGroupFileAddon01" />
+                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        </div>
+                    </div>)
+                }
+
                 <Form.Group controlId="location">
                     <Form.Label>Ubicacion</Form.Label>
                     <Form.Control readOnly={!edit && !add} type="text" value={location} onChange={ e => setLocation(e.target.value)}/>
@@ -89,6 +103,23 @@ const Offices = (props) => {
                         Guardar
                     </Button>
                 }
+            </Modal.Footer>
+        </Modal>
+        <Modal show={crop.imageModal} onHide={crop.handleCloseImageModal}>
+            <Modal.Header closeButton>
+                <Modal.Title>Cortar Imagen</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <ImageCrop _crop={crop}/>
+                <img src={crop.croppedImage} alt="Cropped" />
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={crop.handleCloseImageModal}>
+                    Cerrar
+                </Button>
+                <Button variant="primary" >
+                    Cortar
+                </Button>
             </Modal.Footer>
         </Modal>
     </Container>)

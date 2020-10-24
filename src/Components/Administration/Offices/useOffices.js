@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+import { useState, useCallback } from 'react';
+import { API, graphqlOperation, Storage } from 'aws-amplify';
 import { updateOffice, createOffice } from '../../../graphql/mutations';
+
+import getCroppedImg from '../../../commun/cropImage'
 
 import moment from 'moment';
 
@@ -17,6 +19,17 @@ const useOffices = (props) => {
     const [ name, setName ] = useState('');
     const [ category, setCategory ] = useState(0);
     const [ location, setLocation ] = useState('');
+
+    const [ _crop, setCrop] = useState({ x: 0, y: 0 })
+    const [ rotation, setRotation] = useState(0)
+    const [ zoom, setZoom] = useState(1)
+
+    const [ imagePath, setImagePath ] = useState([]);
+    const [ image, setImage ] = useState([]);
+    const [ imageModal, setImageModal ] = useState(false);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
+    const [croppedImage, setCroppedImage] = useState(null)
+
     const [ employees, setEmployess ] = useState([]);
 
     const handleClose = () => setShow(false);
@@ -191,7 +204,92 @@ const useOffices = (props) => {
        }
     }
 
-	return {  add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, so, setLocation, setName, location, name, employees, setCategory, category };
+    const handleImageSelected = (e) => {
+        console.log(e.target.files);
+        var selectedFile = e.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+            setImagePath(event.target.result);
+            console.log(event.target.result);
+        };       
+        setImageModal(true);
+        reader.readAsDataURL(selectedFile);
+    }
+
+    const putImageOnStorage = async (officeId) => {
+        try {
+            if(image[0] !== undefined){
+
+                if(image[0].type === "application/pdf"){
+
+                    return "";
+                }
+                const filename = "OFFICES_PROFILE_IMAGES/"+officeId+".pdf";
+                await Storage.put(filename, image[0], { contentType: 'application/pdf' });
+                return filename;
+            }else{
+                return ""
+            }
+            
+        } catch (e) {
+            console.log(e);
+
+            props.ap.load.setLoading({type: ''});
+
+            handleClose()
+
+            swal({title: "Agregar Imagen!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
+        }
+    }
+
+    const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+        setCroppedAreaPixels(croppedAreaPixels)
+    }, [])
+
+    const showCroppedImage = useCallback(async () => {
+        try {
+          const croppedImage = await getCroppedImg(
+            imagePath,
+            croppedAreaPixels,
+            rotation
+          )
+          console.log('donee', { croppedImage })
+          setCroppedImage(croppedImage)
+        } catch (e) {
+          console.error(e)
+        }
+      }, [croppedAreaPixels, rotation])
+
+    const handleCloseImageModal = useCallback(() => {
+        setImageModal(false);
+        setImagePath([]);
+        setCroppedImage(null)
+    }, [])
+
+    const handleAddImageCropped = () => {
+        console.log('here');
+    }
+
+    const crop = {
+        imagePath,
+        handleAddImageCropped,
+        handleCloseImageModal,
+        handleImageSelected,
+        imageModal,
+        setImageModal,
+        _crop,
+        rotation,
+        zoom,
+        setCrop,
+        setRotation,
+        onCropComplete,
+        setZoom,
+        setCroppedImage,
+        croppedImage
+    };
+
+	return { crop, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, so, setLocation, setName, location, name, employees, setCategory, category };
 };
 
 export default useOffices;
