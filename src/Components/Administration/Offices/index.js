@@ -1,13 +1,16 @@
 import React from 'react';
 import { Table, Container, Row, Col, ButtonGroup, Modal, Form } from 'react-bootstrap';
 import { Button, Spinner, Icon } from "@blueprintjs/core";
+import Cropper from 'react-easy-crop'
 
 import useOffices from './useOffices';
 import Employess from './Employees/Employees';
 
+import ImageCrop from './ImageCrop';
+
 const Offices = (props) => {
 
-    const { so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees } = useOffices(props);
+    const { crop, so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees, setCategory, category } = useOffices(props);
  
     const list = (props.ap.off.offices !== null)?([].concat(props.ap.off.offices)
 		.map((item,i)=>
@@ -25,6 +28,13 @@ const Offices = (props) => {
 				</tr>
 			)
         )):(<td></td>)
+
+    const categoryList = (props.ap.cat.categories !== null)?([].concat(props.ap.cat.categories)
+	    .map((item,i)=>
+		(
+            <option key={i} value={item.id}>{item.name}</option>
+		)
+     )):(<td></td>)
 
     if(props.ap.err.error.type === 'offices') return(<div style={{marginTop: 5}}><h5>{props.ap.err.error.message}</h5></div>)
     
@@ -61,11 +71,28 @@ const Offices = (props) => {
                     <Form.Label>Nombre</Form.Label>
                     <Form.Control readOnly={!edit && !add} type="text" value={name} onChange={ e => setName(e.target.value)}/>
                 </Form.Group>
+                <Form.Group>
+                    <Form.Control defaultValue={!add ? category : 0} readOnly={!edit && !add} as="select" id="category" onChange={e => setCategory(e.target.value)}>
+                        <option value="0">Seleccione...</option>
+                        {categoryList}
+                    </Form.Control>
+                </Form.Group>
+                {/* Agregar Imagen */}
+
+                { false &&
+                    (<div class="input-group mb-3">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*"  onChange={e => {e.preventDefault(); crop.handleImageSelected(e)}} aria-describedby="inputGroupFileAddon01" />
+                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        </div>
+                    </div>)
+                }
+
                 <Form.Group controlId="location">
                     <Form.Label>Ubicacion</Form.Label>
                     <Form.Control readOnly={!edit && !add} type="text" value={location} onChange={ e => setLocation(e.target.value)}/>
                 </Form.Group>
-                <Employess employess={employees} ap={props.ap} office={so} cp={props.cp}/>
+                {!add && <Employess employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
@@ -76,6 +103,23 @@ const Offices = (props) => {
                         Guardar
                     </Button>
                 }
+            </Modal.Footer>
+        </Modal>
+        <Modal show={crop.imageModal} onHide={crop.handleCloseImageModal}>
+            <Modal.Header closeButton>
+                <Modal.Title>Cortar Imagen</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <ImageCrop _crop={crop}/>
+                <img src={crop.croppedImage} alt="Cropped" />
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={crop.handleCloseImageModal}>
+                    Cerrar
+                </Button>
+                <Button variant="primary" >
+                    Cortar
+                </Button>
             </Modal.Footer>
         </Modal>
     </Container>)
