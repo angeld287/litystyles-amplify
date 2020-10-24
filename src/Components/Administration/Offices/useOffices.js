@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { API, graphqlOperation } from 'aws-amplify';
+import { useState, useCallback } from 'react';
+import { API, graphqlOperation, Storage } from 'aws-amplify';
 import { updateOffice, createOffice } from '../../../graphql/mutations';
+
+import getCroppedImg from '../../../commun/cropImage'
 
 import moment from 'moment';
 
@@ -15,7 +17,19 @@ const useOffices = (props) => {
     const [ so, setSelectedObject ] = useState({});
 
     const [ name, setName ] = useState('');
+    const [ category, setCategory ] = useState(0);
     const [ location, setLocation ] = useState('');
+
+    const [ _crop, setCrop] = useState({ x: 0, y: 0 })
+    const [ rotation, setRotation] = useState(0)
+    const [ zoom, setZoom] = useState(1)
+
+    const [ imagePath, setImagePath ] = useState([]);
+    const [ image, setImage ] = useState([]);
+    const [ imageModal, setImageModal ] = useState(false);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
+    const [croppedImage, setCroppedImage] = useState(null)
+
     const [ employees, setEmployess ] = useState([]);
 
     const handleClose = () => setShow(false);
@@ -26,7 +40,8 @@ const useOffices = (props) => {
                 setSelectedObject(object);
                 setName(object.name);
                 setLocation(object.location);
-                setEmployess(object.employees.items)
+                setEmployess(object.employees.items);
+                setCategory(object.categoryId);
                 setEdit(true);
                 setAdd(false);
                 //setServiceName(object.service.name);
@@ -38,7 +53,8 @@ const useOffices = (props) => {
                 setSelectedObject(object);
                 setName(object.name);
                 setLocation(object.location);
-                setEmployess(object.employees.items)
+                setEmployess(object.employees.items);
+                setCategory(object.categoryId);
                 setEdit(false);
                 setAdd(false);
                 //setServiceName(object.service.name);
@@ -49,6 +65,7 @@ const useOffices = (props) => {
             case 'add':
                 setName('');
                 setLocation('');
+                setCategory(0);
                 setEdit(false);
                 setAdd(true);
                 setShow(true);
@@ -108,17 +125,12 @@ const useOffices = (props) => {
     const handleAdd = async () => {
         try {
 
-             /* if(service === '') {
-                 swal({ title: "Agregar Oficina!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+             var list = props.ap.off.offices;
+
+             if(category === 0 || category === (0).toString()){
+                swal({title: "Editar Oficina!", text: "Debe seleccionar una categoria.", type: "error", timer: 2500 });
                 return;
              }
-
-             if(cost.match(/^[0-9]+$/) === null) {
-                swal({ title: "Agregar Oficina!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
-                return;
-             } */
-
-             var list = props.ap.off.offices;
 
              if(list[list.findIndex(e => e.location === location)] !== undefined) {
                 swal({title: "Agregar Oficina!", text: "Ya existe una oficina con esta ubicacion!", type: "error", timer: 2000 });
@@ -131,8 +143,10 @@ const useOffices = (props) => {
              }
 
              props.ap.load.setLoading({type: 'addoffice'});
+
+             const inp = { name: name, location: location, categoryId: category, categoryOfficesId: category, companyOfficesId: props.cp.state.company.id };
     
-             const api = await API.graphql(graphqlOperation(createOffice, {input: { name: name, location: location }}));
+             const api = await API.graphql(graphqlOperation(createOffice, {input: inp}));
 
              list.push(api.data.createOffice);
 
@@ -157,11 +171,16 @@ const useOffices = (props) => {
     const handleEdit = async () => {
         try {
 
+            if(category === 0 || category === (0).toString()){
+                swal({title: "Editar Oficina!", text: "Debe seleccionar una categoria.", type: "error", timer: 2500 });
+                return;
+            }
+
             props.ap.load.setLoading({type: 'editoffice'});
 
             var list = props.ap.off.offices;
    
-            const api = await API.graphql(graphqlOperation(updateOffice, {input: {id: so.id, location: location, name: name}}));
+            const api = await API.graphql(graphqlOperation(updateOffice, {input: {id: so.id, location: location, name: name, categoryId: category, categoryOfficesId: category}}));
 
             list.splice(list.findIndex(e => e.id === so.id), 1);
 
@@ -185,7 +204,92 @@ const useOffices = (props) => {
        }
     }
 
-	return {  add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, so, setLocation, setName, location, name, employees };
+    const handleImageSelected = (e) => {
+        console.log(e.target.files);
+        var selectedFile = e.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+            setImagePath(event.target.result);
+            console.log(event.target.result);
+        };       
+        setImageModal(true);
+        reader.readAsDataURL(selectedFile);
+    }
+
+    const putImageOnStorage = async (officeId) => {
+        try {
+            if(image[0] !== undefined){
+
+                if(image[0].type === "application/pdf"){
+
+                    return "";
+                }
+                const filename = "OFFICES_PROFILE_IMAGES/"+officeId+".pdf";
+                await Storage.put(filename, image[0], { contentType: 'application/pdf' });
+                return filename;
+            }else{
+                return ""
+            }
+            
+        } catch (e) {
+            console.log(e);
+
+            props.ap.load.setLoading({type: ''});
+
+            handleClose()
+
+            swal({title: "Agregar Imagen!", text: "Ha ocurrido un error. Favor intentarlo mas tarde.", type: "error", timer: 2000 });
+        }
+    }
+
+    const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+        setCroppedAreaPixels(croppedAreaPixels)
+    }, [])
+
+    const showCroppedImage = useCallback(async () => {
+        try {
+          const croppedImage = await getCroppedImg(
+            imagePath,
+            croppedAreaPixels,
+            rotation
+          )
+          console.log('donee', { croppedImage })
+          setCroppedImage(croppedImage)
+        } catch (e) {
+          console.error(e)
+        }
+      }, [croppedAreaPixels, rotation])
+
+    const handleCloseImageModal = useCallback(() => {
+        setImageModal(false);
+        setImagePath([]);
+        setCroppedImage(null)
+    }, [])
+
+    const handleAddImageCropped = () => {
+        console.log('here');
+    }
+
+    const crop = {
+        imagePath,
+        handleAddImageCropped,
+        handleCloseImageModal,
+        handleImageSelected,
+        imageModal,
+        setImageModal,
+        _crop,
+        rotation,
+        zoom,
+        setCrop,
+        setRotation,
+        onCropComplete,
+        setZoom,
+        setCroppedImage,
+        croppedImage
+    };
+
+	return { crop, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, so, setLocation, setName, location, name, employees, setCategory, category };
 };
 
 export default useOffices;

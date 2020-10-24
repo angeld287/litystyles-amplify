@@ -60,11 +60,31 @@ type Office
     name: String
     administrator: String
     employees: [Employee] @connection
+    categoryId: String
+    image: String
     location: String!
     deleted: Boolean
     deletedAt: String
     createdAt: String
     companyId: String
+}
+
+type Category
+    @model
+    @auth(rules: [
+        # Defaults to use the "owner" field.
+        { allow: owner },
+
+        # Roles users can access any operation.
+        { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+    ]) {
+    id: ID!
+    name: String
+    offices: [Office] @connection
+    deleted: Boolean
+    deletedAt: String
+    createdAt: String
 }
 
 type Product

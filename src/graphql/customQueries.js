@@ -3,11 +3,12 @@
     getCompany(id: $id) {
       id
       name
-      offices {
+      offices(filter: {deleted: {ne: true}}) {
         items {
           id
           name
           administrator
+          categoryId
           employees {
             items {
               id
