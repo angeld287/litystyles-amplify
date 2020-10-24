@@ -20,11 +20,16 @@ import './app.css'
 Amplify.configure(aws_exports); 
 
 const AuthStateApp = () => {
-  const [authState, setAuthState] = useState();
+  const [authState, setAuthState] = useState(AuthState.SignIn);
+  const [user, setUser] = useState(null);
+
 
   useEffect(() => {
+    console.log("ss")
       return onAuthUIStateChange((nextAuthState, authData) => {
+          console.log(nextAuthState, authData)
           setAuthState(nextAuthState);
+          setUser(authData);
       });
   }, []);
   
@@ -34,15 +39,12 @@ const AuthStateApp = () => {
     Auth.federatedSignIn({provider: "Google"});
   };
 
-  return authState === AuthState.SignedIn ? (
-      <div>
-          <AppWithRouter authState={authState}/>
-          {/* <AmplifySignOut /> */}
-      </div>
-    ) : (
-      (authState === AuthState.Loading)?
-      (<div style={{marginTop: 50}} align="center"><Spinner intent="primary" size={100} /></div>)
-      :(<div style={{marginTop: 30}}>
+  if(authState === AuthState.SignedIn && user !== null) { return (<div><AppWithRouter authState={authState}/></div>)}
+  
+  if(authState === AuthState.SignIn || authState === AuthState.SignUp || authState === AuthState.ForgotPassword || authState === AuthState.SignedOut || authState === AuthState.ResetPassword
+    || authState === AuthState.ResetPassword || authState === AuthState.ConfirmSignIn || authState === AuthState.ConfirmSignUp){
+    return (
+      <div style={{marginTop: 30}}>
         <div align="center" style={{width: 300, margin: 'auto'}}>
           <Card interactive={true} elevation={Elevation.TWO}>
             <button onClick={(e) => {e.preventDefault(); googleFederated();}} className="loginBtn loginBtn--google">
@@ -52,6 +54,17 @@ const AuthStateApp = () => {
         </div>
         <br/>
         <br/>
+        <AmplifyLogin/>
+      </div>
+    );
+  } else {
+      return <div style={{marginTop: 50}} align="center"><Spinner intent="primary" size={100} /></div> 
+  };
+}
+
+const AmplifyLogin = () => {
+  return (
+    <div>
         <AmplifyAuthenticator federated>
           <AmplifySignIn 
             federated
@@ -72,8 +85,8 @@ const AuthStateApp = () => {
           />}
 
         </AmplifyAuthenticator>
-      </div>)
-  );
+    </div>
+  )
 }
 
 export default AuthStateApp;

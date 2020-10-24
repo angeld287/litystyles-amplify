@@ -79,7 +79,7 @@ const Offices = (props) => {
                 </Form.Group>
                 {/* Agregar Imagen */}
 
-                { edit &&
+                { false &&
                     (<div class="input-group mb-3">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*"  onChange={e => {e.preventDefault(); crop.handleImageSelected(e)}} aria-describedby="inputGroupFileAddon01" />
