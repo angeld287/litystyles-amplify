@@ -9,6 +9,7 @@
           name
           administrator
           categoryId
+          image
           employees {
             items {
               id
