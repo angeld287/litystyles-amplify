@@ -51,10 +51,6 @@
 		}
 	},
 	"storage": {
-		"littystylesstorage": {
-			"service": "S3",
-			"providerPlugin": "awscloudformation"
-		},
 		"littystyless3": {
 			"service": "S3",
 			"providerPlugin": "awscloudformation"
