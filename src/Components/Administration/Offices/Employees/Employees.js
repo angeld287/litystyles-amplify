@@ -73,9 +73,10 @@ const Employess = (props) => {
      )):(<td></td>)
         
     return(<Container fluid>
-		<div style={{marginTop:20}}>
+		{props.addButton &&
+        <div style={{marginTop:20}}>
 			<Col sm={2}><Button loading={props.ap.load.loading.type === 'addemployee'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShow('add', {});}} icon="add"></Button></Col>
-		</div>
+		</div>}
         <div style={{marginTop:20}}>
 			<Table striped bordered hover>
 				<thead>

@@ -30,6 +30,8 @@ const useOffices = (props) => {
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
     const [croppedImage, setCroppedImage] = useState(null)
 
+    const [ s3Image, setS3Image ] = useState('');
+
     const [ employees, setEmployess ] = useState([]);
 
     const handleClose = () => setShow(false);
@@ -37,6 +39,7 @@ const useOffices = (props) => {
     const handleShow = (action, object) => {
         switch (action) {
             case 'edit':
+                getImageFromStorage(object.image)
                 setSelectedObject(object);
                 setName(object.name);
                 setLocation(object.location);
@@ -44,12 +47,12 @@ const useOffices = (props) => {
                 setCategory(object.categoryId);
                 setEdit(true);
                 setAdd(false);
-                //setServiceName(object.service.name);
                 setShow(true);
                 
                 break;
 
             case 'view':
+                getImageFromStorage(object.image)
                 setSelectedObject(object);
                 setName(object.name);
                 setLocation(object.location);
@@ -57,7 +60,6 @@ const useOffices = (props) => {
                 setCategory(object.categoryId);
                 setEdit(false);
                 setAdd(false);
-                //setServiceName(object.service.name);
                 setShow(true);
                 
                 break;
@@ -179,8 +181,15 @@ const useOffices = (props) => {
             props.ap.load.setLoading({type: 'editoffice'});
 
             var list = props.ap.off.offices;
+
+            const input = {id: so.id, location: location, name: name, categoryId: category, categoryOfficesId: category};
+
+            if(croppedImage !== null){
+                const _image = await putImageOnStorage(so.id);
+                if(_image !== undefined){input.image = _image.key;}
+            }
    
-            const api = await API.graphql(graphqlOperation(updateOffice, {input: {id: so.id, location: location, name: name, categoryId: category, categoryOfficesId: category}}));
+            const api = await API.graphql(graphqlOperation(updateOffice, {input: input}));
 
             list.splice(list.findIndex(e => e.id === so.id), 1);
 
@@ -193,6 +202,7 @@ const useOffices = (props) => {
             handleClose();
 
        } catch (e) {
+
            console.log(e);
 
            props.ap.load.setLoading({type: ''});
@@ -204,30 +214,35 @@ const useOffices = (props) => {
        }
     }
 
-    const handleImageSelected = (e) => {
-        console.log(e.target.files);
+    const handleImageSelected = async (e) => {
         var selectedFile = e.target.files[0];
         var reader = new FileReader();
 
-        reader.onload = function(event) {
-            setImagePath(event.target.result);
-            console.log(event.target.result);
+        reader.onload = async function(event) {
+            if(selectedFile.size > 80000){
+                //ResizeImage(selectedFile);
+                setImagePath(event.target.result);
+            }else{
+                setImagePath(event.target.result);
+            }
         };       
+
         setImageModal(true);
         reader.readAsDataURL(selectedFile);
     }
 
     const putImageOnStorage = async (officeId) => {
         try {
-            if(image[0] !== undefined){
+            if(image !== []){
 
-                if(image[0].type === "application/pdf"){
-
+                if(image.type.includes("image/")){
+                    const filename = "OFFICES_PROFILE_IMAGES/"+officeId+".jpeg";
+                    const putr = await Storage.put(filename, image, { contentType: image.type });
+                    return putr;
+                }else{
+                    swal({title: "Agregar Imagen!", text: "Solo se puede agregar un archivo tipo imagen.", type: "error", timer: 3000 });
                     return "";
                 }
-                const filename = "OFFICES_PROFILE_IMAGES/"+officeId+".pdf";
-                await Storage.put(filename, image[0], { contentType: 'application/pdf' });
-                return filename;
             }else{
                 return ""
             }
@@ -249,26 +264,61 @@ const useOffices = (props) => {
 
     const showCroppedImage = useCallback(async () => {
         try {
+          props.ap.load.setLoading({type: 'croppingimage'});
+
           const croppedImage = await getCroppedImg(
             imagePath,
             croppedAreaPixels,
             rotation
           )
-          console.log('donee', { croppedImage })
-          setCroppedImage(croppedImage)
+          
+          setCroppedImage(croppedImage);
+          
+          setImage(dataURLtoFile(croppedImage, so.id));
+
+          setImageModal(false);
+
+          props.ap.load.setLoading({type: ''});
+
         } catch (e) {
-          console.error(e)
+
+          console.error(e);
+
+          props.ap.load.setLoading({type: ''});
+
         }
-      }, [croppedAreaPixels, rotation])
+      }, [so.id, imagePath, croppedAreaPixels, rotation, props])
+
+    const dataURLtoFile = (dataurl, filename) => {
+ 
+        var arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), 
+            n = bstr.length, 
+            u8arr = new Uint8Array(n);
+            
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        
+        return new File([u8arr], filename, {type:mime});
+    }
 
     const handleCloseImageModal = useCallback(() => {
         setImageModal(false);
         setImagePath([]);
-        setCroppedImage(null)
+        //setCroppedImage(null);
     }, [])
 
     const handleAddImageCropped = () => {
         console.log('here');
+    }
+
+    const getImageFromStorage = async (image) => {
+        if(s3Image === '' && image !== '' && image !== null) {
+        const file = await Storage.get(image);
+        setS3Image(file);
+        }
     }
 
     const crop = {
@@ -286,10 +336,11 @@ const useOffices = (props) => {
         onCropComplete,
         setZoom,
         setCroppedImage,
-        croppedImage
+        croppedImage,
+        showCroppedImage
     };
 
-	return { crop, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, so, setLocation, setName, location, name, employees, setCategory, category };
+	return { s3Image, crop, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, so, setLocation, setName, location, name, employees, setCategory, category };
 };
 
 export default useOffices;

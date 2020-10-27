@@ -25,9 +25,7 @@ const AuthStateApp = () => {
 
 
   useEffect(() => {
-    console.log("ss")
       return onAuthUIStateChange((nextAuthState, authData) => {
-          console.log(nextAuthState, authData)
           setAuthState(nextAuthState);
           setUser(authData);
       });

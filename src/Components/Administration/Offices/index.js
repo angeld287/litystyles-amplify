@@ -1,16 +1,18 @@
 import React from 'react';
-import { Table, Container, Row, Col, ButtonGroup, Modal, Form } from 'react-bootstrap';
+import { Table, Container, Row, Col, ButtonGroup, Modal, Form, Image } from 'react-bootstrap';
+
 import { Button, Spinner, Icon } from "@blueprintjs/core";
 import Cropper from 'react-easy-crop'
 
 import useOffices from './useOffices';
-import Employess from './Employees/Employees';
 
-import ImageCrop from './ImageCrop';
+import _default from '../../../images/default-image.png'
+
+import Employess from './Employees/Employees';
 
 const Offices = (props) => {
 
-    const { crop, so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees, setCategory, category } = useOffices(props);
+    const { s3Image, crop, so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees, setCategory, category } = useOffices(props);
  
     const list = (props.ap.off.offices !== null)?([].concat(props.ap.off.offices)
 		.map((item,i)=>
@@ -67,6 +69,9 @@ const Offices = (props) => {
                 <Modal.Title>{edit ? 'Editar Oficina' : add ? 'Agregar Oficina' : 'Ver Oficina'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                <Col className="mb-4">
+                    <Image src={s3Image !== '' && crop.croppedImage === null ? s3Image : ((so.image !== [] && crop.croppedImage !== null) ? crop.croppedImage : _default)} fluid />
+                </Col>
                 <Form.Group controlId="name">
                     <Form.Label>Nombre</Form.Label>
                     <Form.Control readOnly={!edit && !add} type="text" value={name} onChange={ e => setName(e.target.value)}/>
@@ -79,20 +84,19 @@ const Offices = (props) => {
                 </Form.Group>
                 {/* Agregar Imagen */}
 
-                { false &&
-                    (<div class="input-group mb-3">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*"  onChange={e => {e.preventDefault(); crop.handleImageSelected(e)}} aria-describedby="inputGroupFileAddon01" />
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                        </div>
-                    </div>)
-                }
+                { edit &&
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*" onClick={(e)=> { e.target.value = null; }} onChange={e => {e.preventDefault(); crop.handleImageSelected(e)}} aria-describedby="inputGroupFileAddon01" />
+                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                    </div>
+                </div>}
 
                 <Form.Group controlId="location">
                     <Form.Label>Ubicacion</Form.Label>
                     <Form.Control readOnly={!edit && !add} type="text" value={location} onChange={ e => setLocation(e.target.value)}/>
                 </Form.Group>
-                {!add && <Employess employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
+                {!add && <Employess addButton={edit} employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
@@ -110,14 +114,25 @@ const Offices = (props) => {
                 <Modal.Title>Cortar Imagen</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <ImageCrop _crop={crop}/>
-                <img src={crop.croppedImage} alt="Cropped" />
+                <div style={{position: 'relative', width: '100%', height: 200, background: '#333'}}>
+                    <Cropper
+                        image={crop.imagePath}
+                        crop={crop._crop}
+                        //rotation={crop.rotation}
+                        zoom={crop.zoom}
+                        aspect={6 / 3}
+                        onCropChange={crop.setCrop}
+                        //onRotationChange={crop.setRotation}
+                        onCropComplete={crop.onCropComplete}
+                        onZoomChange={crop.setZoom}
+                    />
+                </div>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={crop.handleCloseImageModal}>
                     Cerrar
                 </Button>
-                <Button variant="primary" >
+                <Button loading={props.ap.load.loading.type === 'croppingimage'} variant="primary" onClick={crop.showCroppedImage} >
                     Cortar
                 </Button>
             </Modal.Footer>
