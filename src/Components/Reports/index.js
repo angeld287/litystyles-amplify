@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Alert, FormGroup, Icon } from "@blueprintjs/core";
-import { Tabs, Tab, Table } from 'react-bootstrap';
+import { Tabs, Tab, Table as T } from 'react-bootstrap';
 
 import { DateInput } from "@blueprintjs/datetime";
 import moment from "moment";
@@ -9,12 +9,13 @@ import useReports from './useReports';
 import Line from './Line';
 import Bar from './Bar';
 import Pie from './Pie';
+import Table from './Table';
 
 import SelectMonth from './SelectMonth';
 
 const Reports = (props) => {
 
-	const { rp, barData, pieData, lineData, requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay, } = useReports(props);
+	const { rp, tableData, barData, pieData, lineData, requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay, } = useReports(props);
 	
 	const getMomentFormatter = (format) => {
 		// note that locale argument comes from locale prop and may be undefined
@@ -55,7 +56,7 @@ const Reports = (props) => {
 								</Alert>	
 							}
 						</div>
-						<Table striped bordered hover>
+						<T striped bordered hover>
 							<thead>
 								<tr>
 									<th>No.</th>
@@ -68,7 +69,7 @@ const Reports = (props) => {
 							<tbody>
 								{_requestsSearch}
 							</tbody>
-						</Table>
+						</T>
 					</div>
 				</Tab>
 				<Tab eventKey="timeline-line-chart" title={<Icon icon="timeline-line-chart"/>}>
@@ -79,6 +80,9 @@ const Reports = (props) => {
 				</Tab>
 				<Tab eventKey="pie-chart" title={<Icon icon="pie-chart"/>}>
 					<Pie rp={rp} data={pieData} SelectMonth={SelectMonth}/>
+				</Tab>
+				<Tab eventKey="table" title={<Icon icon="numbered-list"/>}>
+					<Table rp={rp} data={tableData} SelectMonth={SelectMonth}/>
 				</Tab>
 			</Tabs>
         </div>

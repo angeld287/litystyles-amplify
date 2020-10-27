@@ -21,7 +21,9 @@ const useReports = (props) => {
 	const [ tgrequests, setTotalRequests ] = useState(0); 
 
 	const [ gservicesn, setEargingByServicesn ] = useState([]); 
-	const [ gservices, setEargingByServices ] = useState([]); 
+	const [ gservices, setEargingByServices ] = useState([]);
+	
+	const [ tableData, setTableData ] = useState([]); 
 
 	const [ loading, setLoading ] = useState({
 		type: '',
@@ -140,6 +142,7 @@ const useReports = (props) => {
 		var sresult = [];
 		var totalR = data.length;
 		var totalE = 0;
+		var tableD = [];
 
 		for (let i = 0; i <= parseInt(getLastDay(month)); i++) {
 			rresult.push(0);
@@ -151,6 +154,12 @@ const useReports = (props) => {
 
 			var service = e.service.items[0].service.name;
 			var cost = e.service.items[0].cost === null ? e.service.items[0].service.cost : e.service.items[0].cost;
+			var tableItem = {
+				client: e.customerName,
+				service: service,
+				price: cost,
+				date: moment(e.createdAt).format('DD-MM-YY')
+			};
 			
 			totalE = parseInt(cost) + parseInt(totalE);
 
@@ -161,12 +170,16 @@ const useReports = (props) => {
 				sresult[snresult.findIndex(e => e === service)] = sresult[snresult.findIndex(e => e === service)] + parseInt(cost);
 			}
 
+			tableD.push(tableItem)
 			rresult[(date.getDate())] = rresult[(date.getDate())] + 1;
 			eresult[(date.getDate())] = eresult[(date.getDate())] + parseInt(cost);
 		});
 
-		setRequests(rresult)
-		setEarnings(eresult)
+		console.log(tableD);
+
+		setTableData(tableD);
+		setRequests(rresult);
+		setEarnings(eresult);
 		setEargingByServicesn(snresult);
 		setEargingByServices(sresult);
 		setTotalEarnings(totalE);
@@ -306,7 +319,7 @@ const useReports = (props) => {
 		tgrequests
 	}
 
-	return { rp, barData, pieData, lineData, requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay };
+	return { rp, tableData, barData, pieData, lineData, requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay };
 };
 
 export default useReports;
