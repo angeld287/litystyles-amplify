@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listRequests } from '../../graphql/customQueries';
 import { updateRequest } from '../../graphql/mutations';
+import { onUpdateRequest } from '../../graphql/subscriptions';
 
 import { onCreateRequest, onCreateRequestService } from '../../graphql/customSubscptions';
 
@@ -57,13 +58,21 @@ const useEmployee = (props) => {
 				setRequests(prevState => ([...prevState, r.value.data.onCreateRequest]));
 			  }
 			});
+
+			await API.graphql(graphqlOperation(onUpdateRequest, {resposibleName: props.state.username})).subscribe({
+				next: r => {
+					var state = r.value.data.onUpdateRequest.state;
+					if (state !== "ON_HOLD" && state !== "IN_PROCESS") {
+						setRequests(p => ([...p.filter(e => e.id !== r.value.data.onUpdateRequest.id)]));
+					}
+				}
+			});
 		};
 	
 		const subscribeRequestService = async () => {
 			await API.graphql(graphqlOperation(onCreateRequestService, {resposibleName: props.state.username})).subscribe({
 			  next: r => {
 				setRequests(prevState => {
-					//console.log(prevState);
 					var _requests = prevState;
 					var _edit = _requests[_requests.findIndex(e => e.id === r.value.data.onCreateRequestService.request.id)];
 					_requests.splice(_requests.findIndex(e => e.id === r.value.data.onCreateRequestService.request.id), 1);

@@ -218,4 +218,5 @@ type Request
 type Subscription {
   onCreateRequest(resposibleName: String): Request @aws_subscribe(mutations: ["createRequest"])
   onCreateRequestService(resposibleName: String): RequestService @aws_subscribe(mutations: ["createRequestService"])
+  onUpdateRequest(resposibleName: String): Request @aws_subscribe(mutations: ["updateRequest"])
 }

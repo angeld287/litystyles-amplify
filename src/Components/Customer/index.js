@@ -7,7 +7,10 @@ import {
 	Divider,
 	Callout,
 	Spinner,
+	Icon,
 } from "@blueprintjs/core";
+
+import { Row, Col} from 'react-bootstrap'
 
 import useCustomer from './useCustomer';
 
@@ -133,18 +136,29 @@ const Customer = (props) => {
 				{ step === 0 &&
 					<div>
 						{ (((products.length > 0) || (services.length > 0)) && (employees.length > 0)) &&
-							<ControlGroup fill={true} vertical={true} style={{margin: 50}}/* onMouseEnter={} */>
-								<InputGroup
-									style={{fontSize: "70px", margin: 10, height: 100}}
-									disabled={false}
-									//defaultValue={customerName}
-									onChange={(e) => {e.preventDefault(); setCustomerName(e.target.value)}}
-									large={false}
-									placeholder="DIGITE SU NOMBRE"
-									small={false}
-								/>
-								{customerNameEmpty && <Callout intent="danger">Debe digitar su nombre</Callout>}
-								<Button intent="Primary" onClick={handleNextPrevClick(1)} style={{fontSize: "70px", margin: 10}} >SIGUIENTE</Button>
+							<ControlGroup fill={true} vertical={true} style={{margin: 0}}/* onMouseEnter={} */>
+								<div style={{margin: 20}}>
+									<InputGroup
+										style={{fontSize: "70px", height: 100, marginBottom: 20}}
+										disabled={false}
+										//defaultValue={customerName}
+										onChange={(e) => {e.preventDefault(); setCustomerName(e.target.value)}}
+										large={false}
+										placeholder="DIGITE SU NOMBRE"
+										small={false}
+									/>
+									{customerNameEmpty && <Callout intent="danger">Debe digitar su nombre</Callout>}
+									<Button intent="Primary" onClick={handleNextPrevClick(1)} >
+										<Row>
+											<Col>
+												<h1 style={{fontSize: "70px", marginTop: 5}}>SIGUIENTE</h1> 
+											</Col>
+											<Col>
+												<Icon style={{}} icon="double-chevron-right" iconSize={100} />
+											</Col>
+										</Row>
+									</Button>
+								</div>
 							</ControlGroup>
 						}
 						{ (!(products.length > 0) && !(services.length > 0)) &&
