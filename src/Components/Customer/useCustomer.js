@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { getCompanyProductsAndServices, listEmployees } from './../../graphql/customQueries';
+import { getCompanyOfficesProductsAndServices } from './../../graphql/customQueries';
 import { createRequest, createRequestService, createRequestEmployee, createRequestProduct } from '../../graphql/mutations';
 
 import moment from "moment";
@@ -21,11 +21,9 @@ const useCustomer = (props, finishRequest, setStep) => {
 
 		const fetch = async () => {
 			var companyApi = [];
-			var employeesApi = [];
 
 			try {
-				companyApi = await API.graphql(graphqlOperation(getCompanyProductsAndServices, {id: props.state.company.id, limit: 400}));
-				employeesApi = await API.graphql(graphqlOperation(listEmployees, {id: props.state.office.id}));
+				companyApi = await API.graphql(graphqlOperation(getCompanyOfficesProductsAndServices, {id: props.state.company.id, limit: 500}));
 			} catch (e) {
 				setLoading(false);
 				setError(true);
@@ -33,7 +31,9 @@ const useCustomer = (props, finishRequest, setStep) => {
 			}
 
 			if (!didCancel) {
-				setEmployees(employeesApi.data.listEmployees.items)
+				var officeId = props.state.office.id;
+				var office = companyApi.data.getCompany.offices.items.filter(e => e.id === officeId)[0];
+				setEmployees(office.employees.items)
                 setCompany(companyApi.data.getCompany);
                 setProducts(companyApi.data.getCompany.products.items);
 				setServices(companyApi.data.getCompany.services.items);

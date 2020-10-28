@@ -163,6 +163,7 @@ type Employee
 }
 
 enum State { IN_PROCESS FINISHED CANCELED ON_HOLD }
+enum PaymentType { CARD CASH }
 
 type RequestEmployee @model(queries: null) {
   id: ID!
@@ -208,6 +209,7 @@ type Request
     resposibleName: String
     customerName: String!
     state: State
+    paymentType: PaymentType
     deleted: Boolean
     deletedAt: String
     createdAt: String
@@ -216,4 +218,5 @@ type Request
 type Subscription {
   onCreateRequest(resposibleName: String): Request @aws_subscribe(mutations: ["createRequest"])
   onCreateRequestService(resposibleName: String): RequestService @aws_subscribe(mutations: ["createRequestService"])
+  onUpdateRequest(resposibleName: String): Request @aws_subscribe(mutations: ["updateRequest"])
 }

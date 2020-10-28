@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listRequests } from '../../graphql/customQueries';
 import { updateRequest } from '../../graphql/mutations';
+import { onUpdateRequest } from '../../graphql/subscriptions';
 
 import { onCreateRequest, onCreateRequestService } from '../../graphql/customSubscptions';
 
@@ -16,6 +17,10 @@ const useEmployee = (props) => {
 	const [ finishLoading, setFinishLoading ] = useState(false);
 	const [ finishError, setFinishError ] = useState(false);
 	const [ finishErrorMessage, setFinishErrorMessage ] = useState(false);
+
+	const [ tcPayLoading, setTcPayLoading ] = useState(false);
+	const [ tcPayError, setTcPayError ] = useState(false);
+	const [ tcPayErrorMessage, setTcPayErrorMessage ] = useState(false);
 
 	const [ inProcessLoading, setInProcessLoading ] = useState(false);
 	const [ inProcessError, setInProcessError ] = useState(false);
@@ -53,13 +58,21 @@ const useEmployee = (props) => {
 				setRequests(prevState => ([...prevState, r.value.data.onCreateRequest]));
 			  }
 			});
+
+			await API.graphql(graphqlOperation(onUpdateRequest, {resposibleName: props.state.username})).subscribe({
+				next: r => {
+					var state = r.value.data.onUpdateRequest.state;
+					if (state !== "ON_HOLD" && state !== "IN_PROCESS") {
+						setRequests(p => ([...p.filter(e => e.id !== r.value.data.onUpdateRequest.id)]));
+					}
+				}
+			});
 		};
 	
 		const subscribeRequestService = async () => {
 			await API.graphql(graphqlOperation(onCreateRequestService, {resposibleName: props.state.username})).subscribe({
 			  next: r => {
 				setRequests(prevState => {
-					//console.log(prevState);
 					var _requests = prevState;
 					var _edit = _requests[_requests.findIndex(e => e.id === r.value.data.onCreateRequestService.request.id)];
 					_requests.splice(_requests.findIndex(e => e.id === r.value.data.onCreateRequestService.request.id), 1);
@@ -117,7 +130,22 @@ const useEmployee = (props) => {
 		});
 	}
 
-	return { requests, requestInProcess, finishLoading, finishError, finishErrorMessage, FinishRequest, nextRequest, loading, error, errorMessage, inProcessLoading, inProcessError, inProcessErrorMessage };
+	const setTCPayment = () => {
+		setTcPayLoading(true);
+		API.graphql(graphqlOperation(updateRequest, { input: { id: requestToFinish, paymentType: 'CARD' } }))
+		.then(r => {
+			var req = requests[requests.findIndex(e => e.id === requestToFinish)];
+			req.paymentType = "CARD";
+			setTcPayLoading(false);
+		})
+		.catch(e => {
+			setTcPayError(true);
+			setTcPayLoading(false)
+			setTcPayErrorMessage(e);
+		});
+	}
+
+	return { tcPayLoading, tcPayError, tcPayErrorMessage, setTCPayment, requests, requestInProcess, finishLoading, finishError, finishErrorMessage, FinishRequest, nextRequest, loading, error, errorMessage, inProcessLoading, inProcessError, inProcessErrorMessage };
 };
 
 export default useEmployee;

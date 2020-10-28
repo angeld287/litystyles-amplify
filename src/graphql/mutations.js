@@ -1098,6 +1098,7 @@ export const createRequestEmployee = /* GraphQL */ `
         resposibleName
         customerName
         state
+        paymentType
         deleted
         deletedAt
         createdAt
@@ -1144,6 +1145,7 @@ export const updateRequestEmployee = /* GraphQL */ `
         resposibleName
         customerName
         state
+        paymentType
         deleted
         deletedAt
         createdAt
@@ -1190,6 +1192,7 @@ export const deleteRequestEmployee = /* GraphQL */ `
         resposibleName
         customerName
         state
+        paymentType
         deleted
         deletedAt
         createdAt
@@ -1220,6 +1223,7 @@ export const createRequestService = /* GraphQL */ `
         resposibleName
         customerName
         state
+        paymentType
         deleted
         deletedAt
         createdAt
@@ -1270,6 +1274,7 @@ export const updateRequestService = /* GraphQL */ `
         resposibleName
         customerName
         state
+        paymentType
         deleted
         deletedAt
         createdAt
@@ -1320,6 +1325,7 @@ export const deleteRequestService = /* GraphQL */ `
         resposibleName
         customerName
         state
+        paymentType
         deleted
         deletedAt
         createdAt
@@ -1370,6 +1376,7 @@ export const createRequestProduct = /* GraphQL */ `
         resposibleName
         customerName
         state
+        paymentType
         deleted
         deletedAt
         createdAt
@@ -1416,6 +1423,7 @@ export const updateRequestProduct = /* GraphQL */ `
         resposibleName
         customerName
         state
+        paymentType
         deleted
         deletedAt
         createdAt
@@ -1462,6 +1470,7 @@ export const deleteRequestProduct = /* GraphQL */ `
         resposibleName
         customerName
         state
+        paymentType
         deleted
         deletedAt
         createdAt
@@ -1521,6 +1530,7 @@ export const createRequest = /* GraphQL */ `
       resposibleName
       customerName
       state
+      paymentType
       deleted
       deletedAt
       createdAt
@@ -1562,6 +1572,7 @@ export const updateRequest = /* GraphQL */ `
       resposibleName
       customerName
       state
+      paymentType
       deleted
       deletedAt
       createdAt
@@ -1603,6 +1614,7 @@ export const deleteRequest = /* GraphQL */ `
       resposibleName
       customerName
       state
+      paymentType
       deleted
       deletedAt
       createdAt

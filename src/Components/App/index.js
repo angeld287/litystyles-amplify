@@ -4,7 +4,7 @@ import { Spinner } from "@blueprintjs/core";
 
 import HeaderLinks from '../HeaderLinks/';
 
-import { Routes } from '../Routes/';
+//import { Routes } from '../Routes/';
 
 import { listCompanys } from '../../graphql/customQueries';
 
@@ -13,6 +13,13 @@ import { Auth, API, graphqlOperation } from 'aws-amplify';
 import { AuthState } from '@aws-amplify/ui-components';
 
 import aws_exports from '../../aws-exports'; 
+
+import Home from './../Home';
+import Administration from '../Administration';
+import Customer from '../Customer';
+import Employee from '../Employee';
+import Reports from '../Reports';
+import FirstSteps from '../FirstSteps';
 
 const App = (props) => {
   const [ loading, setLoading ] = useState(true);
@@ -25,6 +32,10 @@ const App = (props) => {
   const [ phonenumber, setPhonenumber ] = useState("");
   const [ user_roles, setUser_rolls ] = useState([]);
   const [ firstSteps, setFirstSteps] = useState(false);
+
+  const [ page, setPage ] = useState('');
+
+
 
   const addUserToGroup = useCallback( 
     async (username) => {
@@ -109,6 +120,7 @@ const App = (props) => {
   }; 
 
   const cp = {
+    setPage,
     firstSteps: firstSteps,
     authState: props.authState,
     isLoggedIn: props.authState === AuthState.SignedIn,
@@ -126,13 +138,21 @@ const App = (props) => {
     }
   };
 
-	if (loading) return <div style={{marginTop: 50}} align="center"><Spinner intent="primary" size={100} /></div> ;
+  if (loading) return <div style={{marginTop: 50}} align="center"><Spinner intent="primary" size={100} /></div> ;
+  
+  var anyPage = (page === '' || page === 'COMPANY_ADMIN' || page === 'STYLIST' || page === 'CUSTOMER' || page === 'REPORTS');
 
   return (
     <div className="App">
       <HeaderLinks cp={cp}/>
       {error &&  <div align="center"> <h1>Ha ocurrido un error</h1><p>{errorMessage}</p> </div>}
-      {!error && <Routes cp={cp} />}
+      {/* {!error && <Routes cp={cp} />} se tuvo que cambiar de Router a Single Page por problemas con el login */}
+      { !error && page === '' && !firstSteps && <Home {...cp} /> }
+      { !error && page === 'COMPANY_ADMIN' && !firstSteps && <Administration {...cp} /> }
+      { !error && page === 'STYLIST' && !firstSteps && <Employee {...cp} /> }
+      { !error && page === 'CUSTOMER' && !firstSteps && <Customer {...cp} /> }
+      { !error && page === 'REPORTS' && !firstSteps && <Reports {...cp} /> }
+      { !error && anyPage && firstSteps && <FirstSteps {...cp} /> }
     </div>
   );
 
