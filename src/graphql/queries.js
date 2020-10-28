@@ -390,6 +390,7 @@ export const getRequest = /* GraphQL */ `
       resposibleName
       customerName
       state
+      paymentType
       deleted
       deletedAt
       createdAt
@@ -418,6 +419,7 @@ export const listRequests = /* GraphQL */ `
         resposibleName
         customerName
         state
+        paymentType
         deleted
         deletedAt
         createdAt

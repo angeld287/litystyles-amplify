@@ -20,6 +20,7 @@
                 items {
                   id
                   service {
+                    cost
                     name
                     id
                   }
@@ -101,7 +102,7 @@ export const listCompanys = /* GraphQL */ `
       items {
         id
         name
-        offices {
+        offices(filter: {deleted: {ne: true}}) {
           items {
             administrator
             id
@@ -187,6 +188,7 @@ export const listRequests = /* GraphQL */ `
         resposibleName
         customerName
         state
+        paymentType
         deleted
         deletedAt
         createdAt
@@ -223,6 +225,7 @@ export const listRequestsPerDay = /* GraphQL */ `
             cost
           }
         }
+        paymentType
         customerName
         createdAt
       }

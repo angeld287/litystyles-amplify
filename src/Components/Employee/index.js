@@ -15,7 +15,7 @@ const style = {
 }
 
 const Employee = (props) => {
-	const { requests, requestInProcess, FinishRequest, nextRequest, inProcessLoading, finishLoading } = useEmployee(props);
+	const { setTCPayment, tcPayLoading, requests, requestInProcess, FinishRequest, nextRequest, inProcessLoading, finishLoading } = useEmployee(props);
 
 	const _requests = (requests !== null)?([].concat(requests)
 		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
@@ -30,6 +30,7 @@ const Employee = (props) => {
 
 
 	const _service = requests.length > 0 ? requests[0].service.items.length > 0 ? requests[0].service.items[0].service.name : "No Service"  : "No Request";
+	const _paymentTypeCard = requests.length > 0 ? requests[0].paymentType === "CARD" ? true : false : false;
 //(hasService ? requests[0].service.items[0].service.name : "No Service")
 	const _inTurn = requests.length > 0 ? (
 		<Card interactive={true} elevation={Elevation.FOUR}>
@@ -43,8 +44,12 @@ const Employee = (props) => {
 		<div>
 			<div><h3>{_service}</h3></div>
 			<div>
-				<ControlGroup style={{ margin: 20, marginBottom: 40}} vertical={true}>
-					{requestInProcess && <div><Button intent="Danger" onClick={(e) => {e.preventDefault(); FinishRequest()}} style={style} loading={finishLoading}>FINALIZAR</Button></div>}
+				<ControlGroup style={{ margin: 20, marginBottom: 20}} vertical={true}>
+					{requestInProcess && 
+					<div>
+						<Button intent="Danger" onClick={(e) => {e.preventDefault(); FinishRequest()}} style={style} loading={finishLoading}>FINALIZAR</Button>
+						<Button style={{marginTop: 40}} disabled={_paymentTypeCard} icon="credit-card" intent="warning" onClick={(e) => {e.preventDefault(); setTCPayment();}} loading={tcPayLoading}>Pago con TC</Button>
+					</div>}
 					{!requestInProcess && <div><Button intent="Primary" onClick={(e) => {e.preventDefault(); nextRequest()}} style={style} loading={inProcessLoading} disabled={requests.length === 0}>PROXIMO</Button></div>}
 				</ControlGroup>
 			</div>
