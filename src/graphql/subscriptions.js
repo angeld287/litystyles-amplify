@@ -88,6 +88,45 @@ export const onCreateRequestService = /* GraphQL */ `
     }
   }
 `;
+export const onUpdateRequest = /* GraphQL */ `
+  subscription OnUpdateRequest($resposibleName: String) {
+    onUpdateRequest(resposibleName: $resposibleName) {
+      id
+      companyId
+      resposible {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      service {
+        items {
+          id
+          resposibleName
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      product {
+        items {
+          id
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      resposibleName
+      customerName
+      state
+      paymentType
+      deleted
+      deletedAt
+      createdAt
+    }
+  }
+`;
 export const onCreateCompany = /* GraphQL */ `
   subscription OnCreateCompany($owner: String) {
     onCreateCompany(owner: $owner) {

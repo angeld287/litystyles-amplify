@@ -1,5 +1,5 @@
 import React from 'react';
-import { ControlGroup, Button, Card, Elevation } from "@blueprintjs/core";
+import { ControlGroup, Button, Card, Elevation, Spinner} from "@blueprintjs/core";
 
 
 import useEmployee from './useEmployee';
@@ -15,7 +15,7 @@ const style = {
 }
 
 const Employee = (props) => {
-	const { setTCPayment, tcPayLoading, requests, requestInProcess, FinishRequest, nextRequest, inProcessLoading, finishLoading } = useEmployee(props);
+	const { setTCPayment, tcPayLoading, requests, requestInProcess, FinishRequest, nextRequest, inProcessLoading, finishLoading, loading } = useEmployee(props);
 
 	const _requests = (requests !== null)?([].concat(requests)
 		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
@@ -40,6 +40,8 @@ const Employee = (props) => {
 		</Card>
 	) : (<div></div>);
 
+	if (loading) return <div style={{marginTop: 50}} align="center"><Spinner intent="primary" size={100} /></div> ;
+
 	return (
 		<div>
 			<div><h3>{_service}</h3></div>
@@ -48,8 +50,13 @@ const Employee = (props) => {
 					{requestInProcess && 
 					<div>
 						<Button intent="Danger" onClick={(e) => {e.preventDefault(); FinishRequest()}} style={style} loading={finishLoading}>FINALIZAR</Button>
+					</div>
+					}
+					{requestInProcess && 
+					<div>
 						<Button style={{marginTop: 40}} disabled={_paymentTypeCard} icon="credit-card" intent="warning" onClick={(e) => {e.preventDefault(); setTCPayment();}} loading={tcPayLoading}>Pago con TC</Button>
-					</div>}
+					</div>
+					}
 					{!requestInProcess && <div><Button intent="Primary" onClick={(e) => {e.preventDefault(); nextRequest()}} style={style} loading={inProcessLoading} disabled={requests.length === 0}>PROXIMO</Button></div>}
 				</ControlGroup>
 			</div>

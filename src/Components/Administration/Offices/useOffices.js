@@ -34,7 +34,10 @@ const useOffices = (props) => {
 
     const [ employees, setEmployess ] = useState([]);
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false);
+        setCroppedImage(null);
+    };
 
     const handleShow = (action, object) => {
         switch (action) {
