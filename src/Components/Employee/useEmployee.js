@@ -17,6 +17,10 @@ const useEmployee = (props) => {
 	const [ finishError, setFinishError ] = useState(false);
 	const [ finishErrorMessage, setFinishErrorMessage ] = useState(false);
 
+	const [ tcPayLoading, setTcPayLoading ] = useState(false);
+	const [ tcPayError, setTcPayError ] = useState(false);
+	const [ tcPayErrorMessage, setTcPayErrorMessage ] = useState(false);
+
 	const [ inProcessLoading, setInProcessLoading ] = useState(false);
 	const [ inProcessError, setInProcessError ] = useState(false);
 	const [ inProcessErrorMessage, setInProcessErrorMessage ] = useState(false);
@@ -117,7 +121,22 @@ const useEmployee = (props) => {
 		});
 	}
 
-	return { requests, requestInProcess, finishLoading, finishError, finishErrorMessage, FinishRequest, nextRequest, loading, error, errorMessage, inProcessLoading, inProcessError, inProcessErrorMessage };
+	const setTCPayment = () => {
+		setTcPayLoading(true);
+		API.graphql(graphqlOperation(updateRequest, { input: { id: requestToFinish, paymentType: 'CARD' } }))
+		.then(r => {
+			var req = requests[requests.findIndex(e => e.id === requestToFinish)];
+			req.paymentType = "CARD";
+			setTcPayLoading(false);
+		})
+		.catch(e => {
+			setTcPayError(true);
+			setTcPayLoading(false)
+			setTcPayErrorMessage(e);
+		});
+	}
+
+	return { tcPayLoading, tcPayError, tcPayErrorMessage, setTCPayment, requests, requestInProcess, finishLoading, finishError, finishErrorMessage, FinishRequest, nextRequest, loading, error, errorMessage, inProcessLoading, inProcessError, inProcessErrorMessage };
 };
 
 export default useEmployee;

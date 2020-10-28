@@ -11,6 +11,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "alasql": "^0.6.4",
     "aws-amplify": "^3.3.4",
     "aws-amplify-react": "^4.2.8",
     "bootstrap": "^4.5.2",
@@ -25,7 +26,8 @@
     "react-hook-form": "^6.8.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "sweetalert": "^2.1.2"
+    "sweetalert": "^2.1.2",
+    "xlsx": "^0.16.8"
   },
   "scripts": {
     "start": "react-scripts start",

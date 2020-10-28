@@ -42,6 +42,7 @@ const Customer = (props) => {
 		const rpi = {}
 
 		if (isService) {
+			ri.paymentType = 'CASH';
 			ri.resposibleName = employee.username;
 			rei.requestEmployeeEmployeeId = employee.id;
 			rsi.requestServiceServiceId = service.id;

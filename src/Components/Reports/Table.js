@@ -1,5 +1,6 @@
 import { Container } from 'react-bootstrap'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import { Button } from "@blueprintjs/core";
 import React from 'react';
 
 
@@ -11,6 +12,7 @@ const Table = (props) => {
       <Container>
         <h2>Detalle de Ingresos</h2>
         <SelectMonth rp={rp} />
+        { (data.length !== 0) && <Button icon="download" onClick={e => { e.preventDefault(); rp.downloadExcel();}}>Desargar Reporte DGII</Button>}
         <div style={{marginTop: 20}}>
             <BootstrapTable data={ data } pagination>
                 <TableHeaderColumn dataField='client' isKey>Cliente</TableHeaderColumn>

@@ -6,6 +6,10 @@ import swal from 'sweetalert';
 
 import moment from "moment";
 
+import * as alasql from 'alasql';
+var XLSX = require('xlsx')
+alasql.setXLSX(XLSX);
+
 const useReports = (props) => {
 	
     const [ requestsSearch, setRequestsSearch ] = useState([]);
@@ -14,6 +18,7 @@ const useReports = (props) => {
 	const [ year, setYear ] = useState('');
 
 	const [ results, setResults ] = useState([]); 
+	const [ currentData, setCurrentData ] = useState([]); 
 	const [ dayResults, setDayResults ] = useState([]); 
 	const [ gearnings, setEarnings ] = useState([]); 
 	const [ tgearnings, setTotalEarnings ] = useState(0); 
@@ -106,6 +111,7 @@ const useReports = (props) => {
 
 		if(prior_request !== undefined){
 			setData(prior_request.data);
+			setCurrentData(prior_request.data);
 
 			setLoading({type: ''});
 		}else{
@@ -128,6 +134,7 @@ const useReports = (props) => {
 			_results.push(result);
 
 			setData(r.data.listRequests.items)
+			setCurrentData(r.data.listRequests.items)
 
 			setResults(_results);
 
@@ -301,6 +308,73 @@ const useReports = (props) => {
 		setTotalRequests(0);
 	}
 
+	function downloadExcel () {
+		var companyName = (props.state.company.name).replace(" ", "_");
+
+		var reportName = "FORMATO_607_DGII_"+ companyName +"_" + month + "_" + year;
+
+		var sheet_data = [];
+
+		currentData.forEach(e => {
+			//console.log(e);
+			sheet_data.push({
+				//1-Digite el “RNC / Cédula o Pasaporte” de la persona que adquirió el servicios.
+				RNC_Ceedula_Pasaporte: "40224126819",
+				//2-En “Tipo Identificación” 2. Si se registra una Cédula
+				Tipo_Identificación: 2,
+				//3-En “Número Comprobante Fiscal” NCF "B0100000000000000000"
+				Número_Comprobante_Fiscal: "B0100000000000000000",
+				//4-En “Número Comprobante Fiscal Modificado” nota debito o credito B0300000000000000000 o B0400000000000000000
+				Número_Comprobante_Fiscal_Modificado: "B0300000000000000000",
+				//5-En “Tipo de Ingreso”  siempre "1" Ingreso por operaciones
+				Tipo_Ingreso: "1",
+				//6-En “Fecha Comprobante” Fecha en la que se realizó la venta. formato: YYYYMMDD.
+				Fecha_Comprobante: moment(e.createdAt).format('YYYYMMDD'),
+				//7-En “Fecha de Retención” deje el espacio en blanco. (opcional)
+				Fecha_Retención: "",
+				//8-En “Monto Facturado” registre el valor de la venta del bien o servicio, sin incluir impuestos. (se pone el costo del servicio)
+				Monto_Facturado: e.service.items[0].cost === null ? e.service.items[0].service.cost : e.service.items[0].cost,
+
+				//9-En “ITBIS Facturado” digite el valor del ITBIS facturado en el comprobante, sin incluir otros impuestos.
+				ITBIS_Facturado: "0",
+				//10-En “ITBIS Retenido por Terceros” en blanco
+				ITBIS_Retenido_Terceros: "",
+				//11-En “ITBIS Percibido”* En blanco
+				ITBIS_Percibido: "",
+				//12-En “Retención Renta por Terceros” En blanco
+				Retención_Renta_Terceros: "",
+				//13-En “ISR Percibido”* en blanco
+				ISR_Percibido: "",
+				//14-En “Impuesto Selectivo al Consumo” Monto correspondiente al Impuesto Selectivo al Consumo producto de una venta gravada con este impuesto.
+				Impuesto_Selectivo_Consumo: "0",
+				//15-En “Otros Impuestos/Tasas” Monto de cualquier otro impuesto o tasa no especificado en el formato de envío y que formen parte del valor del comprobante fiscal.
+				Otros_Impuestos_Tasas: "0",
+				//16-En “Monto Propina Legal” coloque el monto de la propina establecida por la Ley 54-32 (10%).
+				Monto_Propina_Legal: "0",
+
+				//17-En "Efectivo" coloque el monto correspondiente a la proporción del pago de la venta recibida en efectivo. (Costo del servicio)
+				Efectivo: e.service.items[0].cost === null ? e.service.items[0].service.cost : e.service.items[0].cost,
+				//18-En "Cheque/Transferencia/Depósito" 0.
+				Cheque_Transferencia_Depoosito: "",
+
+				//19-En "Tarjeta Débito/Crédito" 0 debe agregarse el costo en caso de haber realizado el pago con tarjeta
+				Tarjeta_Débito_Crédito: e.paymentType === "CARD" ? e.service.items[0].cost === null ? e.service.items[0].service.cost : e.service.items[0].cost : 0,
+				//20-En "Venta a Crédito" 0
+				Venta_Crédito: "0",
+				//21-En "Bonos o Certificados de Regalo" 0
+				Bonos_Certificados_Regalo: "0",
+				//22-En "Permuta"* 0
+				Permuta: "0",
+				//23-En "Otras Formas de Ventas" 0
+				Otras_Formas_de_Ventas: "0",
+			});	
+		});
+
+		var opts = [{sheetid:'607',header:true}];
+
+		alasql('SELECT * INTO XLSX("' + reportName + '",?) FROM ?', [opts,[ sheet_data ]]);
+	}
+
 	const rp = {
 		date: {
 			setDate,
@@ -316,10 +390,11 @@ const useReports = (props) => {
 		},
 		setInitialStates,
 		tgearnings,
-		tgrequests
+		tgrequests,
+		downloadExcel
 	}
 
-	return { rp, tableData, barData, pieData, lineData, requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay };
+	return { downloadExcel, rp, tableData, barData, pieData, lineData, requestsSearch, searchLoading, searchError, searcherrorMessage, setDate, getRequestsByDay };
 };
 
 export default useReports;

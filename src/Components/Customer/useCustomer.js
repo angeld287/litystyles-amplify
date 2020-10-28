@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { getCompanyOfficesProductsAndServices, listEmployees } from './../../graphql/customQueries';
+import { getCompanyOfficesProductsAndServices } from './../../graphql/customQueries';
 import { createRequest, createRequestService, createRequestEmployee, createRequestProduct } from '../../graphql/mutations';
 
 import moment from "moment";
