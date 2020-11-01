@@ -30,6 +30,7 @@ export default class HeaderLinks extends Component {
         const userMenu = (
             <Menu>
                 <MenuItem text={this.props.cp.state.name} />
+                {(this.props.cp.state.user_roles.indexOf('company_admin') !== -1) && <MenuItem icon="dollar" text="Panel de Facturación" onClick={ (e) => { e.preventDefault(); this.props.cp.setPage('BILLINGDASHBOARD');}} />}
                 <MenuItem icon="log-out" text="LogOut" onClick={ (e) => { e.preventDefault(); this.handlesignOut();}} />
             </Menu>
         );
