@@ -89,7 +89,7 @@ const Customer = (props) => {
 			case 3:
 				if (isService) {
 					setService(d);
-					const serviceEmployees = employees.filter(i => i.services.items.filter(s => s.service.id === d.id).length !== 0 );
+					const serviceEmployees = employees.filter(i => i.services.items.filter(s => s.service.id === d.service.id).length !== 0 );
 					if(serviceEmployees.length === 1){
 						setEmployee(serviceEmployees[0]);
 						setStep(4);
@@ -116,12 +116,12 @@ const Customer = (props) => {
 
 	const _products = (products !== null)?([].concat(products)
     .sort((a, b) => a.product.name.localeCompare(b.product.name))
-    .map((item,i)=> <Button key={i} intent="Danger" onClick={handleNextPrevClick(3, item.product)} style={{fontSize: "50px", textAlign: "center", margin: 10, width: 300, height: 200}} >{item.product.name}</Button>
+    .map((item,i)=> <Button key={i} intent="Danger" onClick={handleNextPrevClick(3, item)} style={{fontSize: "50px", textAlign: "center", margin: 10, width: 300, height: 200}} >{item.product.name}</Button>
 	)):(<ButtonGroup></ButtonGroup>)
 	
 	const _services = (services !== null)?([].concat(services)
     .sort((a, b) => a.service.name.localeCompare(b.service.name))
-    .map((item,i)=> <Button key={i} intent="Primary" onClick={handleNextPrevClick(3, item.service)} style={{fontSize: "50px", textAlign: "center", margin: 10, width: 300, height: 200}} >{item.service.name}</Button>
+    .map((item,i)=> <Button key={i} intent="Primary" onClick={handleNextPrevClick(3, item)} style={{fontSize: "50px", textAlign: "center", margin: 10, width: 300, height: 200}} >{item.service.name}</Button>
 	)):(<ButtonGroup></ButtonGroup>)
 	
 	const _employees = (employees !== null)?([].concat(employees)
@@ -204,8 +204,8 @@ const Customer = (props) => {
 				}
 				{ step === 4 &&
 					<div>
-						{!isService && <Callout style={{fontSize: "50px", marginTop: "40px"}} intent="info" >Usted ha solicitado el producto "{product.name}" a un costo de RD$ {product.cost === null ? "0" : product.cost}. Haga clic en "Enviar Solicitud" para confirmar.</Callout>}
-						{isService && <Callout style={{fontSize: "50px", marginTop: "40px"}} intent="info" >Usted ha solicitado el servicio "{service.name}" a un costo de RD$ {service.cost === null ? "0" : service.cost}.  Haga clic en "Enviar Solicitud" para confirmar.</Callout>}
+						{!isService && <Callout style={{fontSize: "50px", marginTop: "40px"}} intent="info" >Usted ha solicitado el producto "{product.product.name}" a un costo de RD$ {product.cost === null ? "0" : product.cost}. Haga clic en "Enviar Solicitud" para confirmar.</Callout>}
+						{isService && <Callout style={{fontSize: "50px", marginTop: "40px"}} intent="info" >Usted ha solicitado el servicio "{service.service.name}" a un costo de RD$ {service.cost === null ? "0" : service.cost}.  Haga clic en "Enviar Solicitud" para confirmar.</Callout>}
 						<ButtonGroup fill={true} style={{margin: 0}}/* onMouseEnter={} */>
 							<Button intent="Danger" style={{fontSize: "30px", margin: 10, height: 100}} onClick={finishRequest}>Cancelar Solicitud</Button>
 							<Divider/>
