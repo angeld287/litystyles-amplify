@@ -20,6 +20,7 @@ import Customer from '../Customer';
 import Employee from '../Employee';
 import Reports from '../Reports';
 import FirstSteps from '../FirstSteps';
+import BillingDashboard from '../BillingDashboard';
 
 const App = (props) => {
   const [ loading, setLoading ] = useState(true);
@@ -152,6 +153,7 @@ const App = (props) => {
       { !error && page === 'STYLIST' && !firstSteps && <Employee {...cp} /> }
       { !error && page === 'CUSTOMER' && !firstSteps && <Customer {...cp} /> }
       { !error && page === 'REPORTS' && !firstSteps && <Reports {...cp} /> }
+      { !error && page === 'BILLINGDASHBOARD' && !firstSteps && <BillingDashboard {...cp} /> }
       { !error && anyPage && firstSteps && <FirstSteps {...cp} /> }
     </div>
   );

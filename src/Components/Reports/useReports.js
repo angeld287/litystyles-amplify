@@ -182,8 +182,6 @@ const useReports = (props) => {
 			eresult[(date.getDate())] = eresult[(date.getDate())] + parseInt(cost);
 		});
 
-		console.log(tableD);
-
 		setTableData(tableD);
 		setRequests(rresult);
 		setEarnings(eresult);
