@@ -48,10 +48,10 @@ const Customer = (props) => {
 			ri.paymentType = 'CASH';
 			ri.resposibleName = employee.username;
 			rei.requestEmployeeEmployeeId = employee.id;
-			rsi.requestServiceServiceId = service.id;
+			rsi.requestServiceServiceId = service.service.id;
 			rsi.cost = service.cost;
 		} else {
-			rpi.requestProductProductId = product.id;
+			rpi.requestProductProductId = product.product.id;
 			rpi.cost = product.cost;
 		}
 
