@@ -18,7 +18,7 @@ const Customer = (props) => {
 	const [ step, setStep ] = useState(0);
 	const [ isService, setIsService ] = useState(false);
 	const [ customerName, setCustomerName ] = useState("");
-	const [ service, setService ] = useState({});
+	const [ service, setService ] = useState({service: {id: ""}});
 	const [ product, setProduct ] = useState({});
 	const [ employee, setEmployee ] = useState({});
 	const [ customerNameEmpty, setCustomerNameEmpty ] = useState(false);
@@ -27,7 +27,7 @@ const Customer = (props) => {
 		setStep(0);
 		setIsService(false);
 		setCustomerName("");
-		setService({});
+		setService({service: {id: ""}});
 		setProduct({});
 		setEmployee({});
 		setCustomerNameEmpty(false);
@@ -121,13 +121,13 @@ const Customer = (props) => {
 	
 	const _services = (services !== null)?([].concat(services)
     .sort((a, b) => a.service.name.localeCompare(b.service.name))
-    .map((item,i)=> <Button key={i} intent="Primary" onClick={handleNextPrevClick(3, item)} style={{fontSize: "50px", textAlign: "center", margin: 10, width: 300, height: 200}} >{item.service.name}</Button>
+    .map((item,i)=> <Button key={i} intent="Primary" onClick={handleNextPrevClick(3, item)} style={{fontSize: "50px", textAlign: "center", margin: 10, width: '100%', height: 100}} >{item.service.name}</Button>
 	)):(<ButtonGroup></ButtonGroup>)
 	
 	const _employees = (employees !== null)?([].concat(employees)
 	.sort((a, b) => a.name.localeCompare(b.name))
-	.filter(i => i.services.items.filter(s => s.service.id === service.id).length !== 0 )
-    .map((item,i)=> <Button key={i} intent="Primary" onClick={handleNextPrevClick(4, item)} style={{fontSize: "50px", textAlign: "center", margin: 10, width: 300, height: 200}} >{item.name}</Button>
+	.filter(i => i.services.items.filter(s => s.service.id === service.service.id).length !== 0 )
+    .map((item,i)=> <Button key={i} intent="Primary" onClick={handleNextPrevClick(4, item)} style={{fontSize: "50px", textAlign: "center", margin: 10, width: '100%', height: 100}} >{item.name}</Button>
     )):(<ButtonGroup></ButtonGroup>)
 
 	return (
@@ -151,10 +151,10 @@ const Customer = (props) => {
 									<Button intent="Primary" onClick={handleNextPrevClick(1)} >
 										<Row>
 											<Col>
-												<h1 style={{fontSize: "70px", marginTop: 5}}>SIGUIENTE</h1> 
+												<h1 style={{fontSize: "50px", marginTop: 5}}>PROXIMO</h1> 
 											</Col>
 											<Col>
-												<Icon style={{}} icon="double-chevron-right" iconSize={100} />
+												<Icon style={{}} icon="double-chevron-right" iconSize={70} />
 											</Col>
 										</Row>
 									</Button>
@@ -181,10 +181,8 @@ const Customer = (props) => {
 					<div>
 						<h1>PRODUCTO O SOLICITUD</h1>
 						<Divider/>
-						<ButtonGroup fill={true} style={{margin: 0}}/* onMouseEnter={} */>
-							{products.length > 0 && <Button intent="Danger" onClick={handleNextPrevClick(2, 1)} style={{fontSize: "70px", margin: 10, height: 400}} >Producto</Button>}
-							{services.length > 0 && <Button intent="Primary" onClick={handleNextPrevClick(2, 2)} style={{fontSize: "70px", margin: 10, height: 400}} >Servicio</Button>}
-						</ButtonGroup>
+						{products.length > 0 && <Button intent="Danger" onClick={handleNextPrevClick(2, 1)} style={{fontSize: "70px", minWidth: 300 , margin: 5, height: 200}} >Producto</Button>}
+						{services.length > 0 && <Button intent="Primary" onClick={handleNextPrevClick(2, 2)} style={{fontSize: "70px", minWidth: 300, margin: 5, height: 200}} >Servicio</Button>}
 					</div>
 				}
 				{ step === 2 &&
