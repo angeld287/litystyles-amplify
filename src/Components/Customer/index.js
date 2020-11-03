@@ -121,7 +121,7 @@ const Customer = (props) => {
 	
 	const _services = (services !== null)?([].concat(services)
     .sort((a, b) => a.service.name.localeCompare(b.service.name))
-    .map((item,i)=> <Button key={i} intent="Primary" onClick={handleNextPrevClick(3, item)} style={{fontSize: "50px", textAlign: "center", margin: 10, width: '100%', height: 100}} >{item.service.name}</Button>
+    .map((item,i)=> <Button key={i} intent="Primary" onClick={handleNextPrevClick(3, item)} style={{fontSize: "50px", textAlign: "center", margin: 10, width: 300, height: 300}} >{item.service.name}</Button>
 	)):(<ButtonGroup></ButtonGroup>)
 	
 	const _employees = (employees !== null)?([].concat(employees)
@@ -181,8 +181,10 @@ const Customer = (props) => {
 					<div>
 						<h1>PRODUCTO O SOLICITUD</h1>
 						<Divider/>
-						{products.length > 0 && <Button intent="Danger" onClick={handleNextPrevClick(2, 1)} style={{fontSize: "70px", minWidth: 300 , margin: 5, height: 200}} >Producto</Button>}
-						{services.length > 0 && <Button intent="Primary" onClick={handleNextPrevClick(2, 2)} style={{fontSize: "70px", minWidth: 300, margin: 5, height: 200}} >Servicio</Button>}
+						<ButtonGroup>
+							{products.length > 0 && <Button intent="Danger" onClick={handleNextPrevClick(2, 1)} style={{fontSize: "70px", minWidth: 300 , margin: 5, height: 200}} >Producto</Button>}
+							{services.length > 0 && <Button intent="Primary" onClick={handleNextPrevClick(2, 2)} style={{fontSize: "70px", minWidth: 300, margin: 5, height: 200}} >Servicio</Button>}
+						</ButtonGroup>
 					</div>
 				}
 				{ step === 2 &&
