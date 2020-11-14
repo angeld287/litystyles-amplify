@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Auth } from "aws-amplify";
 import { useForm } from 'react-hook-form';
-import { Redirect } from 'react-router-dom';
+//import { Redirect } from 'react-router-dom';
 
 
 import {
@@ -23,22 +23,6 @@ const CustomSignIn = (props) => {
   const [ user, setUser ] = useState({});
   const { register, handleSubmit, errors, formState } = useForm();
 
-  //isLoggedIn
-
-  useEffect(() => {
-
-    
-    console.log(props.authState);
-    console.log(Auth.user);
-
-		if(props.cp.isLoggedIn){
-      console.log(props.cp.isLoggedIn);
-    }
-
-		return () => {
-		};
-	}, []);
-
   const googleFederated = () => {
     Auth.federatedSignIn({provider: "Google"});
   };
@@ -56,7 +40,7 @@ const CustomSignIn = (props) => {
       } else if (user.challengeName === "MFA_SETUP") {
         //this.changeState("TOTPSetup", user);
       } else {
-        props.cp.onUserSignIn();
+        //props.cp.onUserSignIn();
         props.onStateChange('signedIn',{});
       }
 
@@ -72,6 +56,7 @@ const CustomSignIn = (props) => {
         setErrorMessage("Contraseña incorrecta");
       } else {
         setErrorMessage(e.message);
+        console.log(e.message);
       }
 
     }
@@ -92,16 +77,16 @@ const CustomSignIn = (props) => {
       <div align="center" style={{width: 400, margin: 'auto'}}>
          { props.authState === 'signIn' && 
           <div style={{marginTop: 30}}>
-            <div class="row">
-                <div class="col-md-12"> 
-                  <Button className={Classes.LARGE} intent={Intent.DANGER} onClick={(e) => { e.preventDefault(); googleFederated()}}> {props.authState} Inicia Sesion con <b>Google</b></Button>
+            <div className="row">
+                <div className="col-md-12"> 
+                  <Button className={Classes.LARGE} intent={Intent.DANGER} onClick={(e) => { e.preventDefault(); googleFederated()}}>Inicia Sesion con <b>Google</b></Button>
                 </div>
             </div> 
             <br></br>
-            <div class="or-container">
-                <div class="line-separator"></div>
-                <div class="or-label">o</div>
-                <div class="line-separator"></div>
+            <div className="or-container">
+                <div className="line-separator"></div>
+                <div className="or-label">o</div>
+                <div className="line-separator"></div>
             </div>
             <br></br>
             <div align="center" style={{marginLeft:20}}>
@@ -112,7 +97,8 @@ const CustomSignIn = (props) => {
                           <div style={{marginBottom: 10}}>
                             {errors.username && <Callout intent="danger">{errors.username.message}</Callout>}
                           </div>
-                      <InputGroup name="password" type="password" className={Classes.LARGE} leftIcon="lock" placeholder="Password" style={{ marginBottom: 10}}
+                      <InputGroup name="password" type="password" className={Classes.LARGE} leftIcon="lock" placeholder="Password" style={{ marginBottom: 10} }
+                          autoComplete="on"
                           inputRef={register({ required: { message: 'Digita tu Password', value: true }})}/>
                           <div style={{marginBottom: 10}}>
                             {errors.password && <Callout intent="danger">{errors.password.message}</Callout>}

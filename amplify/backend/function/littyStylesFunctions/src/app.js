@@ -21,7 +21,7 @@ app.use(awsServerlessExpressMiddleware.eventContext())
 
 // Enable CORS for all methods
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Origin", origins_prod)
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
   next()
 });
@@ -49,6 +49,7 @@ app.post('/addUserToGroup', async function(req, res) {
   // Add your code here
   try {
     var origin = req.get('origin');
+    //(origin === origins_dev ? origins_dev : origins_prod)
 
     var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
     const _response = null;
@@ -56,17 +57,16 @@ app.post('/addUserToGroup', async function(req, res) {
     const params = {
       GroupName: req.body.GroupName,
       UserPoolId: req.body.UserPoolId,
-      Username: req.body.Username
+      Username: req.body.Username,
     };
 
     _response = await cognitoidentityserviceprovider.adminAddUserToGroup(params).promise();
-    //(origin === origins_dev ? origins_dev : origins_prod)
 
-    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": '*' }, body: _response })
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": origins_prod }, body: _response })
 
   } catch (error) {
 
-    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": '*' }, body: error })
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": origins_prod  }, body: error })
 
   }
 });
@@ -75,6 +75,7 @@ app.post('/removeUserFromGroup', async function(req, res) {
   // Add your code here
   try {
     var origin = req.get('origin');
+    //(origin === origins_dev ? origins_dev : origins_prod)
 
     var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
     const _response = null;
@@ -86,13 +87,12 @@ app.post('/removeUserFromGroup', async function(req, res) {
     };
 
     _response = await cognitoidentityserviceprovider.adminRemoveUserFromGroup(params).promise(); //adminAddUserToGroup(params).promise();
-    //(origin === origins_dev ? origins_dev : origins_prod)
 
-    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": '*' }, body: _response })
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": origins_prod }, body: _response })
 
   } catch (error) {
 
-    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": '*' }, body: error })
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": origins_prod }, body: error })
 
   }
 });
@@ -121,10 +121,10 @@ app.post('/findUser', async function(req, res) {
 
     const result = await cognitoidentityserviceprovider.listUsers(params).promise();
 
-    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": "*" }, body: result })
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": origins_prod }, body: result })
 
   } catch (error) {
-    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": "*" }, body: error })
+    res.json({ statusCode: 200, headers: { "Access-Control-Allow-Origin": origins_prod }, body: error })
   }
 
 });
