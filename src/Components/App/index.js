@@ -10,8 +10,6 @@ import { listCompanys } from '../../graphql/customQueries';
 
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 
-import { AuthState } from '@aws-amplify/ui-components';
-
 import aws_exports from '../../aws-exports'; 
 
 import Home from './../Home';
@@ -35,8 +33,6 @@ const App = (props) => {
   const [ firstSteps, setFirstSteps] = useState(false);
 
   const [ page, setPage ] = useState('');
-
-
 
   const addUserToGroup = useCallback( 
     async (username) => {
@@ -68,7 +64,7 @@ const App = (props) => {
     []
   );
 
-  const handleUserSignIn = useCallback(
+  const appStart = useCallback(
     async () => {
       try {
         setLoading(true);
@@ -114,18 +110,15 @@ const App = (props) => {
     [addUserToGroup]
   );
   
-  useEffect(  () => { handleUserSignIn()}, [handleUserSignIn]);
+  useEffect(  () => { appStart()}, [appStart]);
   
   const handleUserLogOut = () => {
-    //setIsLoggedIn(false);
+    console.log("sesion cerrada")
   }; 
 
   const cp = {
     setPage,
     firstSteps: firstSteps,
-    authState: props.authState,
-    isLoggedIn: props.authState === AuthState.SignedIn,
-    //onUserSignIn: handleUserSignIn,
     onUserLogOut: handleUserLogOut,
     state: {
       name: name,
