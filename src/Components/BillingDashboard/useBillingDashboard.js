@@ -11,6 +11,20 @@ const useBillingDashboard = (props) => {
     const [ loading, setLoading ] = useState(false);
     const [ error, setError ] = useState(false);
     const [ errorMessage, setErrorMessage ] = useState(false);
+
+
+    const setData = useCallback(
+        (data) => {
+            var rresult = 0;
+            
+            data.forEach(e => {
+                rresult = rresult + 1;
+            });
+
+            setRequests(rresult)
+        },
+        []
+    );
     
     const getBiilingData = useCallback(
         async () => {
@@ -44,20 +58,7 @@ const useBillingDashboard = (props) => {
             }
 
         },
-        [props]
-    );
-
-    const setData = useCallback(
-        (data) => {
-            var rresult = 0;
-            
-            data.forEach(e => {
-                rresult = rresult + 1;
-            });
-
-            setRequests(rresult)
-        },
-        []
+        [props, setData]
     );
 
     const barData = {
@@ -81,7 +82,7 @@ const useBillingDashboard = (props) => {
 
 	
 
-	return { barData, requests };
+	return { barData, requests, loading, error, errorMessage };
 };
 
 export default useBillingDashboard;

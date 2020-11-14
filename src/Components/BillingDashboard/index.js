@@ -1,6 +1,6 @@
 import React from 'react';
 import useBillingDashboard from './useBillingDashboard'
-import { Bar as B, Doughnut} from 'react-chartjs-2';
+import { Bar as B} from 'react-chartjs-2';
 
 const BillingDashboard = (props) => {
 

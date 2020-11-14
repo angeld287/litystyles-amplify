@@ -8,7 +8,6 @@ import Customer from '../Customer';
 import Employee from '../Employee';
 import Reports from '../Reports';
 import FirstSteps from '../FirstSteps';
-//import AuthComponent from './../Authentication/AuthComponent';
 
 export const Routes = ({ cp }) => (
 	<Switch>
@@ -18,7 +17,6 @@ export const Routes = ({ cp }) => (
 		<ProtectedRouteAdmin exact path="/reports" render={Reports} props={cp} />
 		<ProtectedRouteEmployee exact path="/stylist" render={Employee} props={cp} />
 		<ProtectedRouteAdmin exact path="/customer" render={Customer} props={cp} />
-		{/* <ProppedRoute exact path="/signin" render={AuthComponent} props={cp} /> */}
 	</Switch>
 );
 
@@ -68,7 +66,7 @@ export const ProtectedRouteEmployee = ({ render: C, props: cp, ...rest }) =>
 		{...rest}
 		render={
 			(rProps) =>
-				cp.isLoggedIn && cp.state.user_roles.length !== 0 ? 
+				cp.state.user_roles.length !== 0 ? 
 				(
 					cp.state.user_roles.indexOf('employee') !== -1 ? (
 						<C {...rProps} {...cp} />
