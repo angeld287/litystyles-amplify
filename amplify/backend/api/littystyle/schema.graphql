@@ -77,11 +77,12 @@ type Category
 
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
-        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: groups, groups: ["customer", "employee", "company_admin"], operations: [read] },
     ]) {
     id: ID!
     name: String
     offices: [Office] @connection
+    code: String
     deleted: Boolean
     deletedAt: String
     createdAt: String

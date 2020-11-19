@@ -153,6 +153,7 @@ export const getCategory = /* GraphQL */ `
         }
         nextToken
       }
+      code
       deleted
       deletedAt
       createdAt
@@ -173,6 +174,7 @@ export const listCategorys = /* GraphQL */ `
         offices {
           nextToken
         }
+        code
         deleted
         deletedAt
         createdAt
