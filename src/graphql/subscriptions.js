@@ -634,6 +634,7 @@ export const onCreateCategory = /* GraphQL */ `
         }
         nextToken
       }
+      code
       deleted
       deletedAt
       createdAt
@@ -662,6 +663,7 @@ export const onUpdateCategory = /* GraphQL */ `
         }
         nextToken
       }
+      code
       deleted
       deletedAt
       createdAt
@@ -690,6 +692,7 @@ export const onDeleteCategory = /* GraphQL */ `
         }
         nextToken
       }
+      code
       deleted
       deletedAt
       createdAt
