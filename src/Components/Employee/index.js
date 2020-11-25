@@ -18,7 +18,7 @@ const Employee = (props) => {
 	const { setTCPayment, tcPayLoading, requests, requestInProcess, FinishRequest, nextRequest, inProcessLoading, finishLoading, loading } = useEmployee(props);
 
 	const _requests = (requests !== null)?([].concat(requests)
-		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+		.sort((a, b) => new Date(a.date) - new Date(b.date))
 		.map((item,i)=>
 			(
 				<tr key={i} className={item.state === "IN_PROCESS" ? "table-danger" : "table-light"}>

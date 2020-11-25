@@ -191,6 +191,7 @@ export const listRequests = /* GraphQL */ `
         paymentType
         deleted
         deletedAt
+        date
         createdAt
       }
       nextToken
