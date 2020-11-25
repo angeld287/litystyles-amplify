@@ -9,6 +9,7 @@ export const onCreateRequest = /* GraphQL */ `
       resposible {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -32,8 +33,19 @@ export const onCreateRequest = /* GraphQL */ `
       }
       resposibleName
       customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
       state
       paymentType
+      date
       deleted
       deletedAt
       createdAt
@@ -58,8 +70,13 @@ export const onCreateRequestService = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
         deleted
         deletedAt
         createdAt
@@ -96,6 +113,7 @@ export const onUpdateRequest = /* GraphQL */ `
       resposible {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -119,8 +137,19 @@ export const onUpdateRequest = /* GraphQL */ `
       }
       resposibleName
       customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
       state
       paymentType
+      date
       deleted
       deletedAt
       createdAt
@@ -535,6 +564,7 @@ export const onCreateOffice = /* GraphQL */ `
           name
           username
           officeId
+          phoneid
           deleted
           deletedAt
           createdAt
@@ -565,6 +595,7 @@ export const onUpdateOffice = /* GraphQL */ `
           name
           username
           officeId
+          phoneid
           deleted
           deletedAt
           createdAt
@@ -595,6 +626,7 @@ export const onDeleteOffice = /* GraphQL */ `
           name
           username
           officeId
+          phoneid
           deleted
           deletedAt
           createdAt
@@ -907,6 +939,7 @@ export const onCreateEmployeeService = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
         services {
           nextToken
         }
@@ -949,6 +982,7 @@ export const onUpdateEmployeeService = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
         services {
           nextToken
         }
@@ -991,6 +1025,7 @@ export const onDeleteEmployeeService = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
         services {
           nextToken
         }
@@ -1031,6 +1066,7 @@ export const onCreateEmployee = /* GraphQL */ `
       name
       username
       officeId
+      phoneid
       services {
         items {
           id
@@ -1041,6 +1077,7 @@ export const onCreateEmployee = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1059,6 +1096,7 @@ export const onUpdateEmployee = /* GraphQL */ `
       name
       username
       officeId
+      phoneid
       services {
         items {
           id
@@ -1069,6 +1107,7 @@ export const onUpdateEmployee = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1087,6 +1126,7 @@ export const onDeleteEmployee = /* GraphQL */ `
       name
       username
       officeId
+      phoneid
       services {
         items {
           id
@@ -1097,6 +1137,7 @@ export const onDeleteEmployee = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1105,6 +1146,219 @@ export const onDeleteEmployee = /* GraphQL */ `
       deletedAt
       createdAt
       owner
+    }
+  }
+`;
+export const onCreateCustomer = /* GraphQL */ `
+  subscription OnCreateCustomer($owner: String) {
+    onCreateCustomer(owner: $owner) {
+      id
+      name
+      username
+      phoneid
+      request {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onUpdateCustomer = /* GraphQL */ `
+  subscription OnUpdateCustomer($owner: String, $name: String) {
+    onUpdateCustomer(owner: $owner, name: $name) {
+      id
+      name
+      username
+      phoneid
+      request {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onDeleteCustomer = /* GraphQL */ `
+  subscription OnDeleteCustomer($owner: String) {
+    onDeleteCustomer(owner: $owner) {
+      id
+      name
+      username
+      phoneid
+      request {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onCreateRequestCustomer = /* GraphQL */ `
+  subscription OnCreateRequestCustomer {
+    onCreateRequestCustomer {
+      id
+      cost
+      resposibleName
+      customer {
+        id
+        name
+        username
+        phoneid
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        customerUsername
+        customer {
+          nextToken
+        }
+        state
+        paymentType
+        date
+        deleted
+        deletedAt
+        createdAt
+      }
+      createdAt
+    }
+  }
+`;
+export const onUpdateRequestCustomer = /* GraphQL */ `
+  subscription OnUpdateRequestCustomer {
+    onUpdateRequestCustomer {
+      id
+      cost
+      resposibleName
+      customer {
+        id
+        name
+        username
+        phoneid
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        customerUsername
+        customer {
+          nextToken
+        }
+        state
+        paymentType
+        date
+        deleted
+        deletedAt
+        createdAt
+      }
+      createdAt
+    }
+  }
+`;
+export const onDeleteRequestCustomer = /* GraphQL */ `
+  subscription OnDeleteRequestCustomer {
+    onDeleteRequestCustomer {
+      id
+      cost
+      resposibleName
+      customer {
+        id
+        name
+        username
+        phoneid
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        customerUsername
+        customer {
+          nextToken
+        }
+        state
+        paymentType
+        date
+        deleted
+        deletedAt
+        createdAt
+      }
+      createdAt
     }
   }
 `;
@@ -1117,6 +1371,7 @@ export const onCreateRequestEmployee = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
         services {
           nextToken
         }
@@ -1142,12 +1397,18 @@ export const onCreateRequestEmployee = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
         deleted
         deletedAt
         createdAt
       }
+      cost
       createdAt
     }
   }
@@ -1161,6 +1422,7 @@ export const onUpdateRequestEmployee = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
         services {
           nextToken
         }
@@ -1186,12 +1448,18 @@ export const onUpdateRequestEmployee = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
         deleted
         deletedAt
         createdAt
       }
+      cost
       createdAt
     }
   }
@@ -1205,6 +1473,7 @@ export const onDeleteRequestEmployee = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
         services {
           nextToken
         }
@@ -1230,12 +1499,18 @@ export const onDeleteRequestEmployee = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
         deleted
         deletedAt
         createdAt
       }
+      cost
       createdAt
     }
   }
@@ -1258,8 +1533,13 @@ export const onCreateRequestProduct = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
         deleted
         deletedAt
         createdAt
@@ -1302,8 +1582,13 @@ export const onUpdateRequestProduct = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
         deleted
         deletedAt
         createdAt
@@ -1346,8 +1631,13 @@ export const onDeleteRequestProduct = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
         deleted
         deletedAt
         createdAt

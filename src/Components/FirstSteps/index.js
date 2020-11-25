@@ -17,7 +17,7 @@ const FirstSteps = (props) => {
     try {
       setLoading(true);
       const c = await API.graphql(graphqlOperation(createCompany, {input: {name: name}}));
-      await API.graphql(graphqlOperation(createOffice, {input: {location: 'nan', name: name, companyOfficesId: c.data.createCompany.id}}));
+      await API.graphql(graphqlOperation(createOffice, {input: {location: 'nan', name: name, companyOfficesId: c.data.createCompany.id, companyId: c.data.createCompany.id}}));
       setLoading(false);
       window.location.reload();
     } catch (e) {

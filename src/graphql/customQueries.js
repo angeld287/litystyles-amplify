@@ -191,6 +191,7 @@ export const listRequests = /* GraphQL */ `
         paymentType
         deleted
         deletedAt
+        date
         createdAt
       }
       nextToken
@@ -228,6 +229,7 @@ export const listRequestsPerDay = /* GraphQL */ `
         paymentType
         customerName
         createdAt
+        date
       }
       nextToken
     }

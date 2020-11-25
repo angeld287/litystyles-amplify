@@ -3,8 +3,6 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { getCompanyOfficesProductsAndServices } from './../../graphql/customQueries';
 import { createRequest, createRequestService, createRequestEmployee, createRequestProduct } from '../../graphql/mutations';
 
-import moment from "moment";
-
 const useCustomer = (props, finishRequest, setStep) => {
 	const [ company, setCompany ] = useState([]);
 	const [ products, setProducts ] = useState({});
@@ -52,19 +50,16 @@ const useCustomer = (props, finishRequest, setStep) => {
 		try {
 			setLoading(true);
 			var request = {};
-			ri.createdAt = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z';
 			request = await API.graphql(graphqlOperation(createRequest, {input: ri}));
 
 			if (isService) {
 				rei.requestEmployeeRequestId = request.data.createRequest.id;
 				rsi.requestServiceRequestId = request.data.createRequest.id;
-				rpi.createdAt = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z';
 				rsi.resposibleName = ri.resposibleName;
 				await API.graphql(graphqlOperation(createRequestEmployee, {input: rei}));
 				await API.graphql(graphqlOperation(createRequestService, {input: rsi}));
 			} else {
 				rpi.requestProductRequestId = request.data.createRequest.id;
-				rpi.createdAt = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z';
 				await API.graphql(graphqlOperation(createRequestProduct, {input: rpi}));
 			}
 
