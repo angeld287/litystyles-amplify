@@ -156,7 +156,7 @@ const useEmployees = (props) => {
    
             await API.graphql(graphqlOperation(updateEmployee, {input: {id: id, officeEmployeesId: 'nan', officeId: 'nan'}}));
 
-            await addUserToRoll(item.username, 'customer');
+            //await addUserToRoll(item.username, 'customer');
 
             await removeUserFromRoll(item.username, 'employee');
 
@@ -265,7 +265,7 @@ const useEmployees = (props) => {
 
             await addUserToRoll(item.Username, 'employee');
 
-            await removeUserFromRoll(item.username, 'customer');
+            //await removeUserFromRoll(item.username, 'customer');
 
             swal({ title: "Asociar Empleado!", text: "Empleado Asociado Correctamente!", type: "success", timer: 2500 });
 

@@ -156,8 +156,30 @@ type Employee
     name: String
     username: String
     officeId: String
+    phoneid: String
     services: [EmployeeService] @connection(name: "ess")
     request: [RequestEmployee] @connection(name: "er")
+    deleted: Boolean
+    deletedAt: String
+    createdAt: String
+}
+
+type Customer
+    @model
+    @auth(rules: [
+        # Defaults to use the "owner" field.
+        { allow: owner },
+
+        # Roles users can access any operation.
+        { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["customer"], operations: [read] },
+        { allow: owner, ownerField: "name", operations: [update, read] },  
+    ]) {
+    id: ID!
+    name: String
+    username: String
+    phoneid: String
+    request: [RequestCustomer] @connection(name: "cr")
     deleted: Boolean
     deletedAt: String
     createdAt: String
@@ -166,10 +188,20 @@ type Employee
 enum State { IN_PROCESS FINISHED CANCELED ON_HOLD }
 enum PaymentType { CARD CASH }
 
+type RequestCustomer @model(queries: null) {
+  id: ID!
+  cost: String
+  resposibleName: String
+  customer: Customer @connection(name: "cr")
+  request: Request @connection(name: "rc")
+  createdAt: String
+}
+
 type RequestEmployee @model(queries: null) {
   id: ID!
   employee: Employee @connection(name: "er")
   request: Request @connection(name: "re")
+  cost: String
   createdAt: String
 }
 
@@ -209,8 +241,11 @@ type Request
     product: [RequestProduct] @connection(name: "rp")
     resposibleName: String
     customerName: String!
+    customerUsername: String
+    customer: [RequestCustomer] @connection(name: "rc")
     state: State
     paymentType: PaymentType
+    date: String
     deleted: Boolean
     deletedAt: String
     createdAt: String

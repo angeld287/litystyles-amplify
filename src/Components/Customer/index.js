@@ -14,6 +14,8 @@ import { Row, Col} from 'react-bootstrap'
 
 import useCustomer from './useCustomer';
 
+import moment from "moment";
+
 const Customer = (props) => {
 	const [ step, setStep ] = useState(0);
 	const [ isService, setIsService ] = useState(false);
@@ -38,21 +40,20 @@ const Customer = (props) => {
 	if (Object.entries(services).length === 0  && services.constructor === Object) return <div style={{marginTop: 50}} align="center"><Spinner intent="primary" size={100} /></div> ;
 
 	const createRequest = async () => {
-		const ri = {state: 'ON_HOLD', customerName: customerName, companyId: company.id};
+		const _date = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')+'Z';
+		const ri = {state: 'ON_HOLD', customerName: customerName, companyId: company.id, date: _date, createdAt: _date};
 
-		const rei = {}
-		const rsi = {}
-		const rpi = {}
+		const rei = {cost: service.cost, createdAt: _date}
+		const rsi = {cost: service.cost, createdAt: _date}
+		const rpi = {cost: product.cost, createdAt: _date}
 
 		if (isService) {
 			ri.paymentType = 'CASH';
 			ri.resposibleName = employee.username;
 			rei.requestEmployeeEmployeeId = employee.id;
 			rsi.requestServiceServiceId = service.service.id;
-			rsi.cost = service.cost;
 		} else {
 			rpi.requestProductProductId = product.product.id;
-			rpi.cost = product.cost;
 		}
 
 		_createRequest(ri, rei, rsi, rpi, isService);

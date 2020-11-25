@@ -7,6 +7,7 @@ import HeaderLinks from '../HeaderLinks/';
 //import { Routes } from '../Routes/';
 
 import { listCompanys } from '../../graphql/customQueries';
+import { createCustomer } from '../../graphql/mutations';
 
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 
@@ -55,10 +56,13 @@ const App = (props) => {
         await API.post('apiForLambda', '/addUserToGroup', apiOptions);
 
         setUser_rolls(roles)
+
+        return true;
       } catch (e) {
         setError(true);
         setErrorMessage('Ha ocurrido un error al intentar agregar al usuario en el grupo "cliente"');
         console.log(e);
+        return false;
       }
     },
     []
@@ -78,9 +82,14 @@ const App = (props) => {
 
         roles = user.accessToken.payload['cognito:groups'] !== undefined ? user.accessToken.payload['cognito:groups'] : [];
       
-        const hasOnlyGoogleRole = roles !== undefined && roles.length === 1 && roles[0].toUpperCase().includes("GOOGLE");
-
-        if (hasOnlyGoogleRole) { addUserToGroup(user.accessToken.payload.username); }
+        /* const hasOnlyGoogleRole = roles !== undefined && roles.length === 1 && roles[0].toUpperCase().includes("GOOGLE");
+        console.log(hasOnlyGoogleRole);
+        if (hasOnlyGoogleRole) { 
+          var added = await addUserToGroup(user.accessToken.payload.username); 
+          if (added) {
+            
+          }
+        } */
         if (roles === undefined || roles.length === 0) { await addUserToGroup(user.accessToken.payload.username); }
 
         if(roles.indexOf('company_admin') !== -1){

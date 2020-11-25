@@ -149,7 +149,7 @@ const useOffices = (props) => {
 
              props.ap.load.setLoading({type: 'addoffice'});
 
-             const inp = { name: name, location: location, categoryId: category, categoryOfficesId: category, companyOfficesId: props.cp.state.company.id };
+             const inp = { name: name, location: location, categoryId: category, categoryOfficesId: category, companyOfficesId: props.cp.state.company.id, companyId: props.cp.state.company.id };
     
              const api = await API.graphql(graphqlOperation(createOffice, {input: inp}));
 

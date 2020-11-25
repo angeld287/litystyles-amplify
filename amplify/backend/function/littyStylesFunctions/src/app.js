@@ -11,9 +11,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware');
 var AWS = require('aws-sdk');
-var origins_prod = "https://littystyles.com";
-var origins_dev = "https://d38tvovvwgbq83.cloudfront.net"; // ["https://ds0wb4bd1k4ec.cloudfront.net/", "https://littydoctors.com/"];
+var origins_dev = "https://d38tvovvwgbq83.cloudfront.net";
 
+var origins_prod = "*"; //"https://littystyles.com";
 // declare a new express app
 var app = express()
 app.use(bodyParser.json())

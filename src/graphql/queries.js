@@ -87,6 +87,7 @@ export const getOffice = /* GraphQL */ `
           name
           username
           officeId
+          phoneid
           deleted
           deletedAt
           createdAt
@@ -312,6 +313,7 @@ export const getEmployee = /* GraphQL */ `
       name
       username
       officeId
+      phoneid
       services {
         items {
           id
@@ -322,6 +324,7 @@ export const getEmployee = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -345,9 +348,57 @@ export const listEmployees = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
         services {
           nextToken
         }
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getCustomer = /* GraphQL */ `
+  query GetCustomer($id: ID!) {
+    getCustomer(id: $id) {
+      id
+      name
+      username
+      phoneid
+      request {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const listCustomers = /* GraphQL */ `
+  query ListCustomers(
+    $filter: ModelCustomerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCustomers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        username
+        phoneid
         request {
           nextToken
         }
@@ -368,6 +419,7 @@ export const getRequest = /* GraphQL */ `
       resposible {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -391,8 +443,19 @@ export const getRequest = /* GraphQL */ `
       }
       resposibleName
       customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
       state
       paymentType
+      date
       deleted
       deletedAt
       createdAt
@@ -420,8 +483,13 @@ export const listRequests = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
         deleted
         deletedAt
         createdAt
