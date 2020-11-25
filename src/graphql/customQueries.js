@@ -229,6 +229,7 @@ export const listRequestsPerDay = /* GraphQL */ `
         paymentType
         customerName
         createdAt
+        date
       }
       nextToken
     }
