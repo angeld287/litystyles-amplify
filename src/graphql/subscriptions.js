@@ -46,6 +46,7 @@ export const onCreateRequest = /* GraphQL */ `
       state
       paymentType
       date
+      notified
       deleted
       deletedAt
       createdAt
@@ -77,6 +78,7 @@ export const onCreateRequestService = /* GraphQL */ `
         state
         paymentType
         date
+        notified
         deleted
         deletedAt
         createdAt
@@ -150,6 +152,59 @@ export const onUpdateRequest = /* GraphQL */ `
       state
       paymentType
       date
+      notified
+      deleted
+      deletedAt
+      createdAt
+    }
+  }
+`;
+export const onUpdateRequestC = /* GraphQL */ `
+  subscription OnUpdateRequestC($customerUsername: String, $state: State) {
+    onUpdateRequestC(customerUsername: $customerUsername, state: $state) {
+      id
+      companyId
+      resposible {
+        items {
+          id
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      service {
+        items {
+          id
+          resposibleName
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      product {
+        items {
+          id
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      resposibleName
+      customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      state
+      paymentType
+      date
+      notified
       deleted
       deletedAt
       createdAt
@@ -1258,6 +1313,7 @@ export const onCreateRequestCustomer = /* GraphQL */ `
         state
         paymentType
         date
+        notified
         deleted
         deletedAt
         createdAt
@@ -1306,6 +1362,7 @@ export const onUpdateRequestCustomer = /* GraphQL */ `
         state
         paymentType
         date
+        notified
         deleted
         deletedAt
         createdAt
@@ -1354,6 +1411,7 @@ export const onDeleteRequestCustomer = /* GraphQL */ `
         state
         paymentType
         date
+        notified
         deleted
         deletedAt
         createdAt
@@ -1404,6 +1462,7 @@ export const onCreateRequestEmployee = /* GraphQL */ `
         state
         paymentType
         date
+        notified
         deleted
         deletedAt
         createdAt
@@ -1455,6 +1514,7 @@ export const onUpdateRequestEmployee = /* GraphQL */ `
         state
         paymentType
         date
+        notified
         deleted
         deletedAt
         createdAt
@@ -1506,6 +1566,7 @@ export const onDeleteRequestEmployee = /* GraphQL */ `
         state
         paymentType
         date
+        notified
         deleted
         deletedAt
         createdAt
@@ -1540,6 +1601,7 @@ export const onCreateRequestProduct = /* GraphQL */ `
         state
         paymentType
         date
+        notified
         deleted
         deletedAt
         createdAt
@@ -1589,6 +1651,7 @@ export const onUpdateRequestProduct = /* GraphQL */ `
         state
         paymentType
         date
+        notified
         deleted
         deletedAt
         createdAt
@@ -1638,6 +1701,7 @@ export const onDeleteRequestProduct = /* GraphQL */ `
         state
         paymentType
         date
+        notified
         deleted
         deletedAt
         createdAt

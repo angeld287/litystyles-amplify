@@ -24,6 +24,15 @@ export const onCreateRequest = /* GraphQL */ `
         }
         nextToken
       }
+      customer {
+        items {
+          customer {
+            name
+            phoneid
+            id
+          }
+        }
+      }
       resposibleName
       customerName
       state

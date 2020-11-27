@@ -35,7 +35,8 @@ const useEmployee = (props) => {
 			var requestsApi = [];
 
 			try {
-                requestsApi = await API.graphql(graphqlOperation(listRequests, {limit: 400, filter:{ and: [ { or: [ {state: { eq: "ON_HOLD"} }, {state: { eq: "IN_PROCESS"} }]}, {resposibleName: { eq: props.state.username} }]}}));
+				requestsApi = await API.graphql(graphqlOperation(listRequests, {limit: 400, filter:{ and: [ { or: [ {state: { eq: "ON_HOLD"} }, {state: { eq: "IN_PROCESS"} }]}, {resposibleName: { eq: props.state.username} }]}}));
+				//console.log(requestsApi.data.listRequests.items);
 			} catch (e) {
 				setLoading(false);
 				setError(true);
@@ -47,7 +48,7 @@ const useEmployee = (props) => {
 					setRequestToFinish(requestsApi.data.listRequests.items.filter(e => e.state === "IN_PROCESS")[0].id)
 					setRequestInProcess(true);
 				}
-				setRequests(requestsApi.data.listRequests.items.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
+				setRequests(requestsApi.data.listRequests.items.sort((a, b) => new Date(a.date) - new Date(b.date)));
 				setLoading(false);
 			}
 		};
@@ -95,6 +96,45 @@ const useEmployee = (props) => {
 			didCancel = true;
 		};
 	}, [props]);
+
+	const sendNotifications = (object) => {
+		fetch('https://fcm.googleapis.com/fcm/send', {
+			method: 'POST',
+			headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'key=AAAAd-I4wFI:APA91bGEnWMecuwzNUCeBUTde5HwEYP9eHEtXjhkHHgh7ivKX9yQnyQyxtaRcO5Ny_TLbyQFPoN5bYMEkUClfPr_ql8oDsK1OSw9yC0TCu7-Npjhn-871rJ-rfUW7JIti4EQwkkxu-3r'
+			},
+			body: JSON.stringify({
+					to: object.to,
+					priority: 'high',
+					notification: {
+						title: object.title,
+						body: object.body,
+						subtitle: object.body,
+						sound: 'default',
+						android_channel_id: 'littystyles_notification_channel_id'
+					},
+					data: {
+						title: "Notification title",
+    					message: "Notification message",
+						naviateto: object.naviateto,
+					}
+				})
+		}).then().catch((e) => { // Error response
+			console.log(e);
+		});
+	}
+
+	const notify = (item) => {
+		const object = {
+			to: item.customer.items[0].customer.phoneid,
+			title: "Posicion 2 - Posible perdida de turno",
+			body: "Usted se encuentra en el segundo lugar de la lista de turnos. De no llegar a tiempo, podria perder su turno.",
+			sound: 'default',
+			naviateto: "RequestInfo",
+		}
+		sendNotifications(object);
+	}
 
 	const nextRequest = () => {
 		setInProcessLoading(true);
@@ -145,7 +185,7 @@ const useEmployee = (props) => {
 		});
 	}
 
-	return { tcPayLoading, tcPayError, tcPayErrorMessage, setTCPayment, requests, requestInProcess, finishLoading, finishError, finishErrorMessage, FinishRequest, nextRequest, loading, error, errorMessage, inProcessLoading, inProcessError, inProcessErrorMessage };
+	return { notify, tcPayLoading, tcPayError, tcPayErrorMessage, setTCPayment, requests, requestInProcess, finishLoading, finishError, finishErrorMessage, FinishRequest, nextRequest, loading, error, errorMessage, inProcessLoading, inProcessError, inProcessErrorMessage };
 };
 
 export default useEmployee;

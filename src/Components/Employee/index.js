@@ -15,7 +15,7 @@ const style = {
 }
 
 const Employee = (props) => {
-	const { setTCPayment, tcPayLoading, requests, requestInProcess, FinishRequest, nextRequest, inProcessLoading, finishLoading, loading } = useEmployee(props);
+	const { notify, setTCPayment, tcPayLoading, requests, requestInProcess, FinishRequest, nextRequest, inProcessLoading, finishLoading, loading } = useEmployee(props);
 
 	const _requests = (requests !== null)?([].concat(requests)
 		.sort((a, b) => new Date(a.date) - new Date(b.date))
@@ -24,6 +24,7 @@ const Employee = (props) => {
 				<tr key={i} className={item.state === "IN_PROCESS" ? "table-danger" : "table-light"}>
 					<td>{i+1}</td>
 					<td style={{width: 200}}>{item.customerName}</td>
+					{(i === 1 && item.customer.items.length !== 0) && <td><Button onClick={e => {e.preventDefault(); notify(item);}} className="bp3-minimal" icon="notifications-updated"/></td>}
 				</tr>
 			)
 		)):(<td></td>)
@@ -70,6 +71,7 @@ const Employee = (props) => {
                             <tr>
                                 <th scope="col"><b>No.</b></th>
                                 <th scope="col"><b>Cliente</b></th>
+                                <th scope="col"><b></b></th>
                             </tr>
                         </thead>
                         <tbody>

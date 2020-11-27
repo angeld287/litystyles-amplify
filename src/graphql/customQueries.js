@@ -159,7 +159,6 @@ query Office($id: String!) {
     }
   }
 }
-
 `;
 
 export const listRequests = /* GraphQL */ `
@@ -184,6 +183,15 @@ export const listRequests = /* GraphQL */ `
         }
         product {
           nextToken
+        }
+        customer {
+          items {
+            customer {
+              name
+              phoneid
+              id
+            }
+          }
         }
         resposibleName
         customerName
