@@ -188,7 +188,7 @@ type Customer
 enum State { IN_PROCESS FINISHED CANCELED ON_HOLD }
 enum PaymentType { CARD CASH }
 
-type RequestCustomer @model(queries: null) {
+type RequestCustomer @model(queries: null, subscriptions: null) {
   id: ID!
   cost: String
   resposibleName: String
@@ -255,6 +255,8 @@ type Request
 type Subscription {
   onCreateRequest(resposibleName: String): Request @aws_subscribe(mutations: ["createRequest"])
   onCreateRequestService(resposibleName: String): RequestService @aws_subscribe(mutations: ["createRequestService"])
+  onCreateRequestCustomer(resposibleName: String): RequestCustomer @aws_subscribe(mutations: ["createRequestCustomer"])
   onUpdateRequest(resposibleName: String): Request @aws_subscribe(mutations: ["updateRequest"])
+  onUpdateRequestE(resposibleName: String, state: State): Request @aws_subscribe(mutations: ["updateRequest"])
   onUpdateRequestC(customerUsername: String, state: State): Request @aws_subscribe(mutations: ["updateRequest"])
 }

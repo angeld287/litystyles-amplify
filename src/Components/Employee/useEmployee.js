@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { listRequests } from '../../graphql/customQueries';
-import { updateRequest } from '../../graphql/mutations';
+import { listRequests, getRequest } from '../../graphql/customQueries';
+import { updateRequestE, updateRequest } from '../../graphql/customMutations';
 import { onUpdateRequest } from '../../graphql/subscriptions';
 
-import { onCreateRequest, onCreateRequestService } from '../../graphql/customSubscptions';
+import { onCreateRequestCustomer } from '../../graphql/customSubscptions';
 
 const useEmployee = (props) => {
     const [ requests, setRequests ] = useState([]);
     const [ requestInProcess, setRequestInProcess ] = useState(false);
 	const [ loading, setLoading ] = useState(true);
+	const [ notifyLoading, setNotifyLoading ] = useState(false);
 	const [ error, setError ] = useState(false);
 	const [ errorMessage, setErrorMessage ] = useState(false);
 
@@ -54,12 +55,6 @@ const useEmployee = (props) => {
 		};
 
 		const subscribeRequest = async () => {
-			await API.graphql(graphqlOperation(onCreateRequest, {resposibleName: props.state.username})).subscribe({
-			  next: r => {
-				setRequests(prevState => ([...prevState, r.value.data.onCreateRequest]));
-			  }
-			});
-
 			await API.graphql(graphqlOperation(onUpdateRequest, {resposibleName: props.state.username})).subscribe({
 				next: r => {
 					var state = r.value.data.onUpdateRequest.state;
@@ -69,35 +64,27 @@ const useEmployee = (props) => {
 				}
 			});
 		};
-	
-		const subscribeRequestService = async () => {
-			await API.graphql(graphqlOperation(onCreateRequestService, {resposibleName: props.state.username})).subscribe({
-			  next: r => {
-				setRequests(prevState => {
-					var _requests = prevState;
-					var _edit = _requests[_requests.findIndex(e => e.id === r.value.data.onCreateRequestService.request.id)];
-					_requests.splice(_requests.findIndex(e => e.id === r.value.data.onCreateRequestService.request.id), 1);
-					
-					if(_edit !== undefined) {
-						_edit.service.items = [r.value.data.onCreateRequestService];
-						_requests.push(_edit);
-					}
-					return (_requests)
-				});
+
+		const subscribeRequestCustomer = async () => {
+			await API.graphql(graphqlOperation(onCreateRequestCustomer, {resposibleName: props.state.username})).subscribe({
+			  next: async r => {
+				  var request = null;
+				  request = await API.graphql(graphqlOperation(getRequest, {id: r.value.data.onCreateRequestCustomer.request.id}));
+				  setRequests(prevState => ([...prevState, request.data.getRequest]));
 			  }
 			});
 		};
 
 		fetch();
 		subscribeRequest();
-		subscribeRequestService();
+		subscribeRequestCustomer();
 
 		return () => {
 			didCancel = true;
 		};
 	}, [props]);
 
-	const sendNotifications = (object) => {
+	const sendNotifications = async (object) => {
 		fetch('https://fcm.googleapis.com/fcm/send', {
 			method: 'POST',
 			headers: {
@@ -125,15 +112,28 @@ const useEmployee = (props) => {
 		});
 	}
 
-	const notify = (item) => {
-		const object = {
-			to: item.customer.items[0].customer.phoneid,
-			title: "Posicion 2 - Posible perdida de turno",
-			body: "Usted se encuentra en el segundo lugar de la lista de turnos. De no llegar a tiempo, podria perder su turno.",
-			sound: 'default',
-			naviateto: "RequestInfo",
+	const notify = async (item) => {
+		try {
+			setNotifyLoading(true)
+			const object = {
+				to: item.customer.items[0].customer.phoneid,
+				title: "Posicion 2 - Posible perdida de turno",
+				body: "Usted se encuentra en el segundo lugar de la lista de turnos. De no llegar a tiempo, podria perder su turno.",
+				sound: 'default',
+				naviateto: "RequestInfo",
+			}
+	
+			await sendNotifications(object);
+	
+			const req = await API.graphql(graphqlOperation(updateRequestE, { input: { id: item.id , notified: true } }))
+
+			setRequests(p => ([...p.filter(e => e.id !== req.data.updateRequest.id), req.data.updateRequest]));
+
+			setNotifyLoading(false)	
+		} catch (e) {
+			console.log(e);
+			setNotifyLoading(false)
 		}
-		sendNotifications(object);
 	}
 
 	const nextRequest = () => {
@@ -185,7 +185,12 @@ const useEmployee = (props) => {
 		});
 	}
 
-	return { notify, tcPayLoading, tcPayError, tcPayErrorMessage, setTCPayment, requests, requestInProcess, finishLoading, finishError, finishErrorMessage, FinishRequest, nextRequest, loading, error, errorMessage, inProcessLoading, inProcessError, inProcessErrorMessage };
+	// sleep time expects milliseconds
+	function sleep (time) {
+		return new Promise((resolve) => setTimeout(resolve, time));
+	}
+
+	return { notifyLoading, notify, tcPayLoading, tcPayError, tcPayErrorMessage, setTCPayment, requests, requestInProcess, finishLoading, finishError, finishErrorMessage, FinishRequest, nextRequest, loading, error, errorMessage, inProcessLoading, inProcessError, inProcessErrorMessage };
 };
 
 export default useEmployee;
