@@ -107,27 +107,31 @@ const useEmployee = (props) => {
 						naviateto: object.naviateto,
 					}
 				})
-		}).then().catch((e) => { // Error response
+		}).then(/* r => console.log('Notificacion Enviada: ', r) */).catch((e) => { // Error response
 			console.log(e);
 		});
 	}
 
-	const notify = async (item) => {
+	const notify = async (item, position) => {
 		try {
+			var title = "Posicion "+position+" - Posible perdida de turno";
+			var body = position === '2' ? "Usted se encuentra en el segundo lugar de la lista de turnos. De no llegar a tiempo, podria perder su turno." : (position === '3' ? "Usted se encuentra en el tercer lugar de la lista de turnos. Su turno esta cerca." : "");
 			setNotifyLoading(true)
 			const object = {
 				to: item.customer.items[0].customer.phoneid,
-				title: "Posicion 2 - Posible perdida de turno",
-				body: "Usted se encuentra en el segundo lugar de la lista de turnos. De no llegar a tiempo, podria perder su turno.",
+				title: title,
+				body: body,
 				sound: 'default',
 				naviateto: "RequestInfo",
 			}
 	
 			await sendNotifications(object);
-	
-			const req = await API.graphql(graphqlOperation(updateRequestE, { input: { id: item.id , notified: true } }))
 
-			setRequests(p => ([...p.filter(e => e.id !== req.data.updateRequest.id), req.data.updateRequest]));
+			if(position === '2'){
+				const req = await API.graphql(graphqlOperation(updateRequestE, { input: { id: item.id , notified: true } }))
+
+				setRequests(p => ([...p.filter(e => e.id !== req.data.updateRequest.id), req.data.updateRequest]));	
+			}
 
 			setNotifyLoading(false)	
 		} catch (e) {
@@ -160,6 +164,9 @@ const useEmployee = (props) => {
 		API.graphql(graphqlOperation(updateRequest, { input: { id: requestToFinish, state: 'FINISHED' } }))
 		.then(r => {
 			requests.splice(requests.findIndex(e => e.id === requestToFinish), 1);
+			if(requests[2] !== undefined && requests[2].customer.items.length !== 0){
+				notify(requests[2], '3');
+			}
 			setRequestInProcess(false);
 			setFinishLoading(false);
 		})

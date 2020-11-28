@@ -26,7 +26,7 @@ const Employee = (props) => {
 				<tr key={i} className={item.state === "IN_PROCESS" ? "table-danger" : "table-light"}>
 					<td>{i+1}</td>
 					<td style={{width: 200}}>{item.customerName}</td>
-					<td>{ (i === 1 && item.customer.items.length !== 0 && !item.notified) && <Button onClick={e => {e.preventDefault(); notify(item);}} disabled={item.notified} loading={notifyLoading} className="bp3-minimal" icon="notifications-updated"/>}</td>
+					<td>{ (i === 1 && item.customer.items.length !== 0 && !item.notified) && <Button onClick={e => {e.preventDefault(); notify(item, '2');}} disabled={item.notified} loading={notifyLoading} className="bp3-minimal" icon="notifications-updated"/>}</td>
 				</tr>
 				)
 			}
