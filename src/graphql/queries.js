@@ -456,6 +456,7 @@ export const getRequest = /* GraphQL */ `
       state
       paymentType
       date
+      notified
       deleted
       deletedAt
       createdAt
@@ -490,6 +491,7 @@ export const listRequests = /* GraphQL */ `
         state
         paymentType
         date
+        notified
         deleted
         deletedAt
         createdAt

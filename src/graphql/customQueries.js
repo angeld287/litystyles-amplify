@@ -159,7 +159,6 @@ query Office($id: String!) {
     }
   }
 }
-
 `;
 
 export const listRequests = /* GraphQL */ `
@@ -185,9 +184,19 @@ export const listRequests = /* GraphQL */ `
         product {
           nextToken
         }
+        customer {
+          items {
+            customer {
+              name
+              phoneid
+              id
+            }
+          }
+        }
         resposibleName
         customerName
         state
+        notified
         paymentType
         deleted
         deletedAt
@@ -271,6 +280,46 @@ export const listOffices = /* GraphQL */ `
         owner
       }
       nextToken
+    }
+  }
+`;
+
+export const getRequest = /* GraphQL */ `
+  query GetRequest($id: ID!) {
+    getRequest(id: $id) {
+      id
+      companyId
+      resposible {
+        nextToken
+      }
+      service {
+        items {
+          service {
+            name
+          }
+        }
+      }
+      product {
+        nextToken
+      }
+      customer {
+        items {
+          customer {
+            name
+            phoneid
+            id
+          }
+        }
+      }
+      resposibleName
+      customerName
+      notified
+      state
+      paymentType
+      deleted
+      deletedAt
+      date
+      createdAt
     }
   }
 `;
