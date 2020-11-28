@@ -36,8 +36,8 @@ const useEmployee = (props) => {
 			var requestsApi = [];
 
 			try {
-				requestsApi = await API.graphql(graphqlOperation(listRequests, {limit: 400, filter:{ and: [ { or: [ {state: { eq: "ON_HOLD"} }, {state: { eq: "IN_PROCESS"} }]}, {resposibleName: { eq: props.state.username} }]}}));
-				//console.log(requestsApi.data.listRequests.items);
+				requestsApi = await API.graphql(graphqlOperation(listRequests, {limit: 1000, filter:{ and: [ { or: [ {state: { eq: "ON_HOLD"} }, {state: { eq: "IN_PROCESS"} }]}, {resposibleName: { eq: props.state.username} }]}}));
+				//agregar funcionalidad de next token en caso de ser necesario
 			} catch (e) {
 				setLoading(false);
 				setError(true);
