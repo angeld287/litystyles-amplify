@@ -1,15 +1,17 @@
 import React from 'react';
 import './App.css';
+import logo from '../../images/Artboard 1_72x.png';
 
 const Home = (props) => {
 
   
   return (
-    <div className="App">
-      <header className="App-header">
-        <h5>
+    <div >
+      <header >
+        {/* <h5 style={{marginTop: 20}} >
           Bienvenido(a) {props.state.name} a Litty Styles
-        </h5>
+        </h5> */}
+        <img src={logo} alt="logo"/>
       </header>
     </div>
   );
