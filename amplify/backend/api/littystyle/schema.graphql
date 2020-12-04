@@ -41,6 +41,7 @@ type CompanyProduct @model(queries: null) {
   id: ID!
   comapny: Company @connection(name: "cp")
   product: Product @connection(name: "pc")
+  quantity: String
   cost: String
   createdAt: String
 }
@@ -69,6 +70,25 @@ type Office
     companyId: String
 }
 
+type Type
+    @model
+    @auth(rules: [
+        # Defaults to use the "owner" field.
+        { allow: owner },
+
+        # Roles users can access any operation.
+        { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["customer", "employee", "company_admin"], operations: [read] },
+    ]) {
+    id: ID!
+    name: String
+    code: String
+    categories: [Category] @connection
+    deleted: Boolean
+    deletedAt: String
+    createdAt: String
+}
+
 type Category
     @model
     @auth(rules: [
@@ -82,10 +102,67 @@ type Category
     id: ID!
     name: String
     offices: [Office] @connection
+    subcategories: [SubCategory] @connection
+    products: [ProductCategory] @connection(name: "cyp")
+    services: [ServiceCategory] @connection(name: "cys")
+    typeName: String
     code: String
     deleted: Boolean
     deletedAt: String
     createdAt: String
+}
+
+type SubCategory
+    @model
+    @auth(rules: [
+        # Defaults to use the "owner" field.
+        { allow: owner },
+
+        # Roles users can access any operation.
+        { allow: groups, groups: ["admin"] },
+        { allow: groups, groups: ["customer", "employee", "company_admin"], operations: [read] },
+    ]) {
+    id: ID!
+    name: String
+    code: String
+    categoryName: String
+    products: [ProductSubCategory] @connection(name: "scp")
+    services: [ServiceSubCategory] @connection(name: "scs")
+    deleted: Boolean
+    deletedAt: String
+    createdAt: String
+}
+
+#ProductCategory
+type ProductCategory @model(queries: null) {
+  id: ID!
+  category: Category @connection(name: "cyp")
+  product: Product @connection(name: "pcy")
+  createdAt: String
+}
+
+#ProductSubCategory
+type ProductSubCategory @model(queries: null) {
+  id: ID!
+  subcategory: SubCategory @connection(name: "scp")
+  product: Product @connection(name: "psc")
+  createdAt: String
+}
+
+#ServiceCategory
+type ServiceCategory @model(queries: null) {
+  id: ID!
+  category: Category @connection(name: "cys")
+  service: Service @connection(name: "scy")
+  createdAt: String
+}
+
+#ServiceSubCategory
+type ServiceSubCategory @model(queries: null) {
+  id: ID!
+  subcategory: SubCategory @connection(name: "scs")
+  service: Service @connection(name: "ssc")
+  createdAt: String
 }
 
 type Product
@@ -105,7 +182,11 @@ type Product
     cost: String
     companies: [CompanyProduct] @connection(name: "pc")
     request: [RequestProduct] @connection(name: "pr")
+    category: [ProductCategory] @connection(name: "pcy")
+    subcategory: [ProductSubCategory] @connection(name: "psc")
     deleted: Boolean
+    image: String
+    packagingformat: String #1000ml
     deletedAt: String
     createdAt: String
 }
@@ -128,6 +209,8 @@ type Service
     employees: [EmployeeService] @connection(name: "see")
     companies: [CompanyService] @connection(name: "sc")
     request: [RequestService] @connection(name: "sr")
+    category: [ServiceCategory] @connection(name: "scy")
+    subcategory: [ServiceSubCategory] @connection(name: "ssc")
     deleted: Boolean
     deletedAt: String
     createdAt: String
@@ -150,7 +233,7 @@ type Employee
         { allow: groups, groups: ["admin"] },
         { allow: groups, groups: ["customer"], operations: [read] },
         { allow: groups, groups: ["company_admin"], operations: [create, read, update] },
-        { allow: owner, ownerField: "name", operations: [update, read] },  
+        { allow: owner, ownerField: "username", operations: [update, read] },  
     ]) {
     id: ID!
     name: String
@@ -173,7 +256,7 @@ type Customer
         # Roles users can access any operation.
         { allow: groups, groups: ["admin"] },
         { allow: groups, groups: ["customer"], operations: [read] },
-        { allow: owner, ownerField: "name", operations: [update, read] },  
+        { allow: owner, ownerField: "username", operations: [update, read] },  
     ]) {
     id: ID!
     name: String
@@ -219,6 +302,7 @@ type RequestProduct @model(queries: null) {
   request: Request @connection(name: "rp")
   product: Product @connection(name: "pr")
   cost: String
+  quantity: String
   createdAt: String
 }
 
@@ -247,6 +331,7 @@ type Request
     paymentType: PaymentType
     date: String
     notified: Boolean
+    total: String
     deleted: Boolean
     deletedAt: String
     createdAt: String
