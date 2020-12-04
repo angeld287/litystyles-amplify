@@ -323,3 +323,152 @@ export const getRequest = /* GraphQL */ `
     }
   }
 `;
+
+export const getProduct = /* GraphQL */ `
+  query GetProduct($id: ID!) {
+    getProduct(id: $id) {
+      id
+      name
+      cost
+      companies {
+        items {
+          id
+          quantity
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      request {
+        items {
+          id
+          cost
+          quantity
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+          category {
+            id
+          }
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
+          createdAt
+          subcategory {
+            id
+          }
+        }
+        nextToken
+      }
+      deleted
+      image
+      packagingformat
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+
+export const listCategorys = /* GraphQL */ `
+  query ListCategorys(
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCategorys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          items {
+            id
+            name
+          }
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getService = /* GraphQL */ `
+  query GetService($id: ID!) {
+    getService(id: $id) {
+      id
+      name
+      cost
+      employees {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      companies {
+        items {
+          id
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      request {
+        items {
+          id
+          resposibleName
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+          category {
+            id
+          }
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
+          createdAt
+          subcategory {
+            id
+          }
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
