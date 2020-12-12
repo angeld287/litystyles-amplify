@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect } from 'react';
 import { Table, Container, Row, Col, ButtonGroup, Modal, Form, Image } from 'react-bootstrap';
 
 import { Button, Spinner, Icon } from "@blueprintjs/core";
@@ -11,6 +11,10 @@ import _default from '../../../images/default-image.png'
 import Employess from './Employees/Employees';
 
 const Offices = (props) => {
+
+    useEffect(() => { 
+        console.log(props.cp.state.user_roles);
+    }, []);
 
     const { s3Image, crop, so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees, setCategory, category } = useOffices(props);
  
@@ -45,7 +49,7 @@ const Offices = (props) => {
     return(<Container fluid>
 
         <Row>
-            <Col sm={2}><Button loading={props.ap.load.loading.type === 'addoffice'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShow('add', {});}} icon="add"></Button></Col>
+            {props.cp.state.user_roles.indexOf('supplier') === -1 && <Col sm={2}><Button loading={props.ap.load.loading.type === 'addoffice'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShow('add', {});}} icon="add"></Button></Col>}
         </Row>
 
         <div style={{marginTop:20}}>
@@ -92,11 +96,14 @@ const Offices = (props) => {
                     </div>
                 </div>}
 
-                <Form.Group controlId="location">
-                    <Form.Label>Ubicacion</Form.Label>
-                    <Form.Control readOnly={!edit && !add} type="text" value={location} onChange={ e => setLocation(e.target.value)}/>
-                </Form.Group>
-                {!add && <Employess addButton={edit} employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
+                {props.cp.state.user_roles.indexOf('supplier') === -1 &&
+                    <Form.Group controlId="location">
+                        <Form.Label>Ubicacion</Form.Label>
+                        <Form.Control readOnly={!edit && !add} type="text" value={location} onChange={ e => setLocation(e.target.value)}/>
+                    </Form.Group>
+                }
+
+                {(!add && props.cp.state.user_roles.indexOf('supplier') === -1) && <Employess addButton={edit} employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
