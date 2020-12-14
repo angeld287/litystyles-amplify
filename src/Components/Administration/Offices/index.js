@@ -103,7 +103,7 @@ const Offices = (props) => {
                     </Form.Group>
                 }
 
-                {(!add && props.cp.state.user_roles.indexOf('supplier') === -1) && <Employess addButton={edit} employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
+                {!add && <Employess addButton={edit} employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
