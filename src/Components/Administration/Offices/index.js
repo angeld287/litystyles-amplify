@@ -13,7 +13,7 @@ import Employess from './Employees/Employees';
 const Offices = (props) => {
 
     useEffect(() => { 
-        console.log(props.cp.state.user_roles);
+        //console.log(props.cp.state.user_roles);
     }, []);
 
     const { s3Image, crop, so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees, setCategory, category } = useOffices(props);

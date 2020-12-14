@@ -12,7 +12,7 @@ const Administration = (props) => {
 	const { ap, onSelectTab, requests, cancelRequest, confirmCancelRequest, setCancelOverlay, cancelOverlay, cancelLoading, cancelerror, cancelerrorMessage } = useAdministration(props);
 	
 	useEffect(() => { 
-        console.log(props);
+        //console.log(props);
     }, []);
 
 	const _requests = (requests !== null)?([].concat(requests)
