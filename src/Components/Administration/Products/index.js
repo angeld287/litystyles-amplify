@@ -6,7 +6,7 @@ import useProducts from './useProducts';
 
 const Products = (props) => {
 
-    const { add, productName, handleAddProduct, handleEditProduct, setCost, handleDelete, handleClose, handleShow, edit, show, cost, setProduct } = useProducts(props);
+    const { add, productName, handleAddProduct, handleEditProduct, setCost, handleDelete, handleClose, handleShow, edit, show, cost, setProduct, qty, setQty } = useProducts(props);
  
     const list = (props.ap.cpro.companyProducts !== null)?([].concat(props.ap.cpro.companyProducts)
 		.map((item,i)=>
@@ -77,7 +77,11 @@ const Products = (props) => {
                 </Form.Group>
                 <Form.Group controlId="cost">
                     <Form.Label>Costo</Form.Label>
-                    <Form.Control readOnly={!edit && !add} type="text" value={cost} onChange={ e => setCost(e.target.value)}/>
+                    <Form.Control readOnly={!edit && !add} type="number" value={cost} onChange={ e => setCost(e.target.value)}/>
+                </Form.Group>
+                <Form.Group controlId="qty">
+                    <Form.Label>Cantidad</Form.Label>
+                    <Form.Control readOnly={!edit && !add} type="number" value={qty} onChange={ e => setQty(e.target.value)}/>
                 </Form.Group>
             </Modal.Body>
             <Modal.Footer>

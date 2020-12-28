@@ -49,6 +49,7 @@
       products {
         items {
           id
+          quantity
           product {
             name
             cost

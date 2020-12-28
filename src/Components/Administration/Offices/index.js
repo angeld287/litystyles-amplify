@@ -13,7 +13,7 @@ import Employess from './Employees/Employees';
 const Offices = (props) => {
 
     useEffect(() => { 
-        console.log(props.cp.state.user_roles);
+        //console.log(props.cp.state.user_roles);
     }, []);
 
     const { s3Image, crop, so, add, handleAdd, handleEdit, handleDelete, handleClose, handleShow, edit, show, setLocation, setName, location, name, employees, setCategory, category } = useOffices(props);
@@ -103,7 +103,7 @@ const Offices = (props) => {
                     </Form.Group>
                 }
 
-                {(!add && props.cp.state.user_roles.indexOf('supplier') === -1) && <Employess addButton={edit} employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
+                {!add && <Employess addButton={edit} employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
