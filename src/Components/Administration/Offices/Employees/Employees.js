@@ -75,7 +75,7 @@ const Employess = (props) => {
     return(<Container fluid>
 		{props.addButton &&
         <div style={{marginTop:20}}>
-			<Col sm={2}><Button loading={props.ap.load.loading.type === 'addemployee'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShow('add', {});}} icon="add"></Button></Col>
+			{(props.cp.state.user_roles.indexOf('supplier') !== -1 && props.employess.length === 0 ) && <Col sm={2}><Button loading={props.ap.load.loading.type === 'addemployee'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShow('add', {});}} icon="add"></Button></Col>}
 		</div>}
         <div style={{marginTop:20}}>
 			<Table striped bordered hover>
