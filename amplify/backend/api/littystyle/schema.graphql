@@ -268,7 +268,7 @@ type Customer
     createdAt: String
 }
 
-enum State { IN_PROCESS FINISHED CANCELED ON_HOLD ON_CART AWAITING_APPROVAL APPROVED DELIVERED }
+enum State { IN_PROCESS FINISHED CANCELED ON_HOLD ON_CART AWAITING_APPROVAL APPROVED DELIVERED REJECTED }
 enum PaymentType { CARD CASH }
 
 type RequestCustomer @model(queries: null, subscriptions: null) {
