@@ -240,6 +240,7 @@ type Employee
     username: String
     officeId: String
     phoneid: String
+    image: String
     services: [EmployeeService] @connection(name: "ess")
     request: [RequestEmployee] @connection(name: "er")
     deleted: Boolean
@@ -262,13 +263,14 @@ type Customer
     name: String
     username: String
     phoneid: String
+    image: String
     request: [RequestCustomer] @connection(name: "cr")
     deleted: Boolean
     deletedAt: String
     createdAt: String
 }
 
-enum State { IN_PROCESS FINISHED CANCELED ON_HOLD ON_CART AWAITING_APPROVAL APPROVED DELIVERED }
+enum State { IN_PROCESS FINISHED CANCELED ON_HOLD ON_CART AWAITING_APPROVAL APPROVED DELIVERED REJECTED }
 enum PaymentType { CARD CASH }
 
 type RequestCustomer @model(queries: null, subscriptions: null) {
