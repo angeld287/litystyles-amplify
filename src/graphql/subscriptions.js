@@ -127,6 +127,7 @@ export const onCreateRequestCustomer = /* GraphQL */ `
         name
         username
         phoneid
+        image
         request {
           nextToken
         }
@@ -785,6 +786,7 @@ export const onCreateOffice = /* GraphQL */ `
           username
           officeId
           phoneid
+          image
           deleted
           deletedAt
           createdAt
@@ -816,6 +818,7 @@ export const onUpdateOffice = /* GraphQL */ `
           username
           officeId
           phoneid
+          image
           deleted
           deletedAt
           createdAt
@@ -847,6 +850,7 @@ export const onDeleteOffice = /* GraphQL */ `
           username
           officeId
           phoneid
+          image
           deleted
           deletedAt
           createdAt
@@ -2108,6 +2112,7 @@ export const onCreateEmployeeService = /* GraphQL */ `
         username
         officeId
         phoneid
+        image
         services {
           nextToken
         }
@@ -2157,6 +2162,7 @@ export const onUpdateEmployeeService = /* GraphQL */ `
         username
         officeId
         phoneid
+        image
         services {
           nextToken
         }
@@ -2206,6 +2212,7 @@ export const onDeleteEmployeeService = /* GraphQL */ `
         username
         officeId
         phoneid
+        image
         services {
           nextToken
         }
@@ -2253,6 +2260,7 @@ export const onCreateEmployee = /* GraphQL */ `
       username
       officeId
       phoneid
+      image
       services {
         items {
           id
@@ -2283,6 +2291,7 @@ export const onUpdateEmployee = /* GraphQL */ `
       username
       officeId
       phoneid
+      image
       services {
         items {
           id
@@ -2313,6 +2322,7 @@ export const onDeleteEmployee = /* GraphQL */ `
       username
       officeId
       phoneid
+      image
       services {
         items {
           id
@@ -2342,6 +2352,7 @@ export const onCreateCustomer = /* GraphQL */ `
       name
       username
       phoneid
+      image
       request {
         items {
           id
@@ -2365,6 +2376,7 @@ export const onUpdateCustomer = /* GraphQL */ `
       name
       username
       phoneid
+      image
       request {
         items {
           id
@@ -2388,6 +2400,7 @@ export const onDeleteCustomer = /* GraphQL */ `
       name
       username
       phoneid
+      image
       request {
         items {
           id
@@ -2414,6 +2427,7 @@ export const onCreateRequestEmployee = /* GraphQL */ `
         username
         officeId
         phoneid
+        image
         services {
           nextToken
         }
@@ -2467,6 +2481,7 @@ export const onUpdateRequestEmployee = /* GraphQL */ `
         username
         officeId
         phoneid
+        image
         services {
           nextToken
         }
@@ -2520,6 +2535,7 @@ export const onDeleteRequestEmployee = /* GraphQL */ `
         username
         officeId
         phoneid
+        image
         services {
           nextToken
         }

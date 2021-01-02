@@ -240,6 +240,7 @@ type Employee
     username: String
     officeId: String
     phoneid: String
+    image: String
     services: [EmployeeService] @connection(name: "ess")
     request: [RequestEmployee] @connection(name: "er")
     deleted: Boolean
@@ -262,6 +263,7 @@ type Customer
     name: String
     username: String
     phoneid: String
+    image: String
     request: [RequestCustomer] @connection(name: "cr")
     deleted: Boolean
     deletedAt: String
