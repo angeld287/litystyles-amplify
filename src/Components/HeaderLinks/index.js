@@ -42,7 +42,7 @@ export default class HeaderLinks extends Component {
                     <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.props.cp.setPage('')}} icon="home"/>
                     {this.props.cp.state.user_roles.indexOf('company_admin') !== -1 && <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.props.cp.setPage('COMPANY_ADMIN')}} icon="wrench"/>}
                     {this.props.cp.state.user_roles.indexOf('employee') !== -1 && <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.props.cp.setPage('STYLIST')}} icon="cut"/>}
-                    {this.props.cp.state.user_roles.indexOf('company_admin') !== -1 && <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.props.cp.setPage('CUSTOMER')}} icon="people"/>}
+                    {(this.props.cp.state.user_roles.indexOf('company_admin') !== -1 && this.props.cp.state.user_roles.indexOf('supplier') === -1 ) && <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.props.cp.setPage('CUSTOMER')}} icon="people"/>}
                     {this.props.cp.state.user_roles.indexOf('company_admin') !== -1 && <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.props.cp.setPage('REPORTS')}} icon="chart"/>}
                 </Navbar.Group>
                 <Navbar.Group align={Alignment.RIGHT}>

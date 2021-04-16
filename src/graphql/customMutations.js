@@ -99,3 +99,47 @@ export const updateEmployee = /* GraphQL */ `
     }
   }
 `;
+
+
+export const updateRequestE = /* GraphQL */ `
+  mutation UpdateRequest(
+    $input: UpdateRequestInput!
+    $condition: ModelRequestConditionInput
+  ) {
+    updateRequest(input: $input, condition: $condition) {
+      id
+      companyId
+      resposible {
+        nextToken
+      }
+      service {
+        items {
+          service {
+            name
+          }
+        }
+      }
+      product {
+        nextToken
+      }
+      customer {
+        items {
+          customer {
+            name
+            phoneid
+            id
+          }
+        }
+      }
+      resposibleName
+      customerName
+      notified
+      state
+      paymentType
+      deleted
+      deletedAt
+      date
+      createdAt
+    }
+  }
+`;

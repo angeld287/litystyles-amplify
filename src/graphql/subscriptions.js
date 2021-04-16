@@ -9,6 +9,7 @@ export const onCreateRequest = /* GraphQL */ `
       resposible {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -26,14 +27,28 @@ export const onCreateRequest = /* GraphQL */ `
         items {
           id
           cost
+          quantity
           createdAt
         }
         nextToken
       }
       resposibleName
       customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
       state
       paymentType
+      date
+      notified
+      total
       deleted
       deletedAt
       createdAt
@@ -58,8 +73,15 @@ export const onCreateRequestService = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
@@ -77,6 +99,12 @@ export const onCreateRequestService = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -84,6 +112,57 @@ export const onCreateRequestService = /* GraphQL */ `
       }
       resposibleName
       cost
+      createdAt
+    }
+  }
+`;
+export const onCreateRequestCustomer = /* GraphQL */ `
+  subscription OnCreateRequestCustomer($resposibleName: String) {
+    onCreateRequestCustomer(resposibleName: $resposibleName) {
+      id
+      cost
+      resposibleName
+      customer {
+        id
+        name
+        username
+        phoneid
+        image
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        customerUsername
+        customer {
+          nextToken
+        }
+        state
+        paymentType
+        date
+        notified
+        total
+        deleted
+        deletedAt
+        createdAt
+      }
       createdAt
     }
   }
@@ -96,6 +175,7 @@ export const onUpdateRequest = /* GraphQL */ `
       resposible {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -113,14 +193,136 @@ export const onUpdateRequest = /* GraphQL */ `
         items {
           id
           cost
+          quantity
           createdAt
         }
         nextToken
       }
       resposibleName
       customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
       state
       paymentType
+      date
+      notified
+      total
+      deleted
+      deletedAt
+      createdAt
+    }
+  }
+`;
+export const onUpdateRequestE = /* GraphQL */ `
+  subscription OnUpdateRequestE($resposibleName: String, $state: State) {
+    onUpdateRequestE(resposibleName: $resposibleName, state: $state) {
+      id
+      companyId
+      resposible {
+        items {
+          id
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      service {
+        items {
+          id
+          resposibleName
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      product {
+        items {
+          id
+          cost
+          quantity
+          createdAt
+        }
+        nextToken
+      }
+      resposibleName
+      customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      state
+      paymentType
+      date
+      notified
+      total
+      deleted
+      deletedAt
+      createdAt
+    }
+  }
+`;
+export const onUpdateRequestC = /* GraphQL */ `
+  subscription OnUpdateRequestC($customerUsername: String, $state: State) {
+    onUpdateRequestC(customerUsername: $customerUsername, state: $state) {
+      id
+      companyId
+      resposible {
+        items {
+          id
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      service {
+        items {
+          id
+          resposibleName
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      product {
+        items {
+          id
+          cost
+          quantity
+          createdAt
+        }
+        nextToken
+      }
+      resposibleName
+      customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      state
+      paymentType
+      date
+      notified
+      total
       deleted
       deletedAt
       createdAt
@@ -160,6 +362,7 @@ export const onCreateCompany = /* GraphQL */ `
       products {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -205,6 +408,7 @@ export const onUpdateCompany = /* GraphQL */ `
       products {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -250,6 +454,7 @@ export const onDeleteCompany = /* GraphQL */ `
       products {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -297,6 +502,12 @@ export const onCreateCompanyService = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -340,6 +551,12 @@ export const onUpdateCompanyService = /* GraphQL */ `
           nextToken
         }
         request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
           nextToken
         }
         deleted
@@ -387,6 +604,12 @@ export const onDeleteCompanyService = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -429,11 +652,20 @@ export const onCreateCompanyProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
+      quantity
       cost
       createdAt
     }
@@ -471,11 +703,20 @@ export const onUpdateCompanyProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
+      quantity
       cost
       createdAt
     }
@@ -513,11 +754,20 @@ export const onDeleteCompanyProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
+      quantity
       cost
       createdAt
     }
@@ -535,6 +785,8 @@ export const onCreateOffice = /* GraphQL */ `
           name
           username
           officeId
+          phoneid
+          image
           deleted
           deletedAt
           createdAt
@@ -565,6 +817,8 @@ export const onUpdateOffice = /* GraphQL */ `
           name
           username
           officeId
+          phoneid
+          image
           deleted
           deletedAt
           createdAt
@@ -595,6 +849,8 @@ export const onDeleteOffice = /* GraphQL */ `
           name
           username
           officeId
+          phoneid
+          image
           deleted
           deletedAt
           createdAt
@@ -609,6 +865,84 @@ export const onDeleteOffice = /* GraphQL */ `
       deletedAt
       createdAt
       companyId
+      owner
+    }
+  }
+`;
+export const onCreateType = /* GraphQL */ `
+  subscription OnCreateType($owner: String) {
+    onCreateType(owner: $owner) {
+      id
+      name
+      code
+      categories {
+        items {
+          id
+          name
+          typeName
+          code
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onUpdateType = /* GraphQL */ `
+  subscription OnUpdateType($owner: String) {
+    onUpdateType(owner: $owner) {
+      id
+      name
+      code
+      categories {
+        items {
+          id
+          name
+          typeName
+          code
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onDeleteType = /* GraphQL */ `
+  subscription OnDeleteType($owner: String) {
+    onDeleteType(owner: $owner) {
+      id
+      name
+      code
+      categories {
+        items {
+          id
+          name
+          typeName
+          code
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
       owner
     }
   }
@@ -634,6 +968,35 @@ export const onCreateCategory = /* GraphQL */ `
         }
         nextToken
       }
+      subcategories {
+        items {
+          id
+          name
+          code
+          categoryName
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      typeName
+      code
       deleted
       deletedAt
       createdAt
@@ -662,6 +1025,35 @@ export const onUpdateCategory = /* GraphQL */ `
         }
         nextToken
       }
+      subcategories {
+        items {
+          id
+          name
+          code
+          categoryName
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      typeName
+      code
       deleted
       deletedAt
       createdAt
@@ -690,10 +1082,729 @@ export const onDeleteCategory = /* GraphQL */ `
         }
         nextToken
       }
+      subcategories {
+        items {
+          id
+          name
+          code
+          categoryName
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      typeName
+      code
       deleted
       deletedAt
       createdAt
       owner
+    }
+  }
+`;
+export const onCreateSubCategory = /* GraphQL */ `
+  subscription OnCreateSubCategory($owner: String) {
+    onCreateSubCategory(owner: $owner) {
+      id
+      name
+      code
+      categoryName
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onUpdateSubCategory = /* GraphQL */ `
+  subscription OnUpdateSubCategory($owner: String) {
+    onUpdateSubCategory(owner: $owner) {
+      id
+      name
+      code
+      categoryName
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onDeleteSubCategory = /* GraphQL */ `
+  subscription OnDeleteSubCategory($owner: String) {
+    onDeleteSubCategory(owner: $owner) {
+      id
+      name
+      code
+      categoryName
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onCreateProductCategory = /* GraphQL */ `
+  subscription OnCreateProductCategory {
+    onCreateProductCategory {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onUpdateProductCategory = /* GraphQL */ `
+  subscription OnUpdateProductCategory {
+    onUpdateProductCategory {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onDeleteProductCategory = /* GraphQL */ `
+  subscription OnDeleteProductCategory {
+    onDeleteProductCategory {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onCreateProductSubCategory = /* GraphQL */ `
+  subscription OnCreateProductSubCategory {
+    onCreateProductSubCategory {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onUpdateProductSubCategory = /* GraphQL */ `
+  subscription OnUpdateProductSubCategory {
+    onUpdateProductSubCategory {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onDeleteProductSubCategory = /* GraphQL */ `
+  subscription OnDeleteProductSubCategory {
+    onDeleteProductSubCategory {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onCreateServiceCategory = /* GraphQL */ `
+  subscription OnCreateServiceCategory {
+    onCreateServiceCategory {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onUpdateServiceCategory = /* GraphQL */ `
+  subscription OnUpdateServiceCategory {
+    onUpdateServiceCategory {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onDeleteServiceCategory = /* GraphQL */ `
+  subscription OnDeleteServiceCategory {
+    onDeleteServiceCategory {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onCreateServiceSubCategory = /* GraphQL */ `
+  subscription OnCreateServiceSubCategory {
+    onCreateServiceSubCategory {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onUpdateServiceSubCategory = /* GraphQL */ `
+  subscription OnUpdateServiceSubCategory {
+    onUpdateServiceSubCategory {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const onDeleteServiceSubCategory = /* GraphQL */ `
+  subscription OnDeleteServiceSubCategory {
+    onDeleteServiceSubCategory {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
     }
   }
 `;
@@ -706,6 +1817,7 @@ export const onCreateProduct = /* GraphQL */ `
       companies {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -715,11 +1827,28 @@ export const onCreateProduct = /* GraphQL */ `
         items {
           id
           cost
+          quantity
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
           createdAt
         }
         nextToken
       }
       deleted
+      image
+      packagingformat
       deletedAt
       createdAt
       owner
@@ -735,6 +1864,7 @@ export const onUpdateProduct = /* GraphQL */ `
       companies {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -744,11 +1874,28 @@ export const onUpdateProduct = /* GraphQL */ `
         items {
           id
           cost
+          quantity
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
           createdAt
         }
         nextToken
       }
       deleted
+      image
+      packagingformat
       deletedAt
       createdAt
       owner
@@ -764,6 +1911,7 @@ export const onDeleteProduct = /* GraphQL */ `
       companies {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -773,11 +1921,28 @@ export const onDeleteProduct = /* GraphQL */ `
         items {
           id
           cost
+          quantity
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
           createdAt
         }
         nextToken
       }
       deleted
+      image
+      packagingformat
       deletedAt
       createdAt
       owner
@@ -810,6 +1975,20 @@ export const onCreateService = /* GraphQL */ `
           id
           resposibleName
           cost
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
           createdAt
         }
         nextToken
@@ -851,6 +2030,20 @@ export const onUpdateService = /* GraphQL */ `
         }
         nextToken
       }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -888,6 +2081,20 @@ export const onDeleteService = /* GraphQL */ `
         }
         nextToken
       }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -904,6 +2111,8 @@ export const onCreateEmployeeService = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -926,6 +2135,12 @@ export const onCreateEmployeeService = /* GraphQL */ `
           nextToken
         }
         request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
           nextToken
         }
         deleted
@@ -946,6 +2161,8 @@ export const onUpdateEmployeeService = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -968,6 +2185,12 @@ export const onUpdateEmployeeService = /* GraphQL */ `
           nextToken
         }
         request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
           nextToken
         }
         deleted
@@ -988,6 +2211,8 @@ export const onDeleteEmployeeService = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -1012,6 +2237,12 @@ export const onDeleteEmployeeService = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -1028,6 +2259,8 @@ export const onCreateEmployee = /* GraphQL */ `
       name
       username
       officeId
+      phoneid
+      image
       services {
         items {
           id
@@ -1038,6 +2271,7 @@ export const onCreateEmployee = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1050,12 +2284,14 @@ export const onCreateEmployee = /* GraphQL */ `
   }
 `;
 export const onUpdateEmployee = /* GraphQL */ `
-  subscription OnUpdateEmployee($owner: String, $name: String) {
-    onUpdateEmployee(owner: $owner, name: $name) {
+  subscription OnUpdateEmployee($owner: String, $username: String) {
+    onUpdateEmployee(owner: $owner, username: $username) {
       id
       name
       username
       officeId
+      phoneid
+      image
       services {
         items {
           id
@@ -1066,6 +2302,7 @@ export const onUpdateEmployee = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1084,6 +2321,8 @@ export const onDeleteEmployee = /* GraphQL */ `
       name
       username
       officeId
+      phoneid
+      image
       services {
         items {
           id
@@ -1094,6 +2333,79 @@ export const onDeleteEmployee = /* GraphQL */ `
       request {
         items {
           id
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onCreateCustomer = /* GraphQL */ `
+  subscription OnCreateCustomer($owner: String) {
+    onCreateCustomer(owner: $owner) {
+      id
+      name
+      username
+      phoneid
+      image
+      request {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onUpdateCustomer = /* GraphQL */ `
+  subscription OnUpdateCustomer($owner: String, $username: String) {
+    onUpdateCustomer(owner: $owner, username: $username) {
+      id
+      name
+      username
+      phoneid
+      image
+      request {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const onDeleteCustomer = /* GraphQL */ `
+  subscription OnDeleteCustomer($owner: String) {
+    onDeleteCustomer(owner: $owner) {
+      id
+      name
+      username
+      phoneid
+      image
+      request {
+        items {
+          id
+          cost
+          resposibleName
           createdAt
         }
         nextToken
@@ -1114,6 +2426,8 @@ export const onCreateRequestEmployee = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -1139,12 +2453,20 @@ export const onCreateRequestEmployee = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
       }
+      cost
       createdAt
     }
   }
@@ -1158,6 +2480,8 @@ export const onUpdateRequestEmployee = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -1183,12 +2507,20 @@ export const onUpdateRequestEmployee = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
       }
+      cost
       createdAt
     }
   }
@@ -1202,6 +2534,8 @@ export const onDeleteRequestEmployee = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -1227,12 +2561,20 @@ export const onDeleteRequestEmployee = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
       }
+      cost
       createdAt
     }
   }
@@ -1255,8 +2597,15 @@ export const onCreateRequestProduct = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
@@ -1271,12 +2620,21 @@ export const onCreateRequestProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
       cost
+      quantity
       createdAt
     }
   }
@@ -1299,8 +2657,15 @@ export const onUpdateRequestProduct = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
@@ -1315,12 +2680,21 @@ export const onUpdateRequestProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
       cost
+      quantity
       createdAt
     }
   }
@@ -1343,8 +2717,15 @@ export const onDeleteRequestProduct = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
@@ -1359,12 +2740,21 @@ export const onDeleteRequestProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
       cost
+      quantity
       createdAt
     }
   }

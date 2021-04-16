@@ -62,7 +62,7 @@ const Reports = (props) => {
 									<th>No.</th>
 									<th>Cliente</th>
 									<th>Servicio / Producto</th>
-									<th>Costo</th>
+									<th>Ingreso</th>
 									{/* <th>Costo</th> */}
 								</tr>
 							</thead>

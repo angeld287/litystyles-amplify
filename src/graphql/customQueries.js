@@ -49,6 +49,7 @@
       products {
         items {
           id
+          quantity
           product {
             name
             cost
@@ -159,7 +160,6 @@ query Office($id: String!) {
     }
   }
 }
-
 `;
 
 export const listRequests = /* GraphQL */ `
@@ -185,12 +185,23 @@ export const listRequests = /* GraphQL */ `
         product {
           nextToken
         }
+        customer {
+          items {
+            customer {
+              name
+              phoneid
+              id
+            }
+          }
+        }
         resposibleName
         customerName
         state
+        notified
         paymentType
         deleted
         deletedAt
+        date
         createdAt
       }
       nextToken
@@ -228,6 +239,7 @@ export const listRequestsPerDay = /* GraphQL */ `
         paymentType
         customerName
         createdAt
+        date
       }
       nextToken
     }
@@ -269,6 +281,195 @@ export const listOffices = /* GraphQL */ `
         owner
       }
       nextToken
+    }
+  }
+`;
+
+export const getRequest = /* GraphQL */ `
+  query GetRequest($id: ID!) {
+    getRequest(id: $id) {
+      id
+      companyId
+      resposible {
+        nextToken
+      }
+      service {
+        items {
+          service {
+            name
+          }
+        }
+      }
+      product {
+        nextToken
+      }
+      customer {
+        items {
+          customer {
+            name
+            phoneid
+            id
+          }
+        }
+      }
+      resposibleName
+      customerName
+      notified
+      state
+      paymentType
+      deleted
+      deletedAt
+      date
+      createdAt
+    }
+  }
+`;
+
+export const getProduct = /* GraphQL */ `
+  query GetProduct($id: ID!) {
+    getProduct(id: $id) {
+      id
+      name
+      cost
+      companies {
+        items {
+          id
+          quantity
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      request {
+        items {
+          id
+          cost
+          quantity
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+          category {
+            id
+          }
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
+          createdAt
+          subcategory {
+            id
+          }
+        }
+        nextToken
+      }
+      deleted
+      image
+      packagingformat
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+
+export const listCategorys = /* GraphQL */ `
+  query ListCategorys(
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCategorys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          items {
+            id
+            name
+          }
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getService = /* GraphQL */ `
+  query GetService($id: ID!) {
+    getService(id: $id) {
+      id
+      name
+      cost
+      employees {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      companies {
+        items {
+          id
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      request {
+        items {
+          id
+          resposibleName
+          cost
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+          category {
+            id
+          }
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
+          createdAt
+          subcategory {
+            id
+          }
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
     }
   }
 `;

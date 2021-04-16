@@ -15,17 +15,21 @@ const style = {
 }
 
 const Employee = (props) => {
-	const { setTCPayment, tcPayLoading, requests, requestInProcess, FinishRequest, nextRequest, inProcessLoading, finishLoading, loading } = useEmployee(props);
+	const { notifyLoading, notify, setTCPayment, tcPayLoading, requests, requestInProcess, FinishRequest, nextRequest, inProcessLoading, finishLoading, loading } = useEmployee(props);
 
 	const _requests = (requests !== null)?([].concat(requests)
-		.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+		.sort((a, b) => new Date(a.date) - new Date(b.date))
 		.map((item,i)=>
-			(
+			{
+				//console.log(i === 1, item.customer.items.length !== 0);
+				return (
 				<tr key={i} className={item.state === "IN_PROCESS" ? "table-danger" : "table-light"}>
 					<td>{i+1}</td>
 					<td style={{width: 200}}>{item.customerName}</td>
+					<td>{ (i === 1 && item.customer.items.length !== 0 && !item.notified) && <Button onClick={e => {e.preventDefault(); notify(item, '2');}} disabled={item.notified} loading={notifyLoading} className="bp3-minimal" icon="notifications-updated"/>}</td>
 				</tr>
-			)
+				)
+			}
 		)):(<td></td>)
 
 
@@ -70,6 +74,7 @@ const Employee = (props) => {
                             <tr>
                                 <th scope="col"><b>No.</b></th>
                                 <th scope="col"><b>Cliente</b></th>
+                                <th scope="col"><b></b></th>
                             </tr>
                         </thead>
                         <tbody>

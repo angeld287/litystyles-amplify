@@ -123,7 +123,7 @@ const useAdministration = (props) => {
 		try {
 			if(categories.length === 0){
 				setLoading({type: 'categories'})
-				const api = await API.graphql(graphqlOperation(listCategorys));
+				const api = await API.graphql(graphqlOperation(listCategorys, {filter: {typeName: {eq: "Office"}}}));
 				setCategories(api.data.listCategorys.items);
 				setLoading({type: ''})
 			}

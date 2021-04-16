@@ -14,6 +14,7 @@ const useProducts = (props) => {
 
     const [ product, setProduct ] = useState('');
     const [ cost, setCost ] = useState('');
+    const [ qty, setQty ] = useState('0');
     const [ productName, setProductName ] = useState('');
 
     const handleClose = () => setShow(false);
@@ -23,6 +24,7 @@ const useProducts = (props) => {
             case 'edit':
                 setSelectedObject(object);
                 setCost(object.cost);
+                setQty(object.quantity);
                 setEdit(true);
                 setAdd(false);
                 setProductName(object.product.name);
@@ -33,6 +35,7 @@ const useProducts = (props) => {
             case 'view':
                 setSelectedObject(object);
                 setCost(object.cost);
+                setQty(object.quantity);
                 setEdit(false);
                 setAdd(false);
                 setProductName(object.product.name);
@@ -48,6 +51,7 @@ const useProducts = (props) => {
     
                 setSelectedObject(object);
                 setCost('0');
+                setQty('0');
                 setEdit(false);
                 setAdd(true);
                 var lists = props.ap.pro.products;
@@ -107,6 +111,11 @@ const useProducts = (props) => {
                 return;
              }
 
+             if(qty.match(/^[0-9]+$/) === null || qty === '0') {
+                swal({ title: "Agregar Producto!", text: "El campo cantidad debe ser un numero mayor a 0.", type: "error", timer: 2000 });
+                return;
+             }
+
              var list = props.ap.cpro.companyProducts;
 
              if(list[list.findIndex(e => e.product.id === product)] !== undefined) {
@@ -116,7 +125,7 @@ const useProducts = (props) => {
 
              props.ap.load.setLoading({type: 'addproduct'});
     
-             const api = await API.graphql(graphqlOperation(createCompanyProduct, {input: {companyProductProductId: product, companyProductComapnyId: props.ap.state.company.id, cost: cost}}));
+             const api = await API.graphql(graphqlOperation(createCompanyProduct, {input: {companyProductProductId: product, companyProductComapnyId: props.ap.state.company.id, cost: cost, quantity: qty}}));
              list.push(api.data.createCompanyProduct);
 
              props.ap.cpro.setCompanyProducts(list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
@@ -149,7 +158,7 @@ const useProducts = (props) => {
 
             var list = props.ap.cpro.companyProducts;
    
-            const api = await API.graphql(graphqlOperation(updateCompanyProduct, {input: {id: so.id, cost: cost}}));
+            const api = await API.graphql(graphqlOperation(updateCompanyProduct, {input: {id: so.id, cost: cost, quantity: qty}}));
 
             list.splice(list.findIndex(e => e.id === so.id), 1);
 
@@ -173,7 +182,7 @@ const useProducts = (props) => {
        }
     }
 
-	return {  add, productName, handleAddProduct, handleEditProduct, handleDelete, handleClose, handleShow, edit, show, so, cost, setProduct, setCost };
+	return {  add, productName, handleAddProduct, handleEditProduct, handleDelete, handleClose, handleShow, edit, show, so, cost, setProduct, setCost, qty, setQty };
 };
 
 export default useProducts;

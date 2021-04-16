@@ -37,6 +37,7 @@ export const createCompany = /* GraphQL */ `
       products {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -85,6 +86,7 @@ export const updateCompany = /* GraphQL */ `
       products {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -133,6 +135,7 @@ export const deleteCompany = /* GraphQL */ `
       products {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -183,6 +186,12 @@ export const createCompanyService = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -229,6 +238,12 @@ export const updateCompanyService = /* GraphQL */ `
           nextToken
         }
         request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
           nextToken
         }
         deleted
@@ -279,6 +294,12 @@ export const deleteCompanyService = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -324,11 +345,20 @@ export const createCompanyProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
+      quantity
       cost
       createdAt
     }
@@ -369,11 +399,20 @@ export const updateCompanyProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
+      quantity
       cost
       createdAt
     }
@@ -414,11 +453,20 @@ export const deleteCompanyProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
+      quantity
       cost
       createdAt
     }
@@ -439,6 +487,8 @@ export const createOffice = /* GraphQL */ `
           name
           username
           officeId
+          phoneid
+          image
           deleted
           deletedAt
           createdAt
@@ -472,6 +522,8 @@ export const updateOffice = /* GraphQL */ `
           name
           username
           officeId
+          phoneid
+          image
           deleted
           deletedAt
           createdAt
@@ -505,6 +557,8 @@ export const deleteOffice = /* GraphQL */ `
           name
           username
           officeId
+          phoneid
+          image
           deleted
           deletedAt
           createdAt
@@ -519,6 +573,93 @@ export const deleteOffice = /* GraphQL */ `
       deletedAt
       createdAt
       companyId
+      owner
+    }
+  }
+`;
+export const createType = /* GraphQL */ `
+  mutation CreateType(
+    $input: CreateTypeInput!
+    $condition: ModelTypeConditionInput
+  ) {
+    createType(input: $input, condition: $condition) {
+      id
+      name
+      code
+      categories {
+        items {
+          id
+          name
+          typeName
+          code
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const updateType = /* GraphQL */ `
+  mutation UpdateType(
+    $input: UpdateTypeInput!
+    $condition: ModelTypeConditionInput
+  ) {
+    updateType(input: $input, condition: $condition) {
+      id
+      name
+      code
+      categories {
+        items {
+          id
+          name
+          typeName
+          code
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const deleteType = /* GraphQL */ `
+  mutation DeleteType(
+    $input: DeleteTypeInput!
+    $condition: ModelTypeConditionInput
+  ) {
+    deleteType(input: $input, condition: $condition) {
+      id
+      name
+      code
+      categories {
+        items {
+          id
+          name
+          typeName
+          code
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
       owner
     }
   }
@@ -547,6 +688,35 @@ export const createCategory = /* GraphQL */ `
         }
         nextToken
       }
+      subcategories {
+        items {
+          id
+          name
+          code
+          categoryName
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      typeName
+      code
       deleted
       deletedAt
       createdAt
@@ -578,6 +748,35 @@ export const updateCategory = /* GraphQL */ `
         }
         nextToken
       }
+      subcategories {
+        items {
+          id
+          name
+          code
+          categoryName
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      typeName
+      code
       deleted
       deletedAt
       createdAt
@@ -609,10 +808,774 @@ export const deleteCategory = /* GraphQL */ `
         }
         nextToken
       }
+      subcategories {
+        items {
+          id
+          name
+          code
+          categoryName
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      typeName
+      code
       deleted
       deletedAt
       createdAt
       owner
+    }
+  }
+`;
+export const createSubCategory = /* GraphQL */ `
+  mutation CreateSubCategory(
+    $input: CreateSubCategoryInput!
+    $condition: ModelSubCategoryConditionInput
+  ) {
+    createSubCategory(input: $input, condition: $condition) {
+      id
+      name
+      code
+      categoryName
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const updateSubCategory = /* GraphQL */ `
+  mutation UpdateSubCategory(
+    $input: UpdateSubCategoryInput!
+    $condition: ModelSubCategoryConditionInput
+  ) {
+    updateSubCategory(input: $input, condition: $condition) {
+      id
+      name
+      code
+      categoryName
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const deleteSubCategory = /* GraphQL */ `
+  mutation DeleteSubCategory(
+    $input: DeleteSubCategoryInput!
+    $condition: ModelSubCategoryConditionInput
+  ) {
+    deleteSubCategory(input: $input, condition: $condition) {
+      id
+      name
+      code
+      categoryName
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const createProductCategory = /* GraphQL */ `
+  mutation CreateProductCategory(
+    $input: CreateProductCategoryInput!
+    $condition: ModelProductCategoryConditionInput
+  ) {
+    createProductCategory(input: $input, condition: $condition) {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const updateProductCategory = /* GraphQL */ `
+  mutation UpdateProductCategory(
+    $input: UpdateProductCategoryInput!
+    $condition: ModelProductCategoryConditionInput
+  ) {
+    updateProductCategory(input: $input, condition: $condition) {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const deleteProductCategory = /* GraphQL */ `
+  mutation DeleteProductCategory(
+    $input: DeleteProductCategoryInput!
+    $condition: ModelProductCategoryConditionInput
+  ) {
+    deleteProductCategory(input: $input, condition: $condition) {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const createProductSubCategory = /* GraphQL */ `
+  mutation CreateProductSubCategory(
+    $input: CreateProductSubCategoryInput!
+    $condition: ModelProductSubCategoryConditionInput
+  ) {
+    createProductSubCategory(input: $input, condition: $condition) {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const updateProductSubCategory = /* GraphQL */ `
+  mutation UpdateProductSubCategory(
+    $input: UpdateProductSubCategoryInput!
+    $condition: ModelProductSubCategoryConditionInput
+  ) {
+    updateProductSubCategory(input: $input, condition: $condition) {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const deleteProductSubCategory = /* GraphQL */ `
+  mutation DeleteProductSubCategory(
+    $input: DeleteProductSubCategoryInput!
+    $condition: ModelProductSubCategoryConditionInput
+  ) {
+    deleteProductSubCategory(input: $input, condition: $condition) {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      product {
+        id
+        name
+        cost
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        image
+        packagingformat
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const createServiceCategory = /* GraphQL */ `
+  mutation CreateServiceCategory(
+    $input: CreateServiceCategoryInput!
+    $condition: ModelServiceCategoryConditionInput
+  ) {
+    createServiceCategory(input: $input, condition: $condition) {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const updateServiceCategory = /* GraphQL */ `
+  mutation UpdateServiceCategory(
+    $input: UpdateServiceCategoryInput!
+    $condition: ModelServiceCategoryConditionInput
+  ) {
+    updateServiceCategory(input: $input, condition: $condition) {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const deleteServiceCategory = /* GraphQL */ `
+  mutation DeleteServiceCategory(
+    $input: DeleteServiceCategoryInput!
+    $condition: ModelServiceCategoryConditionInput
+  ) {
+    deleteServiceCategory(input: $input, condition: $condition) {
+      id
+      category {
+        id
+        name
+        offices {
+          nextToken
+        }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const createServiceSubCategory = /* GraphQL */ `
+  mutation CreateServiceSubCategory(
+    $input: CreateServiceSubCategoryInput!
+    $condition: ModelServiceSubCategoryConditionInput
+  ) {
+    createServiceSubCategory(input: $input, condition: $condition) {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const updateServiceSubCategory = /* GraphQL */ `
+  mutation UpdateServiceSubCategory(
+    $input: UpdateServiceSubCategoryInput!
+    $condition: ModelServiceSubCategoryConditionInput
+  ) {
+    updateServiceSubCategory(input: $input, condition: $condition) {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
+    }
+  }
+`;
+export const deleteServiceSubCategory = /* GraphQL */ `
+  mutation DeleteServiceSubCategory(
+    $input: DeleteServiceSubCategoryInput!
+    $condition: ModelServiceSubCategoryConditionInput
+  ) {
+    deleteServiceSubCategory(input: $input, condition: $condition) {
+      id
+      subcategory {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      service {
+        id
+        name
+        cost
+        employees {
+          nextToken
+        }
+        companies {
+          nextToken
+        }
+        request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      createdAt
     }
   }
 `;
@@ -628,6 +1591,7 @@ export const createProduct = /* GraphQL */ `
       companies {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -637,11 +1601,28 @@ export const createProduct = /* GraphQL */ `
         items {
           id
           cost
+          quantity
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
           createdAt
         }
         nextToken
       }
       deleted
+      image
+      packagingformat
       deletedAt
       createdAt
       owner
@@ -660,6 +1641,7 @@ export const updateProduct = /* GraphQL */ `
       companies {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -669,11 +1651,28 @@ export const updateProduct = /* GraphQL */ `
         items {
           id
           cost
+          quantity
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
           createdAt
         }
         nextToken
       }
       deleted
+      image
+      packagingformat
       deletedAt
       createdAt
       owner
@@ -692,6 +1691,7 @@ export const deleteProduct = /* GraphQL */ `
       companies {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -701,11 +1701,28 @@ export const deleteProduct = /* GraphQL */ `
         items {
           id
           cost
+          quantity
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
           createdAt
         }
         nextToken
       }
       deleted
+      image
+      packagingformat
       deletedAt
       createdAt
       owner
@@ -741,6 +1758,20 @@ export const createService = /* GraphQL */ `
           id
           resposibleName
           cost
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
           createdAt
         }
         nextToken
@@ -785,6 +1816,20 @@ export const updateService = /* GraphQL */ `
         }
         nextToken
       }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -825,6 +1870,20 @@ export const deleteService = /* GraphQL */ `
         }
         nextToken
       }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -844,6 +1903,8 @@ export const createEmployeeService = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -866,6 +1927,12 @@ export const createEmployeeService = /* GraphQL */ `
           nextToken
         }
         request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
           nextToken
         }
         deleted
@@ -889,6 +1956,8 @@ export const updateEmployeeService = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -911,6 +1980,12 @@ export const updateEmployeeService = /* GraphQL */ `
           nextToken
         }
         request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
           nextToken
         }
         deleted
@@ -934,6 +2009,8 @@ export const deleteEmployeeService = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -958,6 +2035,12 @@ export const deleteEmployeeService = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -977,6 +2060,8 @@ export const createEmployee = /* GraphQL */ `
       name
       username
       officeId
+      phoneid
+      image
       services {
         items {
           id
@@ -987,6 +2072,7 @@ export const createEmployee = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1008,6 +2094,8 @@ export const updateEmployee = /* GraphQL */ `
       name
       username
       officeId
+      phoneid
+      image
       services {
         items {
           id
@@ -1018,6 +2106,7 @@ export const updateEmployee = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1039,6 +2128,8 @@ export const deleteEmployee = /* GraphQL */ `
       name
       username
       officeId
+      phoneid
+      image
       services {
         items {
           id
@@ -1049,6 +2140,7 @@ export const deleteEmployee = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1057,6 +2149,249 @@ export const deleteEmployee = /* GraphQL */ `
       deletedAt
       createdAt
       owner
+    }
+  }
+`;
+export const createCustomer = /* GraphQL */ `
+  mutation CreateCustomer(
+    $input: CreateCustomerInput!
+    $condition: ModelCustomerConditionInput
+  ) {
+    createCustomer(input: $input, condition: $condition) {
+      id
+      name
+      username
+      phoneid
+      image
+      request {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const updateCustomer = /* GraphQL */ `
+  mutation UpdateCustomer(
+    $input: UpdateCustomerInput!
+    $condition: ModelCustomerConditionInput
+  ) {
+    updateCustomer(input: $input, condition: $condition) {
+      id
+      name
+      username
+      phoneid
+      image
+      request {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const deleteCustomer = /* GraphQL */ `
+  mutation DeleteCustomer(
+    $input: DeleteCustomerInput!
+    $condition: ModelCustomerConditionInput
+  ) {
+    deleteCustomer(input: $input, condition: $condition) {
+      id
+      name
+      username
+      phoneid
+      image
+      request {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const createRequestCustomer = /* GraphQL */ `
+  mutation CreateRequestCustomer(
+    $input: CreateRequestCustomerInput!
+    $condition: ModelRequestCustomerConditionInput
+  ) {
+    createRequestCustomer(input: $input, condition: $condition) {
+      id
+      cost
+      resposibleName
+      customer {
+        id
+        name
+        username
+        phoneid
+        image
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        customerUsername
+        customer {
+          nextToken
+        }
+        state
+        paymentType
+        date
+        notified
+        total
+        deleted
+        deletedAt
+        createdAt
+      }
+      createdAt
+    }
+  }
+`;
+export const updateRequestCustomer = /* GraphQL */ `
+  mutation UpdateRequestCustomer(
+    $input: UpdateRequestCustomerInput!
+    $condition: ModelRequestCustomerConditionInput
+  ) {
+    updateRequestCustomer(input: $input, condition: $condition) {
+      id
+      cost
+      resposibleName
+      customer {
+        id
+        name
+        username
+        phoneid
+        image
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        customerUsername
+        customer {
+          nextToken
+        }
+        state
+        paymentType
+        date
+        notified
+        total
+        deleted
+        deletedAt
+        createdAt
+      }
+      createdAt
+    }
+  }
+`;
+export const deleteRequestCustomer = /* GraphQL */ `
+  mutation DeleteRequestCustomer(
+    $input: DeleteRequestCustomerInput!
+    $condition: ModelRequestCustomerConditionInput
+  ) {
+    deleteRequestCustomer(input: $input, condition: $condition) {
+      id
+      cost
+      resposibleName
+      customer {
+        id
+        name
+        username
+        phoneid
+        image
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      request {
+        id
+        companyId
+        resposible {
+          nextToken
+        }
+        service {
+          nextToken
+        }
+        product {
+          nextToken
+        }
+        resposibleName
+        customerName
+        customerUsername
+        customer {
+          nextToken
+        }
+        state
+        paymentType
+        date
+        notified
+        total
+        deleted
+        deletedAt
+        createdAt
+      }
+      createdAt
     }
   }
 `;
@@ -1072,6 +2407,8 @@ export const createRequestEmployee = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -1097,12 +2434,20 @@ export const createRequestEmployee = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
       }
+      cost
       createdAt
     }
   }
@@ -1119,6 +2464,8 @@ export const updateRequestEmployee = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -1144,12 +2491,20 @@ export const updateRequestEmployee = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
       }
+      cost
       createdAt
     }
   }
@@ -1166,6 +2521,8 @@ export const deleteRequestEmployee = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
@@ -1191,12 +2548,20 @@ export const deleteRequestEmployee = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
       }
+      cost
       createdAt
     }
   }
@@ -1222,8 +2587,15 @@ export const createRequestService = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
@@ -1239,6 +2611,12 @@ export const createRequestService = /* GraphQL */ `
           nextToken
         }
         request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
           nextToken
         }
         deleted
@@ -1273,8 +2651,15 @@ export const updateRequestService = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
@@ -1290,6 +2675,12 @@ export const updateRequestService = /* GraphQL */ `
           nextToken
         }
         request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
           nextToken
         }
         deleted
@@ -1324,8 +2715,15 @@ export const deleteRequestService = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
@@ -1341,6 +2739,12 @@ export const deleteRequestService = /* GraphQL */ `
           nextToken
         }
         request {
+          nextToken
+        }
+        category {
+          nextToken
+        }
+        subcategory {
           nextToken
         }
         deleted
@@ -1375,8 +2779,15 @@ export const createRequestProduct = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
@@ -1391,12 +2802,21 @@ export const createRequestProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
       cost
+      quantity
       createdAt
     }
   }
@@ -1422,8 +2842,15 @@ export const updateRequestProduct = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
@@ -1438,12 +2865,21 @@ export const updateRequestProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
       cost
+      quantity
       createdAt
     }
   }
@@ -1469,8 +2905,15 @@ export const deleteRequestProduct = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt
@@ -1485,12 +2928,21 @@ export const deleteRequestProduct = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
       }
       cost
+      quantity
       createdAt
     }
   }
@@ -1506,6 +2958,7 @@ export const createRequest = /* GraphQL */ `
       resposible {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1523,14 +2976,28 @@ export const createRequest = /* GraphQL */ `
         items {
           id
           cost
+          quantity
           createdAt
         }
         nextToken
       }
       resposibleName
       customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
       state
       paymentType
+      date
+      notified
+      total
       deleted
       deletedAt
       createdAt
@@ -1548,6 +3015,7 @@ export const updateRequest = /* GraphQL */ `
       resposible {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1565,14 +3033,28 @@ export const updateRequest = /* GraphQL */ `
         items {
           id
           cost
+          quantity
           createdAt
         }
         nextToken
       }
       resposibleName
       customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
       state
       paymentType
+      date
+      notified
+      total
       deleted
       deletedAt
       createdAt
@@ -1590,6 +3072,7 @@ export const deleteRequest = /* GraphQL */ `
       resposible {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -1607,14 +3090,28 @@ export const deleteRequest = /* GraphQL */ `
         items {
           id
           cost
+          quantity
           createdAt
         }
         nextToken
       }
       resposibleName
       customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
       state
       paymentType
+      date
+      notified
+      total
       deleted
       deletedAt
       createdAt

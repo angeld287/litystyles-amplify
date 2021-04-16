@@ -156,9 +156,12 @@ const useEmployees = (props) => {
    
             await API.graphql(graphqlOperation(updateEmployee, {input: {id: id, officeEmployeesId: 'nan', officeId: 'nan'}}));
 
-            await addUserToRoll(item.username, 'customer');
+            //await addUserToRoll(item.username, 'customer');
 
-            await removeUserFromRoll(item.username, 'employee');
+            if(props.cp.state.user_roles.indexOf('supplier') === -1){
+                await removeUserFromRoll(item.username, 'stylist');
+                await removeUserFromRoll(item.username, 'employee');
+            }
 
             employeesList.splice(employeesList.findIndex(e => e.id === item.id), 1);
    
@@ -263,9 +266,12 @@ const useEmployees = (props) => {
 
             }    
 
-            await addUserToRoll(item.Username, 'employee');
+            if(props.cp.state.user_roles.indexOf('supplier') === -1){
+                await addUserToRoll(item.Username, 'employee');
+                await addUserToRoll(item.Username, 'stylist');
+            }
 
-            await removeUserFromRoll(item.username, 'customer');
+            //await removeUserFromRoll(item.username, 'customer');
 
             swal({ title: "Asociar Empleado!", text: "Empleado Asociado Correctamente!", type: "success", timer: 2500 });
 

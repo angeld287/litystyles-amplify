@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listRequestsPerDay } from '../../graphql/customQueries';
+import { updateRequest } from '../../graphql/mutations';
 
 import swal from 'sweetalert';
 
@@ -57,8 +58,8 @@ const useReports = (props) => {
 				const r = await API.graphql(graphqlOperation(listRequestsPerDay, {
 					filter: {
 					  and: [
-						{createdAt: {gt: _date}}, 
-						{createdAt: {lt: String(moment(date).format('YYYY-MM-DDT')+'23:59:59.000')}},
+						{date: {gt: _date}}, 
+						{date: {lt: String(moment(date).format('YYYY-MM-DDT')+'23:59:59.000')}},
 						{companyId: {eq: props.state.company.id}},
 						{state: {eq: 'FINISHED'}},
 					  ]
@@ -118,8 +119,8 @@ const useReports = (props) => {
 
 			const filter = {
 				and: [
-					{createdAt: {gt: String(start)}}, 
-					{createdAt: {lt: String(end)}},
+					{date: {gt: String(start)}}, 
+					{date: {lt: String(end)}},
 					{state: {eq: 'FINISHED'}},
 					{companyId: {eq: props.state.company.id}},
 				]
@@ -130,6 +131,13 @@ const useReports = (props) => {
 			const r = await requests(filter);
 
 			result.data = r.data.listRequests.items;
+
+			result.data.forEach(e => {
+				if(e.date === null){
+					console.log(e);
+					//API.graphql(graphqlOperation(updateRequest, { input: {id: e.id, date: e.date} }));
+				}
+			});
 
 			_results.push(result);
 
@@ -157,15 +165,17 @@ const useReports = (props) => {
 		}
 		
 		data.forEach(e => {
-			var date = new Date(e.createdAt);
-
-			var service = e.service.items[0].service.name;
-			var cost = e.service.items[0].cost === null ? e.service.items[0].service.cost : e.service.items[0].cost;
+			var date = new Date(e.date);
+			if(e.service.items.length === 0){
+				console.log(e.id);
+			}
+			var service = e.service.items.length !== 0 ? e.service.items[0].service.name : 'n/a';
+			var cost = e.service.items.length !== 0 ? (e.service.items[0].cost === null ? e.service.items[0].service.cost : e.service.items[0].cost) : "n/a";
 			var tableItem = {
 				client: e.customerName,
 				service: service,
 				price: cost,
-				date: moment(e.createdAt).format('DD-MM-YY')
+				date: moment(e.date).format('DD-MM-YY')
 			};
 			
 			totalE = parseInt(cost) + parseInt(totalE);
@@ -327,7 +337,7 @@ const useReports = (props) => {
 				//5-En “Tipo de Ingreso”  siempre "1" Ingreso por operaciones
 				Tipo_Ingreso: "1",
 				//6-En “Fecha Comprobante” Fecha en la que se realizó la venta. formato: YYYYMMDD.
-				Fecha_Comprobante: moment(e.createdAt).format('YYYYMMDD'),
+				Fecha_Comprobante: moment(e.date).format('YYYYMMDD'),
 				//7-En “Fecha de Retención” deje el espacio en blanco. (opcional)
 				Fecha_Retención: "",
 				//8-En “Monto Facturado” registre el valor de la venta del bien o servicio, sin incluir impuestos. (se pone el costo del servicio)

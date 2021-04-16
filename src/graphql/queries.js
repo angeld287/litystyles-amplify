@@ -34,6 +34,7 @@ export const getCompany = /* GraphQL */ `
       products {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -87,6 +88,8 @@ export const getOffice = /* GraphQL */ `
           name
           username
           officeId
+          phoneid
+          image
           deleted
           deletedAt
           createdAt
@@ -132,6 +135,55 @@ export const listOffices = /* GraphQL */ `
     }
   }
 `;
+export const getType = /* GraphQL */ `
+  query GetType($id: ID!) {
+    getType(id: $id) {
+      id
+      name
+      code
+      categories {
+        items {
+          id
+          name
+          typeName
+          code
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const listTypes = /* GraphQL */ `
+  query ListTypes(
+    $filter: ModelTypeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTypes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        code
+        categories {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
 export const getCategory = /* GraphQL */ `
   query GetCategory($id: ID!) {
     getCategory(id: $id) {
@@ -153,6 +205,35 @@ export const getCategory = /* GraphQL */ `
         }
         nextToken
       }
+      subcategories {
+        items {
+          id
+          name
+          code
+          categoryName
+          deleted
+          deletedAt
+          createdAt
+          owner
+        }
+        nextToken
+      }
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      typeName
+      code
       deleted
       deletedAt
       createdAt
@@ -173,6 +254,72 @@ export const listCategorys = /* GraphQL */ `
         offices {
           nextToken
         }
+        subcategories {
+          nextToken
+        }
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getSubCategory = /* GraphQL */ `
+  query GetSubCategory($id: ID!) {
+    getSubCategory(id: $id) {
+      id
+      name
+      code
+      categoryName
+      products {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      services {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const listSubCategorys = /* GraphQL */ `
+  query ListSubCategorys(
+    $filter: ModelSubCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSubCategorys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        code
+        categoryName
+        products {
+          nextToken
+        }
+        services {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -191,6 +338,7 @@ export const getProduct = /* GraphQL */ `
       companies {
         items {
           id
+          quantity
           cost
           createdAt
         }
@@ -200,11 +348,28 @@ export const getProduct = /* GraphQL */ `
         items {
           id
           cost
+          quantity
+          createdAt
+        }
+        nextToken
+      }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
           createdAt
         }
         nextToken
       }
       deleted
+      image
+      packagingformat
       deletedAt
       createdAt
       owner
@@ -228,7 +393,15 @@ export const listProducts = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
+        image
+        packagingformat
         deletedAt
         createdAt
         owner
@@ -267,6 +440,20 @@ export const getService = /* GraphQL */ `
         }
         nextToken
       }
+      category {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
+      subcategory {
+        items {
+          id
+          createdAt
+        }
+        nextToken
+      }
       deleted
       deletedAt
       createdAt
@@ -294,6 +481,12 @@ export const listServices = /* GraphQL */ `
         request {
           nextToken
         }
+        category {
+          nextToken
+        }
+        subcategory {
+          nextToken
+        }
         deleted
         deletedAt
         createdAt
@@ -310,6 +503,8 @@ export const getEmployee = /* GraphQL */ `
       name
       username
       officeId
+      phoneid
+      image
       services {
         items {
           id
@@ -320,6 +515,7 @@ export const getEmployee = /* GraphQL */ `
       request {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -343,9 +539,60 @@ export const listEmployees = /* GraphQL */ `
         name
         username
         officeId
+        phoneid
+        image
         services {
           nextToken
         }
+        request {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getCustomer = /* GraphQL */ `
+  query GetCustomer($id: ID!) {
+    getCustomer(id: $id) {
+      id
+      name
+      username
+      phoneid
+      image
+      request {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
+      deleted
+      deletedAt
+      createdAt
+      owner
+    }
+  }
+`;
+export const listCustomers = /* GraphQL */ `
+  query ListCustomers(
+    $filter: ModelCustomerFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCustomers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        username
+        phoneid
+        image
         request {
           nextToken
         }
@@ -366,6 +613,7 @@ export const getRequest = /* GraphQL */ `
       resposible {
         items {
           id
+          cost
           createdAt
         }
         nextToken
@@ -383,14 +631,28 @@ export const getRequest = /* GraphQL */ `
         items {
           id
           cost
+          quantity
           createdAt
         }
         nextToken
       }
       resposibleName
       customerName
+      customerUsername
+      customer {
+        items {
+          id
+          cost
+          resposibleName
+          createdAt
+        }
+        nextToken
+      }
       state
       paymentType
+      date
+      notified
+      total
       deleted
       deletedAt
       createdAt
@@ -418,8 +680,15 @@ export const listRequests = /* GraphQL */ `
         }
         resposibleName
         customerName
+        customerUsername
+        customer {
+          nextToken
+        }
         state
         paymentType
+        date
+        notified
+        total
         deleted
         deletedAt
         createdAt

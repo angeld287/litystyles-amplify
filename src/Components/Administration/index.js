@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Button, Spinner, Callout, Alert, Icon } from "@blueprintjs/core";
 import { Tabs, Tab, Table } from 'react-bootstrap';
 
@@ -11,6 +11,9 @@ const Administration = (props) => {
 
 	const { ap, onSelectTab, requests, cancelRequest, confirmCancelRequest, setCancelOverlay, cancelOverlay, cancelLoading, cancelerror, cancelerrorMessage } = useAdministration(props);
 	
+	useEffect(() => { 
+        //console.log(props);
+    }, []);
 
 	const _requests = (requests !== null)?([].concat(requests)
 		//.sort((a, b) => a.name.localeCompare(b.name))
@@ -70,11 +73,13 @@ const Administration = (props) => {
 						<Offices ap={ap} cp={props}/>
 					</div>
 				</Tab>
-				<Tab eventKey="services" title={<Icon icon="cog" />}>
-					<div style={{marginTop: 5}}>
-						<Services ap={ap}/>
-					</div>
-				</Tab>
+				{props.state.user_roles.indexOf('supplier') === -1 &&
+					<Tab eventKey="services" title={<Icon icon="cog" />}>
+						<div style={{marginTop: 5}}>
+							<Services ap={ap}/>
+						</div>
+					</Tab>
+				}
 				<Tab eventKey="products" title={<Icon icon="shopping-cart" />}>
 					<div style={{marginTop: 5}}>
 						<Products ap={ap}/>
