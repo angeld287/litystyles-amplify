@@ -488,6 +488,7 @@ export const createOffice = /* GraphQL */ `
           username
           officeId
           phoneid
+          phone_number
           image
           deleted
           deletedAt
@@ -523,6 +524,7 @@ export const updateOffice = /* GraphQL */ `
           username
           officeId
           phoneid
+          phone_number
           image
           deleted
           deletedAt
@@ -558,6 +560,7 @@ export const deleteOffice = /* GraphQL */ `
           username
           officeId
           phoneid
+          phone_number
           image
           deleted
           deletedAt
@@ -1904,6 +1907,7 @@ export const createEmployeeService = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
@@ -1957,6 +1961,7 @@ export const updateEmployeeService = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
@@ -2010,6 +2015,7 @@ export const deleteEmployeeService = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
@@ -2061,6 +2067,7 @@ export const createEmployee = /* GraphQL */ `
       username
       officeId
       phoneid
+      phone_number
       image
       services {
         items {
@@ -2095,6 +2102,7 @@ export const updateEmployee = /* GraphQL */ `
       username
       officeId
       phoneid
+      phone_number
       image
       services {
         items {
@@ -2129,6 +2137,7 @@ export const deleteEmployee = /* GraphQL */ `
       username
       officeId
       phoneid
+      phone_number
       image
       services {
         items {
@@ -2162,6 +2171,7 @@ export const createCustomer = /* GraphQL */ `
       name
       username
       phoneid
+      phone_number
       image
       request {
         items {
@@ -2189,6 +2199,7 @@ export const updateCustomer = /* GraphQL */ `
       name
       username
       phoneid
+      phone_number
       image
       request {
         items {
@@ -2216,6 +2227,7 @@ export const deleteCustomer = /* GraphQL */ `
       name
       username
       phoneid
+      phone_number
       image
       request {
         items {
@@ -2247,6 +2259,7 @@ export const createRequestCustomer = /* GraphQL */ `
         name
         username
         phoneid
+        phone_number
         image
         request {
           nextToken
@@ -2301,6 +2314,7 @@ export const updateRequestCustomer = /* GraphQL */ `
         name
         username
         phoneid
+        phone_number
         image
         request {
           nextToken
@@ -2355,6 +2369,7 @@ export const deleteRequestCustomer = /* GraphQL */ `
         name
         username
         phoneid
+        phone_number
         image
         request {
           nextToken
@@ -2408,6 +2423,7 @@ export const createRequestEmployee = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
@@ -2465,6 +2481,7 @@ export const updateRequestEmployee = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
@@ -2522,6 +2539,7 @@ export const deleteRequestEmployee = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken

@@ -194,7 +194,7 @@ const useEmployees = (props) => {
             };
             
             const _user = await API.post('apiForLambda', '/findUser', apiOptions);
-
+            console.log(_user)
             setCognitoUsers(_user.body === null ? [] : _user.body.Users === undefined ? [] : _user.body.Users);
 
             setlookingforuser(false);
