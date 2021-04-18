@@ -89,6 +89,7 @@ export const getOffice = /* GraphQL */ `
           username
           officeId
           phoneid
+          phone_number
           image
           deleted
           deletedAt
@@ -504,6 +505,7 @@ export const getEmployee = /* GraphQL */ `
       username
       officeId
       phoneid
+      phone_number
       image
       services {
         items {
@@ -540,6 +542,7 @@ export const listEmployees = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
@@ -563,6 +566,7 @@ export const getCustomer = /* GraphQL */ `
       name
       username
       phoneid
+      phone_number
       image
       request {
         items {
@@ -592,6 +596,7 @@ export const listCustomers = /* GraphQL */ `
         name
         username
         phoneid
+        phone_number
         image
         request {
           nextToken
