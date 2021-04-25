@@ -1745,6 +1745,7 @@ export const createService = /* GraphQL */ `
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -1799,6 +1800,7 @@ export const updateService = /* GraphQL */ `
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -1853,6 +1855,7 @@ export const deleteService = /* GraphQL */ `
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -1945,6 +1948,7 @@ export const createEmployeeService = /* GraphQL */ `
         owner
       }
       createdAt
+      duration
     }
   }
 `;
@@ -1999,6 +2003,7 @@ export const updateEmployeeService = /* GraphQL */ `
         owner
       }
       createdAt
+      duration
     }
   }
 `;
@@ -2053,6 +2058,7 @@ export const deleteEmployeeService = /* GraphQL */ `
         owner
       }
       createdAt
+      duration
     }
   }
 `;
@@ -2073,6 +2079,7 @@ export const createEmployee = /* GraphQL */ `
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -2108,6 +2115,7 @@ export const updateEmployee = /* GraphQL */ `
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -2143,6 +2151,7 @@ export const deleteEmployee = /* GraphQL */ `
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }

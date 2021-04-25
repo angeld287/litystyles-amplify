@@ -421,6 +421,7 @@ export const getService = /* GraphQL */ `
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -511,6 +512,7 @@ export const getEmployee = /* GraphQL */ `
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }

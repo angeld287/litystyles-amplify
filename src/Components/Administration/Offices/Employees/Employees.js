@@ -5,7 +5,7 @@ import { Button, Icon } from "@blueprintjs/core";
 import useEmployees from './useEmployees';
 const Employess = (props) => {
 
-    const { lookingforuser, handleLinkEmployee, cognitoUsers, handleFindUser, add, handleClose, handleShow, email, setEmail, edit, show, so, name, setName, setService, addServiceToEmployee, handleDelete, handleUnlinkEmployee } = useEmployees(props);
+    const { handleShowAddService, handleCloseAddS, showAddS, _duration, setDuration, lookingforuser, handleLinkEmployee, cognitoUsers, handleFindUser, add, handleClose, handleShow, email, setEmail, edit, show, so, name, setName, setService, addServiceToEmployee, handleDelete, handleUnlinkEmployee } = useEmployees(props);
     
    /*  useEffect(() => {
 		//let didCancel = false;
@@ -111,7 +111,7 @@ const Employess = (props) => {
                         </Form.Group>
                         <Row>
                             <Col sm={2}>
-                                <Button loading={props.ap.load.loading.type === 'addemployeeservice'} intent="Primary" onClick={(e) => {e.preventDefault(); addServiceToEmployee()}} icon="add"></Button>
+                                <Button loading={props.ap.load.loading.type === 'addemployeeservice'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShowAddService()}} icon="add"></Button>
                             </Col>
                         </Row>
                         <div style={{marginTop:20}}>
@@ -168,6 +168,25 @@ const Employess = (props) => {
                         Guardar
                     </Button>
                 }
+            </Modal.Footer>
+        </Modal>
+        <Modal show={showAddS} onHide={handleCloseAddS}>
+            <Modal.Header closeButton>
+                <Modal.Title>Agregar Servicio a Empleado</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form.Group controlId="duration">
+                    <Form.Label>Duracion promedio en minutos</Form.Label>
+                    <Form.Control type="text" value={_duration} onChange={ e => setDuration(e.target.value)}/>
+                </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseAddS}>
+                    Cerrar
+                </Button>
+                <Button variant="primary" loading={props.ap.load.loading.type === 'addemployeeservice'} onClick={addServiceToEmployee}>
+                    Guardar
+                </Button>
             </Modal.Footer>
         </Modal>
     </Container>)

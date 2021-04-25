@@ -221,6 +221,7 @@ type EmployeeService @model(queries: null) {
   employee: Employee @connection(name: "ess")
   service: Service @connection(name: "see")
   createdAt: String
+  duration: String
 }
 
 type Employee

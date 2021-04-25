@@ -16,9 +16,11 @@ const useEmployees = (props) => {
     const [edit, setEdit] = useState(false);
     const [add, setAdd] = useState(false);
     const [lookingforuser, setlookingforuser ] = useState(false);
+    const [showAddS, setShowAddS ] = useState(false);
 
     const [ name, setName ] = useState('');
     const [ service, setService ] = useState('');
+    const [ _duration, setDuration ] = useState('');
 
     const [ email, setEmail ] = useState('');
     const [ cognitoUsers, setCognitoUsers ] = useState([])
@@ -27,6 +29,16 @@ const useEmployees = (props) => {
 
 
     const handleClose = () => setShow(false);
+    const handleCloseAddS = () => {setShowAddS(false); setDuration('')}
+
+    const handleShowAddService = () => {
+        if(service === '')  {
+            swal({ title: "Agregar Servicio a Empleado!", text: "Debe seleccionar un servicio.", type: "error", timer: 2500 });
+            return;
+        }
+        setShowAddS(true);
+    }
+
 
     const handleShow = (action, object) => {
         switch (action) {
@@ -68,9 +80,14 @@ const useEmployees = (props) => {
         try {
 
             var _services = so.services.items;
-            
+
             if(service === '')  {
                 swal({ title: "Agregar Servicio a Empleado!", text: "Debe seleccionar un servicio.", type: "error", timer: 2500 });
+                return;
+            }
+
+            if(_duration === '' || isNaN(_duration) || _duration === "0")  {
+                swal({ title: "Agregar Servicio a Empleado!", text: "Debe agregar, en formato de número, una duración promedio en minutos. Ejemplo: 20, si el servicio le toma 20 minutos al empleado.", type: "error" });
                 return;
             }
 
@@ -81,22 +98,28 @@ const useEmployees = (props) => {
 
             props.ap.load.setLoading({type: 'addemployeeservice'});
    
-            const api = await API.graphql(graphqlOperation(createEmployeeService, {input: {employeeServiceEmployeeId: so.id, employeeServiceServiceId: service}}));
+            const api = await API.graphql(graphqlOperation(createEmployeeService, {input: {employeeServiceEmployeeId: so.id, employeeServiceServiceId: service, duration: _duration}}));
 
             var sobject = {
                 id: api.data.createEmployeeService.id,
                 service: {
                     name: api.data.createEmployeeService.service.name,
                     id: api.data.createEmployeeService.service.id
-                }
+                },
+                duration: api.data.createEmployeeService.duration
             };
 
             _services.push(sobject);
    
             props.ap.load.setLoading({type: ''});
 
+            handleCloseAddS();
+
        } catch (e) {
+
            console.log(e);
+
+           handleCloseAddS();
 
            props.ap.load.setLoading({type: ''});
 
@@ -322,7 +345,7 @@ const useEmployees = (props) => {
         await API.post('apiForLambda', '/removeUserFromGroup', apiOptions);
     }
 
-	return { lookingforuser, handleLinkEmployee, cognitoUsers, handleFindUser, add, handleClose, handleShow, email, setEmail, edit, show, so, name, setName, setService, addServiceToEmployee, handleDelete, handleUnlinkEmployee };
+	return { handleShowAddService, handleCloseAddS, showAddS, _duration, setDuration, lookingforuser, handleLinkEmployee, cognitoUsers, handleFindUser, add, handleClose, handleShow, email, setEmail, edit, show, so, name, setName, setService, addServiceToEmployee, handleDelete, handleUnlinkEmployee };
 };
 
 export default useEmployees;
