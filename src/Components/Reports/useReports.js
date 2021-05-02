@@ -132,12 +132,12 @@ const useReports = (props) => {
 
 			result.data = r.data.listRequests.items;
 
-			result.data.forEach(e => {
-				if(e.date === null){
-					console.log(e);
-					//API.graphql(graphqlOperation(updateRequest, { input: {id: e.id, date: e.date} }));
-				}
-			});
+			//result.data.forEach(e => {
+			//	if(e.date === null){
+			//		console.log(e);
+			//		API.graphql(graphqlOperation(updateRequest, { input: {id: e.id, date: e.createdAt} }));
+			//	}
+			//});
 
 			_results.push(result);
 
