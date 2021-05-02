@@ -90,12 +90,27 @@ const App = (props) => {
             
           }
         } */
+        
         if (roles === undefined || roles.length === 0) { await addUserToGroup(user.accessToken.payload.username); }
 
         if(roles.indexOf('company_admin') !== -1){
-          companyApi = await API.graphql(graphqlOperation(listCompanys, {filter: {owner: {eq: user.accessToken.payload.username}}}));
 
-          setCompany(companyApi.data.listCompanys.items[0]);
+          companyApi = await API.graphql(graphqlOperation(listCompanys, { limit: 100, filter: {owner: {eq: user.accessToken.payload.username}}}));
+
+          var _nextToken = companyApi.data.listCompanys.nextToken;
+
+          if(companyApi.data.listCompanys.items.length === 0){
+            while (_nextToken !== null) {
+              companyApi = await API.graphql(graphqlOperation(listCompanys, {limit: 100, nextToken: _nextToken, filter: {owner: {eq: user.accessToken.payload.username}}}));
+              if(companyApi.data.listCompanys.items.length > 0){
+                  setCompany(companyApi.data.listCompanys.items[0]);
+                break;
+              }
+              _nextToken = companyApi.data.listCompanys.nextToken;
+            }
+          }else{
+            setCompany(companyApi.data.listCompanys.items[0]);
+          }
 
           if (companyApi.data.listCompanys.items.length === 0) {
             setFirstSteps(true);
