@@ -221,6 +221,7 @@ type EmployeeService @model(queries: null) {
   employee: Employee @connection(name: "ess")
   service: Service @connection(name: "see")
   createdAt: String
+  duration: String
 }
 
 type Employee
@@ -240,6 +241,7 @@ type Employee
     username: String
     officeId: String
     phoneid: String
+    phone_number: String
     image: String
     services: [EmployeeService] @connection(name: "ess")
     request: [RequestEmployee] @connection(name: "er")
@@ -263,6 +265,7 @@ type Customer
     name: String
     username: String
     phoneid: String
+    phone_number: String
     image: String
     request: [RequestCustomer] @connection(name: "cr")
     deleted: Boolean

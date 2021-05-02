@@ -127,6 +127,7 @@ export const onCreateRequestCustomer = /* GraphQL */ `
         name
         username
         phoneid
+        phone_number
         image
         request {
           nextToken
@@ -786,6 +787,7 @@ export const onCreateOffice = /* GraphQL */ `
           username
           officeId
           phoneid
+          phone_number
           image
           deleted
           deletedAt
@@ -818,6 +820,7 @@ export const onUpdateOffice = /* GraphQL */ `
           username
           officeId
           phoneid
+          phone_number
           image
           deleted
           deletedAt
@@ -850,6 +853,7 @@ export const onDeleteOffice = /* GraphQL */ `
           username
           officeId
           phoneid
+          phone_number
           image
           deleted
           deletedAt
@@ -1959,6 +1963,7 @@ export const onCreateService = /* GraphQL */ `
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -2010,6 +2015,7 @@ export const onUpdateService = /* GraphQL */ `
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -2061,6 +2067,7 @@ export const onDeleteService = /* GraphQL */ `
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -2112,6 +2119,7 @@ export const onCreateEmployeeService = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
@@ -2149,6 +2157,7 @@ export const onCreateEmployeeService = /* GraphQL */ `
         owner
       }
       createdAt
+      duration
     }
   }
 `;
@@ -2162,6 +2171,7 @@ export const onUpdateEmployeeService = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
@@ -2199,6 +2209,7 @@ export const onUpdateEmployeeService = /* GraphQL */ `
         owner
       }
       createdAt
+      duration
     }
   }
 `;
@@ -2212,6 +2223,7 @@ export const onDeleteEmployeeService = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
@@ -2249,6 +2261,7 @@ export const onDeleteEmployeeService = /* GraphQL */ `
         owner
       }
       createdAt
+      duration
     }
   }
 `;
@@ -2260,11 +2273,13 @@ export const onCreateEmployee = /* GraphQL */ `
       username
       officeId
       phoneid
+      phone_number
       image
       services {
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -2291,11 +2306,13 @@ export const onUpdateEmployee = /* GraphQL */ `
       username
       officeId
       phoneid
+      phone_number
       image
       services {
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -2322,11 +2339,13 @@ export const onDeleteEmployee = /* GraphQL */ `
       username
       officeId
       phoneid
+      phone_number
       image
       services {
         items {
           id
           createdAt
+          duration
         }
         nextToken
       }
@@ -2352,6 +2371,7 @@ export const onCreateCustomer = /* GraphQL */ `
       name
       username
       phoneid
+      phone_number
       image
       request {
         items {
@@ -2376,6 +2396,7 @@ export const onUpdateCustomer = /* GraphQL */ `
       name
       username
       phoneid
+      phone_number
       image
       request {
         items {
@@ -2400,6 +2421,7 @@ export const onDeleteCustomer = /* GraphQL */ `
       name
       username
       phoneid
+      phone_number
       image
       request {
         items {
@@ -2427,6 +2449,7 @@ export const onCreateRequestEmployee = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
@@ -2481,6 +2504,7 @@ export const onUpdateRequestEmployee = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
@@ -2535,6 +2559,7 @@ export const onDeleteRequestEmployee = /* GraphQL */ `
         username
         officeId
         phoneid
+        phone_number
         image
         services {
           nextToken
