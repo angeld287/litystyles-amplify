@@ -368,6 +368,8 @@ export const getProduct = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
+      subCategoryId
       deleted
       image
       packagingformat
@@ -400,6 +402,8 @@ export const listProducts = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -456,6 +460,8 @@ export const getService = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
+      subCategoryId
       deleted
       deletedAt
       createdAt
@@ -489,6 +495,8 @@ export const listServices = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt

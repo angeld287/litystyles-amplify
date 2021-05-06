@@ -184,6 +184,8 @@ type Product
     request: [RequestProduct] @connection(name: "pr")
     category: [ProductCategory] @connection(name: "pcy")
     subcategory: [ProductSubCategory] @connection(name: "psc")
+    categoryId: String
+    subCategoryId: String
     deleted: Boolean
     image: String
     packagingformat: String #1000ml
@@ -211,6 +213,8 @@ type Service
     request: [RequestService] @connection(name: "sr")
     category: [ServiceCategory] @connection(name: "scy")
     subcategory: [ServiceSubCategory] @connection(name: "ssc")
+    categoryId: String
+    subCategoryId: String
     deleted: Boolean
     deletedAt: String
     createdAt: String
