@@ -89,10 +89,10 @@ const Offices = (props) => {
                 {/* Agregar Imagen */}
 
                 { edit &&
-                <div class="input-group mb-3">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputGroupFile01" accept="image/*" onClick={(e)=> { e.target.value = null; }} onChange={e => {e.preventDefault(); crop.handleImageSelected(e)}} aria-describedby="inputGroupFileAddon01" />
-                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                <div className="input-group mb-3">
+                    <div className="custom-file">
+                        <input type="file" className="custom-file-input" id="inputGroupFile01" accept="image/*" onClick={(e)=> { e.target.value = null; }} onChange={e => {e.preventDefault(); crop.handleImageSelected(e)}} aria-describedby="inputGroupFileAddon01" />
+                        <label className="custom-file-label" htmlFor="inputGroupFile01">Choose file</label>
                     </div>
                 </div>}
 
@@ -103,7 +103,7 @@ const Offices = (props) => {
                     </Form.Group>
                 }
 
-                {!add && <Employess addButton={edit} employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
+                {!add && <Employess category={category} addButton={edit} employess={employees} ap={props.ap} office={so} cp={props.cp}/>}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
