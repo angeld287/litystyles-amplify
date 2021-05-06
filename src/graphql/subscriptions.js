@@ -105,6 +105,8 @@ export const onCreateRequestService = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -509,6 +511,8 @@ export const onCreateCompanyService = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -560,6 +564,8 @@ export const onUpdateCompanyService = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -611,6 +617,8 @@ export const onDeleteCompanyService = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -659,6 +667,8 @@ export const onCreateCompanyProduct = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -710,6 +720,8 @@ export const onUpdateCompanyProduct = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -761,6 +773,8 @@ export const onDeleteCompanyProduct = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -1248,6 +1262,8 @@ export const onCreateProductCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -1301,6 +1317,8 @@ export const onUpdateProductCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -1354,6 +1372,8 @@ export const onDeleteProductCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -1401,6 +1421,8 @@ export const onCreateProductSubCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -1448,6 +1470,8 @@ export const onUpdateProductSubCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -1495,6 +1519,8 @@ export const onDeleteProductSubCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -1551,6 +1577,8 @@ export const onCreateServiceCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -1605,6 +1633,8 @@ export const onUpdateServiceCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -1659,6 +1689,8 @@ export const onDeleteServiceCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -1707,6 +1739,8 @@ export const onCreateServiceSubCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -1755,6 +1789,8 @@ export const onUpdateServiceSubCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -1803,6 +1839,8 @@ export const onDeleteServiceSubCategory = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -1850,6 +1888,8 @@ export const onCreateProduct = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
+      subCategoryId
       deleted
       image
       packagingformat
@@ -1897,6 +1937,8 @@ export const onUpdateProduct = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
+      subCategoryId
       deleted
       image
       packagingformat
@@ -1944,6 +1986,8 @@ export const onDeleteProduct = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
+      subCategoryId
       deleted
       image
       packagingformat
@@ -1998,6 +2042,8 @@ export const onCreateService = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
+      subCategoryId
       deleted
       deletedAt
       createdAt
@@ -2050,6 +2096,8 @@ export const onUpdateService = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
+      subCategoryId
       deleted
       deletedAt
       createdAt
@@ -2102,6 +2150,8 @@ export const onDeleteService = /* GraphQL */ `
         }
         nextToken
       }
+      categoryId
+      subCategoryId
       deleted
       deletedAt
       createdAt
@@ -2151,6 +2201,8 @@ export const onCreateEmployeeService = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -2203,6 +2255,8 @@ export const onUpdateEmployeeService = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -2255,6 +2309,8 @@ export const onDeleteEmployeeService = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         deletedAt
         createdAt
@@ -2651,6 +2707,8 @@ export const onCreateRequestProduct = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -2711,6 +2769,8 @@ export const onUpdateRequestProduct = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat
@@ -2771,6 +2831,8 @@ export const onDeleteRequestProduct = /* GraphQL */ `
         subcategory {
           nextToken
         }
+        categoryId
+        subCategoryId
         deleted
         image
         packagingformat

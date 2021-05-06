@@ -42,6 +42,7 @@
             name
             cost
             id
+            categoryId
           }
           cost
         }
@@ -109,9 +110,11 @@ export const listCompanys = /* GraphQL */ `
             id
             location
             owner
+            categoryId
           }
         }
       }
+      nextToken
     }
   }
 `;

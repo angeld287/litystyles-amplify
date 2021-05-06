@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Table, Container, Row, Col, ButtonGroup, Modal, Form } from 'react-bootstrap';
 import { Button, Icon } from "@blueprintjs/core";
 
@@ -7,15 +7,15 @@ const Employess = (props) => {
 
     const { handleShowAddService, handleCloseAddS, showAddS, _duration, setDuration, lookingforuser, handleLinkEmployee, cognitoUsers, handleFindUser, add, handleClose, handleShow, email, setEmail, edit, show, so, name, setName, setService, addServiceToEmployee, handleDelete, handleUnlinkEmployee } = useEmployees(props);
     
-   /*  useEffect(() => {
-		//let didCancel = false;
+    useEffect(() => {
+		//let didCancel = false
 
-		console.log(props.employess);
+        //console.log(props.ap.cser.companyServices.filter(_ => _.service.categoryId === props.category));
 
 		return () => {
 		//	didCancel = true;
 		};
-	}, []); */
+	}, []);
 
     const list = (props.employess !== null )?([].concat(props.employess)
 		.map((item,i)=>
@@ -65,17 +65,20 @@ const Employess = (props) => {
 			)
         )):(<td></td>)
 
-    const companyServices = (props.ap.cser.companyServices !== null)?([].concat(props.ap.cser.companyServices)
+    const companyServices = (props.ap.cser.companyServices !== null)?([].concat(props.ap.cser.companyServices.filter(_ => _.service.categoryId === props.category))
 	    .map((item,i)=>
 		(
             <option key={i} value={item.service.id}>{item.service.name}</option>
 		)
      )):(<td></td>)
+
+     const isSupplier = (props.cp.state.user_roles.indexOf('supplier') !== -1 && props.employess.length <= 1 );
+     const isNotSupplier = (props.cp.state.user_roles.indexOf('supplier') === -1 );
         
     return(<Container fluid>
 		{props.addButton &&
         <div style={{marginTop:20}}>
-			{(props.cp.state.user_roles.indexOf('supplier') !== -1 && props.employess.length === 0 ) && <Col sm={2}><Button loading={props.ap.load.loading.type === 'addemployee'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShow('add', {});}} icon="add"></Button></Col>}
+			{ (isNotSupplier || isSupplier) && <Col sm={2}><Button loading={props.ap.load.loading.type === 'addemployee'} intent="Primary" onClick={(e) => {e.preventDefault(); handleShow('add', {});}} icon="add"></Button></Col>}
 		</div>}
         <div style={{marginTop:20}}>
 			<Table striped bordered hover>
