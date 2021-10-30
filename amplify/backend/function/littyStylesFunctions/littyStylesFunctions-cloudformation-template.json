@@ -62,7 +62,7 @@
 				"Runtime": "nodejs10.x",
 				"Timeout": "25",
 				"Code": {
-					"S3Bucket": "amplify-littystyle-dev-114547-deployment",
+					"S3Bucket": "amplify-littystyle-prod-94755-deployment",
 					"S3Key": "amplify-builds/littyStylesFunctions-6850684a763032747069-build.zip"
 				}
 			}
