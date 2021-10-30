@@ -18,7 +18,8 @@
                 }
             },
             "function": {
-                "littyStylesFunctions": {}
+                "littyStylesFunctions": {},
+                "UserEmailAutoVerification": {}
             }
         }
     },
