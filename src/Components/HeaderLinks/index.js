@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Auth } from 'aws-amplify';
+import { connect } from 'react-redux';
+import { setCurrentUser } from '../../redux/user/user.actions';
 
 import {
     Alignment,
@@ -11,47 +13,51 @@ import {
     Position,
 } from "@blueprintjs/core";
 
-export default class HeaderLinks extends Component {
+const HeaderLinks = ({ setCurrentUser, currentUser }) => {
 
-	handlesignOut = () => {
-		Auth.signOut().then((d) => {
-			//window.location.reload();
-		});
+    const handlesignOut = () => {
+        Auth.signOut().then((d) => {
+            setCurrentUser(null)
+            sessionStorage.setItem('CURRENT_USER_SESSION', null);
+        });
     };
-    
-    redirect = (path) => {
-        window.location.href = path;
-	};
 
-	render() {
+    console.log(currentUser)
 
-        const userMenu = (
-            <Menu>
-                <MenuItem text={this.props.cp.state.name} />
-                {(this.props.cp.state.user_roles.indexOf('company_admin') !== -1) && <MenuItem icon="dollar" text="Panel de Facturación" onClick={ (e) => { e.preventDefault(); this.props.cp.setPage('BILLINGDASHBOARD');}} />}
-                <MenuItem icon="log-out" text="LogOut" onClick={ (e) => { e.preventDefault(); this.handlesignOut();}} />
-            </Menu>
-        );
+    const userMenu = (
+        <Menu>
+            <MenuItem text={'props.cp.state.name'} />
+            {/* {(props.cp.state.user_roles.indexOf('company_admin') !== -1) && <MenuItem icon="dollar" text="Panel de Facturación" onClick={(e) => { e.preventDefault(); props.cp.setPage('BILLINGDASHBOARD'); }} />} */}
+            <MenuItem icon="log-out" text="LogOut" onClick={(e) => { e.preventDefault(); handlesignOut(); }} />
+        </Menu>
+    );
 
-		return (
-            <Navbar>
-                <Navbar.Group align={Alignment.LEFT}>
-                    <Navbar.Heading>Litty Style</Navbar.Heading>
-                    <Navbar.Divider />
-                    {/* this.redirect('/') */}
-                    <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.props.cp.setPage('')}} icon="home"/>
-                    {this.props.cp.state.user_roles.indexOf('company_admin') !== -1 && <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.props.cp.setPage('COMPANY_ADMIN')}} icon="wrench"/>}
-                    {this.props.cp.state.user_roles.indexOf('employee') !== -1 && <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.props.cp.setPage('STYLIST')}} icon="cut"/>}
-                    {(this.props.cp.state.user_roles.indexOf('company_admin') !== -1 && this.props.cp.state.user_roles.indexOf('supplier') === -1 ) && <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.props.cp.setPage('CUSTOMER')}} icon="people"/>}
-                    {this.props.cp.state.user_roles.indexOf('company_admin') !== -1 && <Button className="bp3-minimal" onClick={(e) => {e.preventDefault(); this.props.cp.setPage('REPORTS')}} icon="chart"/>}
-                </Navbar.Group>
-                <Navbar.Group align={Alignment.RIGHT}>
-                    <Navbar.Divider />
-                    <Popover content={userMenu} position={Position.BOTTOM}>
-                        <Button icon="user" text=""/>
-                    </Popover>
-                </Navbar.Group>
-            </Navbar>
-		);
-	}
+    return (
+        <Navbar>
+            <Navbar.Group align={Alignment.LEFT}>
+                <Navbar.Heading>Litty Style</Navbar.Heading>
+                <Navbar.Divider />
+                <Button className="bp3-minimal" onClick={(e) => { e.preventDefault() }} icon="home" />
+                {/* {props.cp.state.user_roles.indexOf('company_admin') !== -1 && <Button className="bp3-minimal" onClick={(e) => { e.preventDefault(); props.cp.setPage('COMPANY_ADMIN') }} icon="wrench" />}
+                {props.cp.state.user_roles.indexOf('employee') !== -1 && <Button className="bp3-minimal" onClick={(e) => { e.preventDefault(); props.cp.setPage('STYLIST') }} icon="cut" />}
+                {(props.cp.state.user_roles.indexOf('company_admin') !== -1 && props.cp.state.user_roles.indexOf('supplier') === -1) && <Button className="bp3-minimal" onClick={(e) => { e.preventDefault(); props.cp.setPage('CUSTOMER') }} icon="people" />}
+                {props.cp.state.user_roles.indexOf('company_admin') !== -1 && <Button className="bp3-minimal" onClick={(e) => { e.preventDefault(); props.cp.setPage('REPORTS') }} icon="chart" />} */}
+            </Navbar.Group>
+            <Navbar.Group align={Alignment.RIGHT}>
+                <Navbar.Divider />
+                <Popover content={userMenu} position={Position.BOTTOM}>
+                    <Button icon="user" text="" />
+                </Popover>
+            </Navbar.Group>
+        </Navbar>
+    );
 }
+
+const mapStateToProps = state => ({
+    currentUser: state.user.currentUser
+})
+const mapDispatchToProps = dispatch => ({
+    setCurrentUser: user => dispatch(setCurrentUser(user))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderLinks);
