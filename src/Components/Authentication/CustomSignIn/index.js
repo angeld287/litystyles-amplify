@@ -86,28 +86,28 @@ const CustomSignIn = (props) => {
   }, []);
 
   return (
-    <div align="center" style={{ width: 400, margin: 'auto' }}>
+    <div key="div_container" align="center" style={{ width: 400, margin: 'auto' }}>
       {props.authState === 'signIn' &&
-        <div style={{ marginTop: 30 }}>
-          <div className="row">
+        <div key="div_login" style={{ marginTop: 30 }}>
+          <div key="div_login_google" className="row">
             <div className="col-md-12">
               <CustomButton intent={Intent.DANGER} onClick={(e) => { e.preventDefault(); googleFederated() }}>Inicia Sesion con <b>Google</b></CustomButton>
             </div>
           </div>
           <br></br>
-          <div className="or-container">
+          <div key="div_login_divider" className="or-container">
             <div className="line-separator"></div>
             <div className="or-label">o</div>
             <div className="line-separator"></div>
           </div>
           <br></br>
-          <div align="center" style={{ marginLeft: 20 }}>
+          <div key="div_login_form" align="center" style={{ marginLeft: 20 }}>
             <CustomForm onSubmit={onSubmit} error={error} errorMessage={errorMessage} fields={fields} button={button} />
           </div>
         </div>
 
       }
-      <div>
+      <div key="div_overlay">
         <CustomOverlay isOpen={newPassword} onSubmit={nponSubmit} fields={newPasswordFields} button={changePasswordButton} error={nperror} errorMessage={nperrorMessage} />
       </div>
     </div>

@@ -28,7 +28,7 @@ CustomInputGroup.propTypes = {
     className: PropTypes.string,
     style: PropTypes.object,
     validationMessage: PropTypes.string,
-    inputRef: PropTypes.node,
+    inputRef: PropTypes.any,
     type: PropTypes.string,
 }
 

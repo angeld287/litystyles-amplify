@@ -20,15 +20,16 @@ const CustomForm = ({ onSubmit, error, errorMessage, fields, button }) => {
                 {/* fields */}
                 {fields.map(
                     _ => {
-                        return <>
-                            <CustomInputGroup name={_.name} leftIcon={_.icon} placeholder={_.placeholder} style={{ marginBottom: 10 }}
+                        return <div key={'form_' + _.name}>
+                            <CustomInputGroup key={'input_' + _.name} name={_.name} leftIcon={_.icon} placeholder={_.placeholder} style={{ marginBottom: 10 }}
                                 autoComplete="on"
                                 type={_.type !== undefined ? _.type : "text"}
-                                inputRef={register({ required: { message: _.validationMessage, value: _.validationMessage !== undefined || _.validationMessage !== '' } })} />
-                            <div style={{ marginBottom: 10 }}>
+                                inputRef={register({ required: { message: _.validationMessage, value: _.validationMessage !== undefined || _.validationMessage !== '' } })}
+                            />
+                            <div key={'error_' + _.name} style={{ marginBottom: 10 }}>
                                 {errors[_.name] && <Callout intent="danger">{errors[_.name].message}</Callout>}
                             </div>
-                        </>
+                        </div>
                     }
                 )}
 
