@@ -1,26 +1,35 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-//import { Spinner } from "@blueprintjs/core";
 import HeaderLinks from '../Components/HeaderLinks';
 import Administration from '../Screens/Administration';
+import Employee from '../Screens/Employee'
+import Customer from '../Screens/Customer'
+import Reports from '../Screens/Reports'
 import Home from '../Screens/Home';
+import CustomSpinner from '../Components/CustomSpinner';
 
 
-const Routes = ({ currentScreen }) => {
-    //if (loading) return <div style={{ marginTop: 50 }} align="center"><Spinner intent="primary" size={100} /></div>;
+const Routes = ({ currentScreen, loadingScreen }) => {
+
+    if (loadingScreen) return <CustomSpinner />;
+
     return (
         <div className="App">
             <HeaderLinks />
-            {currentScreen === 'COMPANY_ADMIN' && <Administration />}
             {currentScreen === 'HOME' && <Home />}
+            {currentScreen === 'COMPANY_ADMIN' && <Administration />}
+            {currentScreen === 'STYLIST' && <Employee />}
+            {currentScreen === 'CUSTOMER' && <Customer />}
+            {currentScreen === 'REPORTS' && <Reports />}
         </div>
     );
 
 }
 
 const mapStateToProps = state => ({
-    currentScreen: state.commun.currentScreen
+    currentScreen: state.commun.currentScreen,
+    loadingScreen: state.commun.loadingScreen
 })
 
 export default connect(mapStateToProps)(Routes);;

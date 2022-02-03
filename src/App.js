@@ -10,6 +10,7 @@ import CustomSignIn from './Components/Authentication/CustomSignIn';
 import { withAuthenticator, AmplifyTheme, ConfirmSignIn, ConfirmSignUp, ForgotPassword, RequireNewPassword, SignUp, VerifyContact } from 'aws-amplify-react'
 import { connect } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
+import { setLoadingScreen } from './redux/commun/commun.actions'
 
 Amplify.configure(aws_exports);
 
@@ -53,7 +54,7 @@ const signUpConfig = {
 };
 
 const Application = ({ setCurrentUser }) => {
-
+  setLoadingScreen(true)
   useEffect(() => {
     let currentUserLS = JSON.parse(sessionStorage.getItem('CURRENT_USER_SESSION'));
     if (typeof currentUserLS !== 'object') {
@@ -63,13 +64,15 @@ const Application = ({ setCurrentUser }) => {
     } else {
       setCurrentUser(currentUserLS)
     }
+    //setLoadingScreen(false)
   });
 
   return <Routes />;
 }
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  setCurrentUser: user => dispatch(setCurrentUser(user)),
+  setLoadingScreen: loading => dispatch(setLoadingScreen(loading)),
 })
 
 const connectApplication = connect(null, mapDispatchToProps)(Application)
