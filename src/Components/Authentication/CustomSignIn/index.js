@@ -1,30 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Auth } from "aws-amplify";
-import { useForm } from 'react-hook-form';
-//import { Redirect } from 'react-router-dom';
+import CustomButton from "../../CustomButton";
+import CustomForm from "../../CustomForm"
+import CustomOverlay from "../../CustomOverlay";
 
 
-import {
-  ControlGroup,
-  InputGroup,
-  Button,
-  Classes,
-  Intent,
-  Callout,
-  Overlay,
-} from "@blueprintjs/core";
+import { Intent } from "@blueprintjs/core";
 
 const CustomSignIn = (props) => {
-  const [ error, setError ] = useState(false);
-  const [ errorMessage, setErrorMessage ] = useState("");
-  const [ nperror, npsetError ] = useState(false);
-  const [ nperrorMessage, npsetErrorMessage ] = useState("");
-  const [ newPassword, setNewPassword ] = useState(false);
-  const [ user, setUser ] = useState({});
-  const { register, handleSubmit, errors, formState } = useForm();
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [nperror, npsetError] = useState(false);
+  const [nperrorMessage, npsetErrorMessage] = useState("");
+  const [newPassword, setNewPassword] = useState(false);
+  const [user, setUser] = useState({});
+
 
   const googleFederated = () => {
-    Auth.federatedSignIn({provider: "Google"});
+    Auth.federatedSignIn({ provider: "Google" });
   };
 
   const onSubmit = async (input) => {
@@ -41,7 +34,8 @@ const CustomSignIn = (props) => {
         //this.changeState("TOTPSetup", user);
       } else {
         //props.cp.onUserSignIn();
-        props.onStateChange('signedIn',{});
+        sessionStorage.setItem('CURRENT_USER_SESSION', JSON.stringify(user));
+        props.onStateChange('signedIn', {});
       }
 
     } catch (e) {
@@ -50,6 +44,7 @@ const CustomSignIn = (props) => {
         setErrorMessage("Usuario no Confirmado");
       } else if (e.code === "PasswordResetRequiredException") {
         setErrorMessage("Se requiere cambio de contraseña");
+        console.log(props)
       } else if (e.code === "UserNotFoundException") {
         setErrorMessage("El usuario no existe");
       } else if (e.code === "NotAuthorizedException") {
@@ -60,7 +55,7 @@ const CustomSignIn = (props) => {
       }
 
     }
-    
+
   }
 
   const nponSubmit = async (input) => {
@@ -70,74 +65,53 @@ const CustomSignIn = (props) => {
       npsetError(true);
       npsetErrorMessage(e.message);
     }
-    
+
   }
 
-    return (
-      <div align="center" style={{width: 400, margin: 'auto'}}>
-         { props.authState === 'signIn' && 
-          <div style={{marginTop: 30}}>
-            <div className="row">
-                <div className="col-md-12"> 
-                  <Button className={Classes.LARGE} intent={Intent.DANGER} onClick={(e) => { e.preventDefault(); googleFederated()}}>Inicia Sesion con <b>Google</b></Button>
-                </div>
-            </div> 
-            <br></br>
-            <div className="or-container">
-                <div className="line-separator"></div>
-                <div className="or-label">o</div>
-                <div className="line-separator"></div>
-            </div>
-            <br></br>
-            <div align="center" style={{marginLeft:20}}>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                  <ControlGroup vertical style={{ marginTop: 15}}>
-                      <InputGroup name="username" className={Classes.LARGE} leftIcon="person" placeholder="Username" style={{marginBottom: 10}} 
-                          inputRef={register({ required: { message: 'Digita tu Username o Email', value: true }})}/>
-                          <div style={{marginBottom: 10}}>
-                            {errors.username && <Callout intent="danger">{errors.username.message}</Callout>}
-                          </div>
-                      <InputGroup name="password" type="password" className={Classes.LARGE} leftIcon="lock" placeholder="Password" style={{ marginBottom: 10} }
-                          autoComplete="on"
-                          inputRef={register({ required: { message: 'Digita tu Password', value: true }})}/>
-                          <div style={{marginBottom: 10}}>
-                            {errors.password && <Callout intent="danger">{errors.password.message}</Callout>}
-                          </div>
-                      <Button className={Classes.LARGE} intent={Intent.PRIMARY} text="Login" type="submit" loading={formState.isSubmitting} />
-                      <div style={{marginBottom: 10}}>
-                        {error && <Callout intent="danger">{errorMessage}</Callout>}
-                      </div>
-                  </ControlGroup>
-              </form>
-            </div>
-            {/* <div hidden={!formState.isSubmitting}><Spinner intent="primary" size={55} /></div> */}
-          </div>
+  const fields = useMemo(() => [
+    { name: 'username', icon: 'person', placeholder: 'Nombre de Usuario o Email', validationMessage: 'Digita tu Nombre de Usuario o Email' },
+    { name: 'password', type: 'password', icon: 'lock', placeholder: 'Password', validationMessage: 'Digita tu Password' }
+  ], []);
 
-          }
-          {/* {props.authState !== 'signIn' && props.authState !== '' &&
-            <Redirect to="/" />
-          } */}
-          <div>
-              <Overlay isOpen={newPassword} >
-                <div style={{width: 400, margin: 'auto'}}>
-                  <form onSubmit={handleSubmit(nponSubmit)}>
-                      <ControlGroup vertical style={{ margin: 20}}>
-                          <InputGroup name="password" type="password" className={Classes.LARGE} leftIcon="lock" placeholder="Password" style={{ marginBottom: 10}}
-                              inputRef={register({ required: { message: 'Digita tu nuevo Password', value: true }})}/>
-                              <div style={{marginBottom: 10}}>
-                                {errors.password && <Callout intent="danger">{errors.password.message}</Callout>}
-                              </div>
-                          <Button className={Classes.LARGE} intent={Intent.PRIMARY} text="Cambiar Password" type="submit" disabled={formState.isSubmitting} />
-                          <div style={{marginBottom: 10}}>
-                            {nperror && <Callout intent="danger">{nperrorMessage}</Callout>}
-                          </div>
-                      </ControlGroup>
-                  </form>
-                </div>
-              </Overlay>
+  const newPasswordFields = useMemo(() => [
+    { name: 'password', type: 'password', icon: 'lock', placeholder: 'new Password', validationMessage: 'Digita tu nuevo Password' }
+  ], []);
+
+  const button = useMemo(() => {
+    return ({ text: "Login" })
+  }, []);
+
+  const changePasswordButton = useMemo(() => {
+    return ({ text: "Cambiar Password" })
+  }, []);
+
+  return (
+    <div key="div_container" align="center" style={{ width: 400, margin: 'auto' }}>
+      {props.authState === 'signIn' &&
+        <div key="div_login" style={{ marginTop: 30 }}>
+          <div key="div_login_google" className="row">
+            <div className="col-md-12">
+              <CustomButton intent={Intent.DANGER} onClick={(e) => { e.preventDefault(); googleFederated() }}>Inicia Sesion con <b>Google</b></CustomButton>
+            </div>
           </div>
+          <br></br>
+          <div key="div_login_divider" className="or-container">
+            <div className="line-separator"></div>
+            <div className="or-label">o</div>
+            <div className="line-separator"></div>
+          </div>
+          <br></br>
+          <div key="div_login_form" align="center" style={{ marginLeft: 20 }}>
+            <CustomForm onSubmit={onSubmit} error={error} errorMessage={errorMessage} fields={fields} button={button} />
+          </div>
+        </div>
+
+      }
+      <div key="div_overlay">
+        <CustomOverlay isOpen={newPassword} onSubmit={nponSubmit} fields={newPasswordFields} button={changePasswordButton} error={nperror} errorMessage={nperrorMessage} />
       </div>
-    );
-  }
+    </div>
+  );
+}
 
 export default CustomSignIn;

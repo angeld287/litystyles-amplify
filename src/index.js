@@ -9,11 +9,17 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
+import { Provider } from 'react-redux';
+
+import store from './redux/store';
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Provider store={store}>
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </Provider>,
   document.getElementById('root')
 );
 
