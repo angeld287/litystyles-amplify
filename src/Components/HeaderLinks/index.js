@@ -7,9 +7,7 @@ import { setCurrentScreen } from '../../redux/commun/commun.actions';
 import {
     Alignment,
     Button,
-    Navbar,
-    Menu,
-    MenuItem,
+    Navbar
 } from "@blueprintjs/core";
 
 const HeaderLinks = ({ setCurrentUser, setCurrentScreen, currentUser }) => {

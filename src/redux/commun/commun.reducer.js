@@ -1,5 +1,6 @@
 const INITIAL_STATES = {
-    currentScreen: 'HOME'
+    currentScreen: 'HOME',
+    loadingScreen: false
 }
 const communReducer = (state = INITIAL_STATES, action) => {
     switch (action.type) {
@@ -7,6 +8,11 @@ const communReducer = (state = INITIAL_STATES, action) => {
             return {
                 ...state,
                 currentScreen: action.payload
+            }
+        case 'SET_LOADING_SCREEN':
+            return {
+                ...state,
+                loadingScreen: action.payload
             }
         default:
             return state;
