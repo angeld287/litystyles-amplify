@@ -1,7 +1,7 @@
 import { Types } from '../../utils/Items/Types'
 
 const INITIAL_STATES = {
-    currentScreen: 'HOME',
+    currentScreen: 'COMPANY_ADMIN',
     loadingScreen: false
 };
 

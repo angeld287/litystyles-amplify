@@ -69,21 +69,17 @@ const CustomSignIn = (props) => {
   }
 
   const fields = useMemo(() => [
-    { name: 'username', icon: 'person', placeholder: 'Nombre de Usuario o Email', validationMessage: 'Digita tu Nombre de Usuario o Email' },
-    { name: 'password', type: 'password', icon: 'lock', placeholder: 'Password', validationMessage: 'Digita tu Password' }
+    { name: 'username', leftIcon: 'person', placeholder: 'Nombre de Usuario o Email', validationmessage: 'Digita tu Nombre de Usuario o Email' },
+    { name: 'password', type: 'password', leftIcon: 'lock', placeholder: 'Password', validationmessage: 'Digita tu Password' }
   ], []);
 
   const newPasswordFields = useMemo(() => [
-    { name: 'password', type: 'password', icon: 'lock', placeholder: 'new Password', validationMessage: 'Digita tu nuevo Password' }
+    { name: 'password', type: 'password', leftIcon: 'lock', placeholder: 'new Password', validationmessage: 'Digita tu nuevo Password' }
   ], []);
 
-  const button = useMemo(() => {
-    return ({ text: "Login" })
-  }, []);
+  const buttons = useMemo(() => [{ name: 'login', text: "Login" }], []);
 
-  const changePasswordButton = useMemo(() => {
-    return ({ text: "Cambiar Password" })
-  }, []);
+  const changePasswordButtons = useMemo(() => [{ name: 'changepass', text: "Cambiar Password" }], []);
 
   return (
     <div key="div_container" align="center" style={{ width: 400, margin: 'auto' }}>
@@ -102,13 +98,13 @@ const CustomSignIn = (props) => {
           </div>
           <br></br>
           <div key="div_login_form" align="center" style={{ marginLeft: 20 }}>
-            <CustomForm onSubmit={onSubmit} error={error} errorMessage={errorMessage} fields={fields} button={button} />
+            <CustomForm verticalButtons={true} onSubmit={onSubmit} error={error} errorMessage={errorMessage} fields={fields} buttons={buttons} />
           </div>
         </div>
 
       }
       <div key="div_overlay">
-        <CustomOverlay isOpen={newPassword} onSubmit={nponSubmit} fields={newPasswordFields} button={changePasswordButton} error={nperror} errorMessage={nperrorMessage} />
+        <CustomOverlay isOpen={newPassword} onSubmit={nponSubmit} fields={newPasswordFields} button={changePasswordButtons} error={nperror} errorMessage={nperrorMessage} />
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ const CustomOverlay = (props) => {
     return (
         <Overlay isOpen={props.isOpen} >
             <div style={{ width: 400, margin: 'auto' }}>
-                <CustomForm {...props} />
+                <CustomForm verticalButtons={true} {...props} />
             </div>
         </Overlay>
     )
@@ -23,7 +23,7 @@ CustomOverlay.propTypes = {
     error: PropTypes.bool,
     errorMessage: PropTypes.string,
     fields: PropTypes.array,
-    button: PropTypes.object,
+    buttons: PropTypes.array,
 }
 
 export default memo(CustomOverlay);
