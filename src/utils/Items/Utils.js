@@ -1,4 +1,5 @@
 export const utilAddItem = (items, itemToAdd) => {
+    console.log(items, itemToAdd)
     const existingItem = items.find(
         _item => _item.id === itemToAdd.id
     );

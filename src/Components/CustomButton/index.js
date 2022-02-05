@@ -23,6 +23,7 @@ CustomButton.propTypes = {
     intent: PropTypes.string,
     onClick: PropTypes.func,
     icon: PropTypes.string,
+    id: PropTypes.string,
 }
 
 CustomButton.defaultProps = {

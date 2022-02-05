@@ -32,4 +32,4 @@ const mapStateToProps = state => ({
     loadingScreen: state.commun.loadingScreen
 })
 
-export default connect(mapStateToProps)(Routes);;
+export default connect(mapStateToProps)(Routes);
