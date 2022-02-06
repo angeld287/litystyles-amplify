@@ -1,11 +1,11 @@
 import { API, graphqlOperation } from 'aws-amplify';
 
-export const getList = async (queryId, query, variables) => {
+export const getList = async (queryId, query, parameters) => {
     var list = [];
-    const _variables = variables === undefined ? {} : variables;
+    const _parameters = parameters === undefined ? {} : parameters;
 
     try {
-        const gresult = await API.graphql(graphqlOperation(query, _variables));
+        const gresult = await API.graphql(graphqlOperation(query, _parameters));
         list = gresult.data[queryId];
     } catch (e) {
         list = [e];
@@ -14,10 +14,11 @@ export const getList = async (queryId, query, variables) => {
     return list;
 }
 
-export const getItemById = async (queryId, query, id) => {
+export const getItemById = async (queryId, query, parameters) => {
     var list = [];
+    const _parameters = parameters === undefined ? {} : parameters;
     try {
-        const gresult = await API.graphql(graphqlOperation(query, { id: id }));
+        const gresult = await API.graphql(graphqlOperation(query, _parameters));
         list = gresult.data[queryId];
     } catch (e) {
         console.log(e);

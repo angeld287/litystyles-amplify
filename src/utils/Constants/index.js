@@ -10,3 +10,5 @@ export const CustomClasses = {
 export const CustomIntents = {
     ...Intent
 };
+
+export const QUERY_LIMIT_5 = 5;

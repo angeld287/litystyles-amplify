@@ -4,63 +4,87 @@ import CustomModal from '../../../Components/CustomModal';
 import CustomSelect from '../../../Components/CustomSelect';
 import CustomTable from '../../../Components/CustomTable';
 
-import { listServices } from "../../../graphql/customQueries"
-import { getList } from "../../../services/AppSync"
+import { listServices, getCompanyServices } from "../../../graphql/customQueries"
+import { getList, getItemById } from "../../../services/AppSync"
 
+import { QUERY_LIMIT_5 } from '../../../utils/Constants'
 
 import { connect } from 'react-redux';
 import { setCompanyService, removeCompanyService, setItemsFromStore, setNextToken } from '../../../redux/services/services.actions'
-import { setLoadingScreen } from '../../../redux/commun/commun.actions'
 
 import swal from 'sweetalert';
 
 import { Container, Row, Col } from 'react-bootstrap';
 
-const Services = ({ _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, setLoadingScreen }) => {
+const Services = ({ _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, company }) => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [service, setService] = useState('0');
     const [companyServices, setCompanyServices] = useState([]);
     const [dlBtnLoading, setDlBtnLoading] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         let didCancel = false;
-        setLoadingScreen(true);
         const fetch = async () => {
+            setLoading(true);
+
             var result = [];
-            var _items = [];
+            var _services = [];
+            var _companyServices = [];
+            let parameters = {};
+            let tokens = {};
 
             try {
-                result = await getList('listServices', listServices, { filter: { deleted: { ne: true } } });
-                _items = result.items;
-                while (_items.length < 10 && result.nextToken !== null) {
-                    result = await getList('listServices', listServices, { filter: { deleted: { ne: true } }, nextToken: result.nextToken });
-                    _items = [..._items, ...result.items];
+
+                //get services
+                parameters = { limit: QUERY_LIMIT_5, filter: { deleted: { ne: true } } };
+                result = await getList('listServices', listServices, parameters);
+                _services = result.items;
+                tokens.servicesNextToken = result.nextToken
+                while (_services.length < QUERY_LIMIT_5 && result.nextToken !== null) {
+                    parameters.nextToken = result.nextToken;
+                    result = await getList('listServices', listServices, parameters);
+                    _services = [..._services, ...result.items];
+                    tokens.servicesNextToken = result.nextToken
+                }
+
+                //get companyServices
+                parameters = { id: company.id, limit: QUERY_LIMIT_5 };
+                result = await getItemById('getCompany', getCompanyServices, parameters);
+                _companyServices = result.services.items;
+                tokens.companyServicesNextToken = result.services.nextToken
+                while (_companyServices.length < QUERY_LIMIT_5 && result.services.nextToken !== null) {
+                    parameters.nextToken = result.services.nextToken;
+                    result = await getItemById('getCompany', getCompanyServices, parameters);
+                    _companyServices = [..._companyServices, ...result.services.items];
+                    tokens.companyServicesNextToken = result.services.nextToken
                 }
 
             } catch (e) {
                 console.log(e)
+                setLoading(false);
             }
 
             if (!didCancel) {
                 setItemsFromStore({
-                    services: _items,
-                    companyServices: []
+                    services: _services,
+                    companyServices: _companyServices
                 });
 
-                setNextToken(result.nextToken);
+                setNextToken(tokens);
+                setLoading(false);
             }
         };
 
         fetch();
-        setLoadingScreen(false)
         return () => {
             didCancel = true;
-            setLoadingScreen(false)
+            setLoading(false)
         };
 
-    }, [setLoadingScreen, setNextToken, setItemsFromStore])
+    }, [setNextToken, setItemsFromStore])
 
     const handleDelete = useCallback(() => async (e) => {
         swal({ title: "Esta seguro que desea eliminar el servicio?", icon: "warning", buttons: true, dangerMode: true })
@@ -86,8 +110,8 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
         try {
             if (_companyServices !== undefined) {
                 setCompanyServices(_companyServices.map(e => ({
-                    servicio: e.name,
-                    costo: e.cost,
+                    servicio: e.service.name,
+                    costo: e.service.cost,
                     acciones: [
                         { id: e.id, color: 'blue', icon: 'edit', onClick: () => { console.log(e) }, text: "Editar" },
                         { id: e.id, color: 'red', icon: 'trash', onClick: () => { handleDelete(e) }, loading: dlBtnLoading === e.id, text: "Remover" }
@@ -168,7 +192,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
                 items={tableItems}
                 headers={tableHeaders}
                 getItemsNextToken={getItemsNextToken}
-                itemsLoading={false}
+                itemsLoading={loading}
             />
         </Container>
     );
@@ -177,6 +201,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
 const mapStateToProps = state => ({
     _companyServices: state.services.companyServices,
     services: state.services.services,
+    company: state.company.company,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -184,7 +209,6 @@ const mapDispatchToProps = dispatch => ({
     removeCompanyService: companyService => dispatch(removeCompanyService(companyService)),
     setItemsFromStore: data => dispatch(setItemsFromStore(data)),
     setNextToken: token => dispatch(setNextToken(token)),
-    setLoadingScreen: loading => dispatch(setLoadingScreen(loading)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Services)

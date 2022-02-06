@@ -187,3 +187,34 @@ export const listTypes = /* GraphQL */ `
     }
   }
 `;
+
+
+/*********************************
+*
+*   COMPANY SERVICES CUSTOM QUERY
+*
+**********************************/
+export const getCompanyServices = /* GraphQL */ `
+  query getCompanyServices(
+    $id: ID!
+    $filter: ModelCompanyServiceFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getCompany(id: $id) {
+      services(filter: $filter, limit: $limit, nextToken: $nextToken) {
+        items {
+          id
+          service {
+            name
+            cost
+            id
+            categoryId
+          }
+          cost
+        }
+        nextToken
+      }
+    }
+  }
+`;

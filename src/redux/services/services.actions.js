@@ -13,7 +13,7 @@ export const removeCompanyService = companyService => ({
 export const setItemsFromStore = (data) => {
     return {
         type: Types.SET_ITEMS,
-        payload: { services: data.services, companyService: data.companyService }
+        payload: { services: data.services, companyServices: data.companyServices }
     }
 }
 
