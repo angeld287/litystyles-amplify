@@ -5,7 +5,7 @@ const INITIAL_STATES = {
     companyServices: [],
     companyService: {},
     services: [],
-    nextToken: {},
+    nextToken: { servicesNextToken: "", companyServicesNextToken: "" },
 }
 const servicesReducer = (state = INITIAL_STATES, action) => {
     switch (action.type) {

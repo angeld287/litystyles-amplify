@@ -7,7 +7,7 @@ import CustomTable from '../../../Components/CustomTable';
 import { listServices, getCompanyServices } from "../../../graphql/customQueries"
 import { getList, getItemById } from "../../../services/AppSync"
 
-import { QUERY_LIMIT_5 } from '../../../utils/Constants'
+import { QUERY_LIMIT } from '../../../utils/Constants'
 
 import { connect } from 'react-redux';
 import { setCompanyService, removeCompanyService, setItemsFromStore, setNextToken } from '../../../redux/services/services.actions'
@@ -16,7 +16,7 @@ import swal from 'sweetalert';
 
 import { Container, Row, Col } from 'react-bootstrap';
 
-const Services = ({ _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, company }) => {
+const Services = ({ _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, company, companyServicesNextToken, servicesNextToken }) => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -32,18 +32,18 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
 
             var result = [];
             var _services = [];
-            var _companyServices = [];
+            var __companyServices = [];
             let parameters = {};
             let tokens = {};
 
             try {
 
                 //get services
-                parameters = { limit: QUERY_LIMIT_5, filter: { deleted: { ne: true } } };
+                parameters = { limit: QUERY_LIMIT, filter: { deleted: { ne: true } } };
                 result = await getList('listServices', listServices, parameters);
                 _services = result.items;
                 tokens.servicesNextToken = result.nextToken
-                while (_services.length < QUERY_LIMIT_5 && result.nextToken !== null) {
+                while (_services.length < QUERY_LIMIT && result.nextToken !== null) {
                     parameters.nextToken = result.nextToken;
                     result = await getList('listServices', listServices, parameters);
                     _services = [..._services, ...result.items];
@@ -51,14 +51,14 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
                 }
 
                 //get companyServices
-                parameters = { id: company.id, limit: QUERY_LIMIT_5 };
+                parameters = { id: company.id, limit: QUERY_LIMIT };
                 result = await getItemById('getCompany', getCompanyServices, parameters);
-                _companyServices = result.services.items;
+                __companyServices = result.services.items;
                 tokens.companyServicesNextToken = result.services.nextToken
-                while (_companyServices.length < QUERY_LIMIT_5 && result.services.nextToken !== null) {
+                while (__companyServices.length < QUERY_LIMIT && result.services.nextToken !== null) {
                     parameters.nextToken = result.services.nextToken;
                     result = await getItemById('getCompany', getCompanyServices, parameters);
-                    _companyServices = [..._companyServices, ...result.services.items];
+                    __companyServices = [...__companyServices, ...result.services.items];
                     tokens.companyServicesNextToken = result.services.nextToken
                 }
 
@@ -70,7 +70,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
             if (!didCancel) {
                 setItemsFromStore({
                     services: _services,
-                    companyServices: _companyServices
+                    companyServices: __companyServices
                 });
 
                 setNextToken(tokens);
@@ -84,7 +84,36 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
             setLoading(false)
         };
 
-    }, [setNextToken, setItemsFromStore])
+    }, [setNextToken, setItemsFromStore, company])
+
+    const getItemsNextToken = useCallback(async () => {
+        setLoading(true);
+
+        var result = [];
+        var parameters = {};
+        var tokens = { servicesNextToken, companyServicesNextToken }
+        var __companyServices = [];
+
+        if (companyServicesNextToken !== null) {
+            try {
+                parameters = { id: company.id, limit: QUERY_LIMIT, nextToken: companyServicesNextToken };
+                result = await getItemById('getCompany', getCompanyServices, parameters);
+                __companyServices = result.services.items;
+                tokens.companyServicesNextToken = result.services.nextToken
+
+                setItemsFromStore({
+                    services: services,
+                    companyServices: [..._companyServices, ...__companyServices]
+                });
+
+                setNextToken(tokens);
+                setLoading(false);
+            } catch (e) {
+                console.log(e)
+                setLoading(false);
+            }
+        }
+    }, [servicesNextToken, companyServicesNextToken, company, services, setItemsFromStore, setNextToken, _companyServices]);
 
     const handleDelete = useCallback(() => async (e) => {
         swal({ title: "Esta seguro que desea eliminar el servicio?", icon: "warning", buttons: true, dangerMode: true })
@@ -174,8 +203,6 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
         ];
     }, [serviceObj]);
 
-    const getItemsNextToken = (e) => { console.log(e) }
-
     const tableHeaders = useMemo(() => ['Servicio', 'Costo', 'Acciones'], []);
     const tableItems = useMemo(() => companyServices, [companyServices]);
 
@@ -201,6 +228,8 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
 const mapStateToProps = state => ({
     _companyServices: state.services.companyServices,
     services: state.services.services,
+    servicesNextToken: state.services.nextToken.servicesNextToken,
+    companyServicesNextToken: state.services.nextToken.companyServicesNextToken,
     company: state.company.company,
 })
 

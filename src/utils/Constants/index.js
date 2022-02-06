@@ -11,4 +11,4 @@ export const CustomIntents = {
     ...Intent
 };
 
-export const QUERY_LIMIT_5 = 5;
+export const QUERY_LIMIT = 10;
