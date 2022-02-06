@@ -1,23 +1,86 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import CustomButton from '../../../Components/CustomButton';
 import CustomModal from '../../../Components/CustomModal';
 import CustomSelect from '../../../Components/CustomSelect';
 import CustomTable from '../../../Components/CustomTable';
 
+import { listServices } from "../../../graphql/customQueries"
+import { getList } from "../../../services/AppSync"
+
+
 import { connect } from 'react-redux';
-import { setCompanyService, removeCompanyService } from '../../../redux/services/services.actions'
+import { setCompanyService, removeCompanyService, setItemsFromStore, setNextToken } from '../../../redux/services/services.actions'
+import { setLoadingScreen } from '../../../redux/commun/commun.actions'
 
 import swal from 'sweetalert';
 
 import { Container, Row, Col } from 'react-bootstrap';
 
-const Services = ({ _companyServices, services, setCompanyService, removeCompanyService }) => {
+const Services = ({ _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, setLoadingScreen }) => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [service, setService] = useState('0');
     const [companyServices, setCompanyServices] = useState([]);
     const [dlBtnLoading, setDlBtnLoading] = useState('');
+
+    useEffect(() => {
+        let didCancel = false;
+        setLoadingScreen(true);
+        const fetch = async () => {
+            var result = [];
+            var _items = [];
+
+            try {
+                result = await getList('listServices', listServices, { filter: { deleted: { ne: true } } });
+                _items = result.items;
+                while (_items.length < 10 && result.nextToken !== null) {
+                    result = await getList('listServices', listServices, { filter: { deleted: { ne: true } }, nextToken: result.nextToken });
+                    _items = [..._items, ...result.items];
+                }
+
+            } catch (e) {
+                console.log(e)
+            }
+
+            if (!didCancel) {
+                setItemsFromStore({
+                    services: _items,
+                    companyServices: []
+                });
+
+                setNextToken(result.nextToken);
+            }
+        };
+
+        fetch();
+        setLoadingScreen(false)
+        return () => {
+            didCancel = true;
+            setLoadingScreen(false)
+        };
+
+    }, [setLoadingScreen, setNextToken, setItemsFromStore])
+
+    const handleDelete = useCallback(() => async (e) => {
+        swal({ title: "Esta seguro que desea eliminar el servicio?", icon: "warning", buttons: true, dangerMode: true })
+            .then(async (willDelete) => {
+                if (willDelete) {
+
+                    try {
+                        removeCompanyService(e)
+
+                    } catch (e) {
+                        console.log(e);
+                    }
+
+                    swal({ title: "El registro ha sido eliminado!", text: "Se ha eliminado el servicio correctamente.", type: "sucess", timer: 2000 });
+
+                } else {
+                    swal({ title: "Eliminacion Cancelada!", text: "Se ha cancelado la eliminacion del servicio.", type: "error", timer: 2000 });
+                }
+            });
+    }, [removeCompanyService]);
 
     useEffect(() => {
         try {
@@ -35,7 +98,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
         } catch (error) {
             throw new Error('CompanyServices - xx: ', error)
         }
-    }, [_companyServices, dlBtnLoading]);
+    }, [_companyServices, dlBtnLoading, handleDelete]);
 
     const handleShowModal = () => {
         if (!showModal && service === '0') {
@@ -46,6 +109,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
     }
 
     const onSubmitModal = (e) => {
+
         try {
             if (service === '0') {
                 swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
@@ -68,26 +132,6 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
             setError(true);
             setErrorMessage('CompanyServices - xx');
         }
-    }
-
-    const handleDelete = async (e) => {
-        swal({ title: "Esta seguro que desea eliminar el servicio?", icon: "warning", buttons: true, dangerMode: true })
-            .then(async (willDelete) => {
-                if (willDelete) {
-
-                    try {
-                        removeCompanyService(e)
-
-                    } catch (e) {
-                        console.log(e);
-                    }
-
-                    swal({ title: "El registro ha sido eliminado!", text: "Se ha eliminado el servicio correctamente.", type: "sucess", timer: 2000 });
-
-                } else {
-                    swal({ title: "Eliminacion Cancelada!", text: "Se ha cancelado la eliminacion del servicio.", type: "error", timer: 2000 });
-                }
-            });
     }
 
     const serviceObj = useMemo(() => {
@@ -132,12 +176,15 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
 
 const mapStateToProps = state => ({
     _companyServices: state.services.companyServices,
-    services: state.services.services
+    services: state.services.services,
 })
 
 const mapDispatchToProps = dispatch => ({
     setCompanyService: companyService => dispatch(setCompanyService(companyService)),
     removeCompanyService: companyService => dispatch(removeCompanyService(companyService)),
+    setItemsFromStore: data => dispatch(setItemsFromStore(data)),
+    setNextToken: token => dispatch(setNextToken(token)),
+    setLoadingScreen: loading => dispatch(setLoadingScreen(loading)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Services)
