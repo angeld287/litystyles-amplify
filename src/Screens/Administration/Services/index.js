@@ -115,6 +115,35 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
         }
     }, [servicesNextToken, companyServicesNextToken, company, services, setItemsFromStore, setNextToken, _companyServices]);
 
+    const getItemsNextTokenSelect = useCallback(async () => {
+
+        var result = [];
+        var parameters = {};
+        var tokens = { servicesNextToken, companyServicesNextToken }
+        var _services = [];
+
+        if (servicesNextToken !== null) {
+            try {
+
+                parameters = { limit: QUERY_LIMIT, filter: { deleted: { ne: true } }, nextToken: servicesNextToken };
+                result = await getList('listServices', listServices, parameters);
+                _services = result.items;
+                tokens.servicesNextToken = result.nextToken
+
+                setItemsFromStore({
+                    services: [...services, ..._services],
+                    companyServices: _companyServices,
+                });
+
+                setNextToken(tokens);
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    }, [servicesNextToken, companyServicesNextToken, services, setItemsFromStore, setNextToken, _companyServices]);
+
+
+
     const handleDelete = useCallback(() => async (e) => {
         swal({ title: "Esta seguro que desea eliminar el servicio?", icon: "warning", buttons: true, dangerMode: true })
             .then(async (willDelete) => {
@@ -210,7 +239,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
         <Container fluid>
             <Row>
                 <Col sm={4}>
-                    <CustomSelect id="services" onChange={e => setService(e.target.value)} items={services} />
+                    <CustomSelect id="services" dataTestId="select-services" onChange={e => setService(e)} items={services} placeHolder="selecciona un nuevo servicio para agregar" getItemsNextToken={getItemsNextTokenSelect} />
                 </Col>
                 <Col sm={2}><CustomButton loading={false} onClick={handleShowModal} icon="add"></CustomButton></Col>
             </Row>
