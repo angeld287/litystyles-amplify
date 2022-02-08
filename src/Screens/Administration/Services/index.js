@@ -107,13 +107,51 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
                 });
 
                 setNextToken(tokens);
-                setLoading(false);
             } catch (e) {
                 console.log(e)
-                setLoading(false);
             }
         }
+
+        setLoading(false);
     }, [servicesNextToken, companyServicesNextToken, company, services, setItemsFromStore, setNextToken, _companyServices]);
+
+    const getCompanyServiceById = useCallback(async (id) => {
+        let _service = _companyServices.find(e => e.service.id === id);
+
+        if (_service === undefined && companyServicesNextToken !== null) {
+
+            let result = [];
+            let __companyServices = [];
+            let parameters = { id: company.id };
+            let tokens = {};
+
+            result = await getItemById('getCompany', getCompanyServices, parameters);
+            __companyServices = result.services.items;
+
+            tokens.servicesNextToken = servicesNextToken;
+            tokens.companyServicesNextToken = result.services.nextToken;
+
+            _service = __companyServices.find(e => e.service.id === id);
+
+            while (_service === undefined && result.services.nextToken !== null) {
+                parameters.nextToken = result.services.nextToken;
+                result = await getItemById('getCompany', getCompanyServices, parameters);
+                __companyServices = [...__companyServices, ...result.services.items];
+                tokens.companyServicesNextToken = result.services.nextToken
+                _service = __companyServices.find(e => e.service.id === id);
+            }
+
+            setItemsFromStore({
+                services: services,
+                companyServices: __companyServices
+            });
+
+            setNextToken(tokens);
+        }
+
+        return _service;
+
+    }, [company, _companyServices, companyServicesNextToken, servicesNextToken, services]);
 
     const getItemsNextTokenSelect = useCallback(async () => {
 
@@ -187,10 +225,11 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
             swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
             return null;
         }
+
         setShowModal(!showModal);
     }
 
-    const onSubmitModal = (e) => {
+    const onSubmitModal = async (e) => {
 
         try {
             if (service === '0') {
@@ -203,12 +242,14 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
                 return;
             }
 
-            // if (_companyServices[list.findIndex(e => e.service.id === service)] !== undefined) {
-            //     swal({ title: "Agregar Servicio!", text: "Este servicio ya existe!", type: "error", timer: 2000 });
-            //     return;
-            // }
+            const result = await getCompanyServiceById(service);
 
-            setCompanyService({ name: serviceObj.name, cost: e.cost, id: serviceObj.id })
+            if (result !== undefined) {
+                swal({ title: "Agregar Servicio!", text: "Este servicio ya existe en su empresa!", type: "error", timer: 2000 });
+                return;
+            }
+
+            //setCompanyService({ name: serviceObj.name, cost: e.cost, id: serviceObj.id })
             handleShowModal();
         } catch (error) {
             setError(true);
@@ -221,14 +262,14 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
         if (obj !== undefined) {
             return services.find(_ => _.id === service);
         } else {
-            return { id: '0', name: 'no item selected' }
+            return { id: '0', name: 'no item selected', cost: '0' }
         }
     }, [services, service]);
 
     const modalFields = useMemo(() => {
         return [
             { name: 'name', placeholder: 'Nombre de Servicio', validationmessage: 'Digita el Nombre de Servicio', disabled: true, defaultValue: serviceObj.name },
-            { name: 'cost', placeholder: 'Costo de Servicio', validationmessage: 'Digita el Costo de Servicio', defaultValue: '0' }
+            { name: 'cost', placeholder: 'Costo de Servicio', validationmessage: 'Digita el Costo de Servicio', defaultValue: serviceObj.cost }
         ];
     }, [serviceObj]);
 
