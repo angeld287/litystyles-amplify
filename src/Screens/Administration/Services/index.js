@@ -5,7 +5,8 @@ import CustomSelect from '../../../Components/CustomSelect';
 import CustomTable from '../../../Components/CustomTable';
 
 import { listServices, getCompanyServices } from "../../../graphql/customQueries"
-import { getList, getItemById } from "../../../services/AppSync"
+import { createCompanyService, deleteCompanyService } from "../../../graphql/customMutations"
+import { getList, getItemById, createUpdateItem, deleteItem } from "../../../services/AppSync"
 
 import { QUERY_LIMIT } from '../../../utils/Constants'
 
@@ -151,7 +152,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
 
         return _service;
 
-    }, [company, _companyServices, companyServicesNextToken, servicesNextToken, services]);
+    }, [company, _companyServices, companyServicesNextToken, servicesNextToken, services, setItemsFromStore, setNextToken]);
 
     const getItemsNextTokenSelect = useCallback(async () => {
 
@@ -182,23 +183,31 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
 
 
 
-    const handleDelete = useCallback(() => async (e) => {
+    const handleDelete = useCallback(async (e) => {
         swal({ title: "Esta seguro que desea eliminar el servicio?", icon: "warning", buttons: true, dangerMode: true })
             .then(async (willDelete) => {
                 if (willDelete) {
-
+                    let _delete = null;
+                    setDlBtnLoading(true);
                     try {
-                        removeCompanyService(e)
+                        _delete = await deleteItem('deleteCompanyService', deleteCompanyService, e.id);
 
-                    } catch (e) {
-                        console.log(e);
+                    } catch (err) {
+                        console.log(err);
                     }
 
-                    swal({ title: "El registro ha sido eliminado!", text: "Se ha eliminado el servicio correctamente.", type: "sucess", timer: 2000 });
+                    if (_delete === false) {
+                        swal({ title: "Eliminacion de Servicio!", text: "Ha ocurrido un error al eliminar el servicio.", type: "error", timer: 2000 });
+                    } else {
+                        removeCompanyService(_delete)
+                        swal({ title: "El registro ha sido eliminado!", text: "Se ha eliminado el servicio correctamente.", type: "sucess", timer: 2000 });
+                    }
 
                 } else {
                     swal({ title: "Eliminacion Cancelada!", text: "Se ha cancelado la eliminacion del servicio.", type: "error", timer: 2000 });
                 }
+
+                setDlBtnLoading(false);
             });
     }, [removeCompanyService]);
 
@@ -220,16 +229,15 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
         }
     }, [_companyServices, dlBtnLoading, handleDelete]);
 
-    const handleShowModal = () => {
+    const handleShowModal = useCallback(() => {
         if (!showModal && service === '0') {
             swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
             return null;
         }
-
         setShowModal(!showModal);
-    }
+    }, [service, showModal]);
 
-    const onSubmitModal = async (e) => {
+    const onSubmitModal = useCallback(async (e) => {
 
         try {
             if (service === '0') {
@@ -243,19 +251,24 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
             }
 
             const result = await getCompanyServiceById(service);
-
             if (result !== undefined) {
                 swal({ title: "Agregar Servicio!", text: "Este servicio ya existe en su empresa!", type: "error", timer: 2000 });
                 return;
             }
 
-            //setCompanyService({ name: serviceObj.name, cost: e.cost, id: serviceObj.id })
+            const input = { input: { companyServiceServiceId: service, companyServiceComapnyId: company.id, cost: e.cost } };
+
+            const createResult = await createUpdateItem('createCompanyService', createCompanyService, input);
+
+            setCompanyService(createResult)
+
             handleShowModal();
         } catch (error) {
             setError(true);
             setErrorMessage('CompanyServices - xx');
         }
-    }
+
+    }, [company, getCompanyServiceById, handleShowModal, service, setCompanyService]);
 
     const serviceObj = useMemo(() => {
         const obj = services.find(_ => _.id === service);

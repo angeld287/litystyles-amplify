@@ -38,3 +38,15 @@ export const createUpdateItem = async (queryId, query, _input) => {
     }
     return createObject
 }
+
+export const deleteItem = async (queryId, query, _id) => {
+    var deletedObject = {}
+    try {
+        const _delete = await API.graphql(graphqlOperation(query, { input: { id: _id } }));
+        deletedObject = _delete.data[queryId];
+    } catch (e) {
+        console.log("Error en el metodo 'deleteItem' de AppSync: ", e);
+        deletedObject = false;
+    }
+    return deletedObject
+}
