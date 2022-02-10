@@ -18,6 +18,7 @@ import swal from 'sweetalert';
 import { Container, Row, Col } from 'react-bootstrap';
 
 const Services = ({ _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, company, companyServicesNextToken, servicesNextToken, editCompanyService }) => {
+
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -27,6 +28,9 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
     const [dlBtnLoading, setDlBtnLoading] = useState('');
     const [loading, setLoading] = useState(false);
     const [mutation, setMutation] = useState('');
+
+
+    //#region Actions to fetch data
 
     useEffect(() => {
         let didCancel = false;
@@ -118,6 +122,33 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
         setLoading(false);
     }, [servicesNextToken, companyServicesNextToken, company, services, setItemsFromStore, setNextToken, _companyServices]);
 
+    const getItemsNextTokenSelect = useCallback(async () => {
+
+        var result = [];
+        var parameters = {};
+        var tokens = { servicesNextToken, companyServicesNextToken }
+        var _services = [];
+
+        if (servicesNextToken !== null) {
+            try {
+
+                parameters = { limit: QUERY_LIMIT, filter: { deleted: { ne: true } }, nextToken: servicesNextToken };
+                result = await getList('listServices', listServices, parameters);
+                _services = result.items;
+                tokens.servicesNextToken = result.nextToken
+
+                setItemsFromStore({
+                    services: [...services, ..._services],
+                    companyServices: _companyServices,
+                });
+
+                setNextToken(tokens);
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    }, [servicesNextToken, companyServicesNextToken, services, setItemsFromStore, setNextToken, _companyServices]);
+
     const getCompanyServiceById = useCallback(async (id) => {
         let _service = _companyServices.find(e => e.service.id === id);
 
@@ -156,63 +187,6 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
 
     }, [company, _companyServices, companyServicesNextToken, servicesNextToken, services, setItemsFromStore, setNextToken]);
 
-    const getItemsNextTokenSelect = useCallback(async () => {
-
-        var result = [];
-        var parameters = {};
-        var tokens = { servicesNextToken, companyServicesNextToken }
-        var _services = [];
-
-        if (servicesNextToken !== null) {
-            try {
-
-                parameters = { limit: QUERY_LIMIT, filter: { deleted: { ne: true } }, nextToken: servicesNextToken };
-                result = await getList('listServices', listServices, parameters);
-                _services = result.items;
-                tokens.servicesNextToken = result.nextToken
-
-                setItemsFromStore({
-                    services: [...services, ..._services],
-                    companyServices: _companyServices,
-                });
-
-                setNextToken(tokens);
-            } catch (e) {
-                console.log(e)
-            }
-        }
-    }, [servicesNextToken, companyServicesNextToken, services, setItemsFromStore, setNextToken, _companyServices]);
-
-
-
-    const handleDelete = useCallback(async (e) => {
-        swal({ title: "Esta seguro que desea eliminar el servicio?", icon: "warning", buttons: true, dangerMode: true })
-            .then(async (willDelete) => {
-                if (willDelete) {
-                    let _delete = null;
-                    setDlBtnLoading(true);
-                    try {
-                        _delete = await deleteItem('deleteCompanyService', deleteCompanyService, e.id);
-
-                    } catch (err) {
-                        console.log(err);
-                    }
-
-                    if (_delete === false) {
-                        swal({ title: "Eliminar Servicio", text: "Ha ocurrido un error al eliminar el servicio.", type: "error", timer: 2000 });
-                    } else {
-                        removeCompanyService(_delete)
-                        swal({ title: "Eliminar Servicio", text: "Se ha eliminado el servicio correctamente.", type: "sucess", timer: 2000 });
-                    }
-
-                } else {
-                    swal({ title: "Eliminar Servicio", text: "Se ha cancelado la eliminacion del servicio.", type: "error", timer: 2000 });
-                }
-
-                setDlBtnLoading(false);
-            });
-    }, [removeCompanyService]);
-
     const handleShowModal = useCallback((e) => {
         if (!showModal) {
             if (e === null) {
@@ -233,23 +207,9 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
         setShowModal(!showModal);
     }, [service, showModal]);
 
-    useEffect(() => {
-        try {
-            if (_companyServices !== undefined) {
-                setCompanyServices(_companyServices.map(e => ({
-                    servicio: e.service.name,
-                    costo: e.cost,
-                    acciones: [
-                        { id: e.id, color: 'blue', icon: 'edit', onClick: () => { handleShowModal(e) }, text: "Editar" },
-                        { id: e.id, color: 'red', icon: 'trash', onClick: () => { handleDelete(e) }, loading: dlBtnLoading === e.id, text: "Remover" }
-                    ],
-                    id: e.id
-                })))
-            }
-        } catch (error) {
-            throw new Error('CompanyServices - xx: ', error)
-        }
-    }, [_companyServices, dlBtnLoading, handleDelete, handleShowModal]);
+    //#endregion
+
+    //#region Mutation Actions
 
     const onSubmitModal = useCallback(async (e) => {
         try {
@@ -312,6 +272,56 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
 
     }, [company, getCompanyServiceById, handleShowModal, service, setCompanyService, editCompanyService, mutation, companyServiceObj]);
 
+    const handleDelete = useCallback(async (e) => {
+        swal({ title: "Esta seguro que desea eliminar el servicio?", icon: "warning", buttons: true, dangerMode: true })
+            .then(async (willDelete) => {
+                if (willDelete) {
+                    let _delete = null;
+                    setDlBtnLoading(true);
+                    try {
+                        _delete = await deleteItem('deleteCompanyService', deleteCompanyService, e.id);
+
+                    } catch (err) {
+                        console.log(err);
+                    }
+
+                    if (_delete === false) {
+                        swal({ title: "Eliminar Servicio", text: "Ha ocurrido un error al eliminar el servicio.", type: "error", timer: 2000 });
+                    } else {
+                        removeCompanyService(_delete)
+                        swal({ title: "Eliminar Servicio", text: "Se ha eliminado el servicio correctamente.", type: "sucess", timer: 2000 });
+                    }
+
+                } else {
+                    swal({ title: "Eliminar Servicio", text: "Se ha cancelado la eliminacion del servicio.", type: "error", timer: 2000 });
+                }
+
+                setDlBtnLoading(false);
+            });
+    }, [removeCompanyService]);
+
+    //#endregion
+
+    //#region Elements of presentation
+
+    useEffect(() => {
+        try {
+            if (_companyServices !== undefined) {
+                setCompanyServices(_companyServices.map(e => ({
+                    servicio: e.service.name,
+                    costo: e.cost,
+                    acciones: [
+                        { id: e.id, color: 'blue', icon: 'edit', onClick: () => { handleShowModal(e) }, text: "Editar" },
+                        { id: e.id, color: 'red', icon: 'trash', onClick: () => { handleDelete(e) }, loading: dlBtnLoading === e.id, text: "Remover" }
+                    ],
+                    id: e.id
+                })))
+            }
+        } catch (error) {
+            throw new Error('CompanyServices - xx: ', error)
+        }
+    }, [_companyServices, dlBtnLoading, handleDelete, handleShowModal]);
+
     const serviceObj = useMemo(() => {
         const obj = services.find(_ => _.id === service);
         if (obj !== undefined) {
@@ -332,6 +342,8 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
     const tableItems = useMemo(() => companyServices, [companyServices]);
 
     const modalTitles = useMemo(() => mutation === 'create' ? 'Agregar Servicio' : 'Editar Servicio', [mutation]);
+
+    //#endregion
 
     return (
         <Container fluid>
