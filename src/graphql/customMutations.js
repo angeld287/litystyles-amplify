@@ -38,3 +38,21 @@ export const deleteCompanyService = /* GraphQL */ `
     }
   }
 `;
+
+export const updateCompanyService = /* GraphQL */ `
+  mutation UpdateCompanyService(
+    $input: UpdateCompanyServiceInput!
+    $condition: ModelCompanyServiceConditionInput
+  ) {
+    updateCompanyService(input: $input, condition: $condition) {
+      id
+      service {
+        name
+        cost
+        id
+        categoryId
+      }
+      cost
+    }
+  }
+`;

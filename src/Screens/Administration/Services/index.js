@@ -5,26 +5,28 @@ import CustomSelect from '../../../Components/CustomSelect';
 import CustomTable from '../../../Components/CustomTable';
 
 import { listServices, getCompanyServices } from "../../../graphql/customQueries"
-import { createCompanyService, deleteCompanyService } from "../../../graphql/customMutations"
+import { createCompanyService, deleteCompanyService, updateCompanyService } from "../../../graphql/customMutations"
 import { getList, getItemById, createUpdateItem, deleteItem } from "../../../services/AppSync"
 
 import { QUERY_LIMIT } from '../../../utils/Constants'
 
 import { connect } from 'react-redux';
-import { setCompanyService, removeCompanyService, setItemsFromStore, setNextToken } from '../../../redux/services/services.actions'
+import { setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, editCompanyService } from '../../../redux/services/services.actions'
 
 import swal from 'sweetalert';
 
 import { Container, Row, Col } from 'react-bootstrap';
 
-const Services = ({ _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, company, companyServicesNextToken, servicesNextToken }) => {
+const Services = ({ _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, company, companyServicesNextToken, servicesNextToken, editCompanyService }) => {
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [service, setService] = useState('0');
     const [companyServices, setCompanyServices] = useState([]);
+    const [companyServiceObj, setCompanyServiceObj] = useState({ id: '0', service: { id: '0', name: 'no item selected', cost: '0' }, cost: '0' });
     const [dlBtnLoading, setDlBtnLoading] = useState('');
     const [loading, setLoading] = useState(false);
+    const [mutation, setMutation] = useState('');
 
     useEffect(() => {
         let didCancel = false;
@@ -197,28 +199,48 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
                     }
 
                     if (_delete === false) {
-                        swal({ title: "Eliminacion de Servicio!", text: "Ha ocurrido un error al eliminar el servicio.", type: "error", timer: 2000 });
+                        swal({ title: "Eliminar Servicio", text: "Ha ocurrido un error al eliminar el servicio.", type: "error", timer: 2000 });
                     } else {
                         removeCompanyService(_delete)
-                        swal({ title: "El registro ha sido eliminado!", text: "Se ha eliminado el servicio correctamente.", type: "sucess", timer: 2000 });
+                        swal({ title: "Eliminar Servicio", text: "Se ha eliminado el servicio correctamente.", type: "sucess", timer: 2000 });
                     }
 
                 } else {
-                    swal({ title: "Eliminacion Cancelada!", text: "Se ha cancelado la eliminacion del servicio.", type: "error", timer: 2000 });
+                    swal({ title: "Eliminar Servicio", text: "Se ha cancelado la eliminacion del servicio.", type: "error", timer: 2000 });
                 }
 
                 setDlBtnLoading(false);
             });
     }, [removeCompanyService]);
 
+    const handleShowModal = useCallback((e) => {
+        if (!showModal) {
+            if (e === null) {
+                if (service === '0') {
+                    swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+                    return null;
+                }
+                setMutation('create')
+            } else if (e.service !== undefined) {
+                setCompanyServiceObj(e)
+                setMutation('update')
+            }
+        } else {
+            setCompanyServiceObj({ id: '0', service: { id: '0', name: 'no item selected', cost: '0' }, cost: '0' })
+            setMutation('')
+        }
+
+        setShowModal(!showModal);
+    }, [service, showModal]);
+
     useEffect(() => {
         try {
             if (_companyServices !== undefined) {
                 setCompanyServices(_companyServices.map(e => ({
                     servicio: e.service.name,
-                    costo: e.service.cost,
+                    costo: e.cost,
                     acciones: [
-                        { id: e.id, color: 'blue', icon: 'edit', onClick: () => { console.log(e) }, text: "Editar" },
+                        { id: e.id, color: 'blue', icon: 'edit', onClick: () => { handleShowModal(e) }, text: "Editar" },
                         { id: e.id, color: 'red', icon: 'trash', onClick: () => { handleDelete(e) }, loading: dlBtnLoading === e.id, text: "Remover" }
                     ],
                     id: e.id
@@ -227,20 +249,11 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
         } catch (error) {
             throw new Error('CompanyServices - xx: ', error)
         }
-    }, [_companyServices, dlBtnLoading, handleDelete]);
-
-    const handleShowModal = useCallback(() => {
-        if (!showModal && service === '0') {
-            swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
-            return null;
-        }
-        setShowModal(!showModal);
-    }, [service, showModal]);
+    }, [_companyServices, dlBtnLoading, handleDelete, handleShowModal]);
 
     const onSubmitModal = useCallback(async (e) => {
-
         try {
-            if (service === '0') {
+            if (mutation === 'create' && service === '0') {
                 swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
                 return;
             }
@@ -250,17 +263,46 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
                 return;
             }
 
-            const result = await getCompanyServiceById(service);
+            const result = mutation === 'create' ? await getCompanyServiceById(service) : undefined;
             if (result !== undefined) {
                 swal({ title: "Agregar Servicio!", text: "Este servicio ya existe en su empresa!", type: "error", timer: 2000 });
                 return;
             }
 
-            const input = { input: { companyServiceServiceId: service, companyServiceComapnyId: company.id, cost: e.cost } };
+            let input = {};
+            let messageTitle = '';
+            let sucessText = '';
+            let errorText = '';
+            let mutationResult = false;
 
-            const createResult = await createUpdateItem('createCompanyService', createCompanyService, input);
+            if (mutation === 'create') {
+                messageTitle = "Agregar Servicio";
+                sucessText = "Se ha creado el servicio correctamente.";
+                errorText = "Ha ocurrido un error al crear el servicio.";
+                input = { companyServiceServiceId: service, companyServiceComapnyId: company.id, cost: e.cost };
+                mutationResult = await createUpdateItem('createCompanyService', createCompanyService, input);
 
-            setCompanyService(createResult)
+            } else if (mutation === 'update') {
+                messageTitle = "Editar Servicio";
+                sucessText = "Se ha editado el servicio correctamente.";
+                errorText = "Ha ocurrido un error al editar el servicio.";
+                input = { id: companyServiceObj.id, cost: e.cost };
+                console.log(e.cost !== companyServiceObj.service.cost)
+                mutationResult = e.cost !== companyServiceObj.service.cost ? await createUpdateItem('updateCompanyService', updateCompanyService, input) : true;
+            }
+
+            console.log(mutationResult)
+            if (mutationResult === false) {
+                swal({ title: messageTitle, text: errorText, type: "error", timer: 2000 });
+            } else {
+                if (mutation === 'create') {
+                    setCompanyService(mutationResult);
+                } else if (mutation === 'update') {
+                    editCompanyService(mutationResult);
+                }
+                swal({ title: messageTitle, text: sucessText, type: "sucess", timer: 2000 });
+
+            }
 
             handleShowModal();
         } catch (error) {
@@ -268,7 +310,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
             setErrorMessage('CompanyServices - xx');
         }
 
-    }, [company, getCompanyServiceById, handleShowModal, service, setCompanyService]);
+    }, [company, getCompanyServiceById, handleShowModal, service, setCompanyService, editCompanyService, mutation, companyServiceObj]);
 
     const serviceObj = useMemo(() => {
         const obj = services.find(_ => _.id === service);
@@ -281,13 +323,15 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
 
     const modalFields = useMemo(() => {
         return [
-            { name: 'name', placeholder: 'Nombre de Servicio', validationmessage: 'Digita el Nombre de Servicio', disabled: true, defaultValue: serviceObj.name },
-            { name: 'cost', placeholder: 'Costo de Servicio', validationmessage: 'Digita el Costo de Servicio', defaultValue: serviceObj.cost }
+            { name: 'name', placeholder: 'Nombre de Servicio', validationmessage: 'Digita el Nombre de Servicio', disabled: true, defaultValue: mutation === 'update' ? companyServiceObj.service.name : serviceObj.name },
+            { name: 'cost', placeholder: 'Costo de Servicio', validationmessage: 'Digita el Costo de Servicio', defaultValue: mutation === 'update' ? companyServiceObj.cost : serviceObj.cost }
         ];
-    }, [serviceObj]);
+    }, [serviceObj, mutation, companyServiceObj]);
 
     const tableHeaders = useMemo(() => ['Servicio', 'Costo', 'Acciones'], []);
     const tableItems = useMemo(() => companyServices, [companyServices]);
+
+    const modalTitles = useMemo(() => mutation === 'create' ? 'Agregar Servicio' : 'Editar Servicio', [mutation]);
 
     return (
         <Container fluid>
@@ -295,9 +339,9 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
                 <Col sm={4}>
                     <CustomSelect id="services" dataTestId="select-services" onChange={e => setService(e)} items={services} placeHolder="selecciona un nuevo servicio para agregar" getItemsNextToken={getItemsNextTokenSelect} />
                 </Col>
-                <Col sm={2}><CustomButton loading={false} onClick={handleShowModal} icon="add"></CustomButton></Col>
+                <Col sm={2}><CustomButton loading={false} onClick={e => { e.preventDefault(); handleShowModal(null); }} icon="add"></CustomButton></Col>
             </Row>
-            <CustomModal title="Agregar Servicio" saveButtonText={'Guardar'} show={showModal} onSubmit={onSubmitModal} handleClose={handleShowModal} fields={modalFields} error={error} errorMessage={errorMessage} />
+            <CustomModal title={modalTitles} saveButtonText={'Guardar'} show={showModal} onSubmit={onSubmitModal} handleClose={handleShowModal} fields={modalFields} error={error} errorMessage={errorMessage} />
             <CustomTable
                 items={tableItems}
                 headers={tableHeaders}
@@ -321,6 +365,7 @@ const mapDispatchToProps = dispatch => ({
     removeCompanyService: companyService => dispatch(removeCompanyService(companyService)),
     setItemsFromStore: data => dispatch(setItemsFromStore(data)),
     setNextToken: token => dispatch(setNextToken(token)),
+    editCompanyService: companyService => dispatch(editCompanyService(companyService)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Services)

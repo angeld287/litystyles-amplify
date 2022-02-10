@@ -5,6 +5,11 @@ export const setCompanyService = companyService => ({
     payload: companyService
 })
 
+export const editCompanyService = companyService => ({
+    type: Types.EDIT_ITEM,
+    payload: companyService
+})
+
 export const removeCompanyService = companyService => ({
     type: Types.REMOVE_ITEM,
     payload: companyService

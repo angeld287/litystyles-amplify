@@ -11,7 +11,7 @@ const CustomModal = (props) => {
     const noFunction = () => { return null }
 
     const buttons = useMemo(() => [
-        { name: 'cancelBtn', text: "Cancelar", className: CustomClasses.INTENT_DANGER, onClick: handleClose, type: 'button' },
+        { name: 'cancelBtn', text: "Cancelar", className: CustomClasses.INTENT_DANGER, onClick: handleClose, type: 'button', loading: false, },
         { name: 'saveBtn', text: "Guardar", }
     ], [handleClose]);
 

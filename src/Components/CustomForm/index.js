@@ -10,13 +10,13 @@ import CustomInputGroup from '../CustomInputGroup';
 import CustomButton from '../CustomButton';
 import { useForm } from 'react-hook-form';
 
-const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, verticalButtons }) => {
+const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, verticalButtons, loading }) => {
 
     const { register, handleSubmit, errors, formState } = useForm();
 
     const _buttons = useMemo(() => buttons.map(b => (
-        <CustomButton style={{ marginRight: 5 }} key={'btn_' + b.name} loading={formState.isSubmitting} {...b} />
-    )), [buttons, formState.isSubmitting])
+        <CustomButton style={{ marginRight: 5 }} key={'btn_' + b.name} loading={loading !== undefined ? loading : formState.isSubmitting} {...b} />
+    )), [buttons, formState.isSubmitting, loading])
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -58,7 +58,8 @@ CustomForm.propTypes = {
     errorMessage: PropTypes.string,
     fields: PropTypes.array,
     buttons: PropTypes.array,
-    verticalButtons: PropTypes.bool
+    verticalButtons: PropTypes.bool,
+    loading: PropTypes.bool,
 }
 
 CustomForm.defaultProps = {
