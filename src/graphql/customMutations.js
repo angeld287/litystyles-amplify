@@ -56,3 +56,62 @@ export const updateCompanyService = /* GraphQL */ `
     }
   }
 `;
+
+/***************************************
+*
+*   COMPANY PRODUCTS CUSTOM MUTATIONS
+*
+****************************************/
+export const createCompanyProduct = /* GraphQL */ `
+  mutation CreateCompanyProduct(
+    $input: CreateCompanyProductInput!
+    $condition: ModelCompanyProductConditionInput
+  ) {
+    createCompanyProduct(input: $input, condition: $condition) {
+      id
+      product {
+        name
+        cost
+        id
+        categoryId
+      }
+      cost
+    }
+  }
+`;
+
+export const deleteCompanyProduct = /* GraphQL */ `
+  mutation DeleteCompanyProduct(
+    $input: DeleteCompanyProductInput!
+    $condition: ModelCompanyProductConditionInput
+  ) {
+    deleteCompanyProduct(input: $input, condition: $condition) {
+      id
+      product {
+        name
+        cost
+        id
+        categoryId
+      }
+      cost
+    }
+  }
+`;
+
+export const updateCompanyProduct = /* GraphQL */ `
+  mutation UpdateCompanyProduct(
+    $input: UpdateCompanyProductInput!
+    $condition: ModelCompanyProductConditionInput
+  ) {
+    updateCompanyProduct(input: $input, condition: $condition) {
+      id
+      product {
+        name
+        cost
+        id
+        categoryId
+      }
+      cost
+    }
+  }
+`;

@@ -218,3 +218,33 @@ export const getCompanyServices = /* GraphQL */ `
     }
   }
 `;
+
+/*********************************
+*
+*   COMPANY PRODUCTS CUSTOM QUERY
+*
+**********************************/
+export const getCompanyProducts = /* GraphQL */ `
+  query getCompanyProducts(
+    $id: ID!
+    $filter: ModelCompanyProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getCompany(id: $id) {
+      products(filter: $filter, limit: $limit, nextToken: $nextToken) {
+        items {
+          id
+          product {
+            name
+            cost
+            id
+            categoryId
+          }
+          cost
+        }
+        nextToken
+      }
+    }
+  }
+`;

@@ -17,7 +17,7 @@ import swal from 'sweetalert';
 
 import { Container, Row, Col } from 'react-bootstrap';
 
-const Services = ({ _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, company, companyServicesNextToken, servicesNextToken, editCompanyService }) => {
+const Services = ({ currentTab, _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, company, companyServicesNextToken, servicesNextToken, editCompanyService }) => {
 
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(false);
@@ -28,6 +28,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
     const [dlBtnLoading, setDlBtnLoading] = useState('');
     const [loading, setLoading] = useState(false);
     const [mutation, setMutation] = useState('');
+    const [dataLoaded, setDataLoaded] = useState(false);
 
 
     //#region Actions to fetch data
@@ -81,18 +82,21 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
                     companyServices: __companyServices
                 });
 
+                setDataLoaded(true)
                 setNextToken(tokens);
                 setLoading(false);
             }
         };
-
-        fetch();
+        console.log(services, _companyServices)
+        if (currentTab === "services" && !dataLoaded) {
+            fetch();
+        }
         return () => {
             didCancel = true;
             setLoading(false)
         };
 
-    }, [setNextToken, setItemsFromStore, company])
+    }, [setNextToken, setItemsFromStore, company, currentTab, dataLoaded])
 
     const getItemsNextToken = useCallback(async () => {
         setLoading(true);
@@ -326,7 +330,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
     }, [_companyServices, dlBtnLoading, handleDelete, handleShowModal]);
 
     const serviceObj = useMemo(() => {
-        const obj = services.find(_ => _.id === service);
+        const obj = services !== undefined ? services.find(_ => _.id === service) : undefined;
         if (obj !== undefined) {
             return services.find(_ => _.id === service);
         } else {

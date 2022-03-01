@@ -6,7 +6,7 @@ import ErrorBoundary from "../ErrorBoundary";
 const CustomTabs = ({ onSelectTab, tabs }) => {
     return (
         <div align="center" style={{ marginTop: 5 }}>
-            <Tabs defaultActiveKey={tabs[2].name} id="controlled-tab" onSelect={e => onSelectTab(e)}>
+            <Tabs defaultActiveKey={tabs[3].name} id="controlled-tab" onSelect={e => onSelectTab(e)}>
                 {
                     tabs.map((tab) =>
                         <Tab key={'tab_' + tab.name} eventKey={tab.name} title={tab.iconTitle} style={{ margin: 5 }}>
