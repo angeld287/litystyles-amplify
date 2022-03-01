@@ -1,4 +1,4 @@
-import { Types } from "../../utils/Items/Types";
+import { Types } from "./products.types";
 
 export const setCompanyProduct = companyProduct => ({
     type: Types.ADD_ITEM,

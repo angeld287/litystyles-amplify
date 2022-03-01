@@ -1,4 +1,4 @@
-import { Types } from '../../utils/Items/Types'
+import { Types } from "./products.types";
 import { utilAddItem, utilRemoveItem, utilEditItem, getItem } from '../../utils/Items/Utils'
 
 const INITIAL_STATES = {

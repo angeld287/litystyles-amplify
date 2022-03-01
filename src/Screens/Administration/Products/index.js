@@ -28,7 +28,6 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
     const [dlBtnLoading, setDlBtnLoading] = useState('');
     const [loading, setLoading] = useState(false);
     const [mutation, setMutation] = useState('');
-    const [dataLoaded, setDataLoaded] = useState(false);
 
     //#region Actions to fetch data
 
@@ -84,13 +83,10 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
 
                 setNextToken(tokens);
                 setLoading(false);
-                setDataLoaded(true)
             }
         };
 
-        console.log(products, _companyProducts)
-
-        if (currentTab === "products" && !dataLoaded) {
+        if (currentTab === "products" && products.length === 0) {
             fetch();
         }
 
@@ -99,7 +95,7 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
             setLoading(false)
         };
 
-    }, [setNextToken, setItemsFromStore, company, currentTab, dataLoaded])
+    }, [setNextToken, setItemsFromStore, company, currentTab, products])
 
     const getItemsNextToken = useCallback(async () => {
         setLoading(true);

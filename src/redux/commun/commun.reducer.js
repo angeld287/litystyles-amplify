@@ -1,4 +1,4 @@
-import { Types } from '../../utils/Items/Types'
+import { Types } from './commun.types'
 
 const INITIAL_STATES = {
     currentScreen: 'COMPANY_ADMIN',

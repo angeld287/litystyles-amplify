@@ -28,7 +28,6 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
     const [dlBtnLoading, setDlBtnLoading] = useState('');
     const [loading, setLoading] = useState(false);
     const [mutation, setMutation] = useState('');
-    const [dataLoaded, setDataLoaded] = useState(false);
 
 
     //#region Actions to fetch data
@@ -82,13 +81,12 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
                     companyServices: __companyServices
                 });
 
-                setDataLoaded(true)
                 setNextToken(tokens);
                 setLoading(false);
             }
         };
-        console.log(services, _companyServices)
-        if (currentTab === "services" && !dataLoaded) {
+
+        if (currentTab === "services" && services.length === 0) {
             fetch();
         }
         return () => {
@@ -96,7 +94,7 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
             setLoading(false)
         };
 
-    }, [setNextToken, setItemsFromStore, company, currentTab, dataLoaded])
+    }, [setNextToken, setItemsFromStore, company, currentTab, services])
 
     const getItemsNextToken = useCallback(async () => {
         setLoading(true);

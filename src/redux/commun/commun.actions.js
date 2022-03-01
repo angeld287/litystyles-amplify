@@ -1,4 +1,4 @@
-import { Types } from '../../utils/Items/Types'
+import { Types } from './commun.types'
 
 export const setCurrentScreen = screen => ({
     type: Types.SET_CURRENT_SCREEN,
