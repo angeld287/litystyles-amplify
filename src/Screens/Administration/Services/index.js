@@ -72,6 +72,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
             } catch (e) {
                 console.log(e)
                 setLoading(false);
+                throw new Error('CompanyServices - 01: ', e)
             }
 
             if (!didCancel) {
@@ -116,6 +117,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
                 setNextToken(tokens);
             } catch (e) {
                 console.log(e)
+                throw new Error('CompanyServices - 02: ', e)
             }
         }
 
@@ -145,6 +147,7 @@ const Services = ({ _companyServices, services, setCompanyService, removeCompany
                 setNextToken(tokens);
             } catch (e) {
                 console.log(e)
+                throw new Error('CompanyServices - 03: ', e)
             }
         }
     }, [servicesNextToken, companyServicesNextToken, services, setItemsFromStore, setNextToken, _companyServices]);
