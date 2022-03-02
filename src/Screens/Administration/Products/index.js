@@ -37,35 +37,38 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
             setLoading(true);
 
             var result = [];
-            var _products = [];
-            var __companyProducts = [];
+            var _products = products;
+            var __companyProducts = _companyProducts;
             let parameters = {};
-            let tokens = {};
+            let tokens = { productsNextToken, companyProductsNextToken };
 
             try {
-
                 //get products
-                parameters = { limit: QUERY_LIMIT, filter: { deleted: { ne: true } } };
-                result = await getList('listProducts', listProducts, parameters);
-                _products = result.items;
-                tokens.productsNextToken = result.nextToken
-                while (_products.length < QUERY_LIMIT && result.nextToken !== null) {
-                    parameters.nextToken = result.nextToken;
+                if (products.length === 0) {
+                    parameters = { limit: QUERY_LIMIT, filter: { deleted: { ne: true } } };
                     result = await getList('listProducts', listProducts, parameters);
-                    _products = [..._products, ...result.items];
+                    _products = result.items;
                     tokens.productsNextToken = result.nextToken
+                    while (_products.length < QUERY_LIMIT && result.nextToken !== null) {
+                        parameters.nextToken = result.nextToken;
+                        result = await getList('listProducts', listProducts, parameters);
+                        _products = [..._products, ...result.items];
+                        tokens.productsNextToken = result.nextToken
+                    }
                 }
 
                 //get companyProducts
-                parameters = { id: company.id, limit: QUERY_LIMIT };
-                result = await getItemById('getCompany', getCompanyProducts, parameters);
-                __companyProducts = result.products.items;
-                tokens.companyProductsNextToken = result.products.nextToken
-                while (__companyProducts.length < QUERY_LIMIT && result.products.nextToken !== null) {
-                    parameters.nextToken = result.products.nextToken;
+                if (_companyProducts.length === 0) {
+                    parameters = { id: company.id, limit: QUERY_LIMIT };
                     result = await getItemById('getCompany', getCompanyProducts, parameters);
-                    __companyProducts = [...__companyProducts, ...result.products.items];
+                    __companyProducts = result.products.items;
                     tokens.companyProductsNextToken = result.products.nextToken
+                    while (__companyProducts.length < QUERY_LIMIT && result.products.nextToken !== null) {
+                        parameters.nextToken = result.products.nextToken;
+                        result = await getItemById('getCompany', getCompanyProducts, parameters);
+                        __companyProducts = [...__companyProducts, ...result.products.items];
+                        tokens.companyProductsNextToken = result.products.nextToken
+                    }
                 }
 
             } catch (e) {
@@ -76,17 +79,19 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
             }
 
             if (!didCancel) {
-                setItemsFromStore({
-                    products: _products,
-                    companyProducts: __companyProducts
-                });
+                if (products.length === 0 || _companyProducts.length === 0) {
+                    setItemsFromStore({
+                        products: _products,
+                        companyProducts: __companyProducts
+                    });
 
-                setNextToken(tokens);
+                    setNextToken(tokens);
+                }
                 setLoading(false);
             }
         };
 
-        if (currentTab === "products" && products.length === 0) {
+        if (currentTab === "products") {
             fetch();
         }
 
@@ -95,7 +100,7 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
             setLoading(false)
         };
 
-    }, [setNextToken, setItemsFromStore, company, currentTab, products])
+    }, [setNextToken, setItemsFromStore, company, currentTab, products, _companyProducts, productsNextToken, companyProductsNextToken])
 
     const getItemsNextToken = useCallback(async () => {
         setLoading(true);

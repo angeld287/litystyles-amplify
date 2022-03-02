@@ -38,35 +38,39 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
             setLoading(true);
 
             var result = [];
-            var _services = [];
-            var __companyServices = [];
+            var _services = services;
+            var __companyServices = _companyServices;
             let parameters = {};
-            let tokens = {};
+            let tokens = { companyServicesNextToken, servicesNextToken };
 
             try {
 
-                //get services
-                parameters = { limit: QUERY_LIMIT, filter: { deleted: { ne: true } } };
-                result = await getList('listServices', listServices, parameters);
-                _services = result.items;
-                tokens.servicesNextToken = result.nextToken
-                while (_services.length < QUERY_LIMIT && result.nextToken !== null) {
-                    parameters.nextToken = result.nextToken;
+                //get services  only execute it if needed
+                if (services.length === 0) {
+                    parameters = { limit: QUERY_LIMIT, filter: { deleted: { ne: true } } };
                     result = await getList('listServices', listServices, parameters);
-                    _services = [..._services, ...result.items];
+                    _services = result.items;
                     tokens.servicesNextToken = result.nextToken
+                    while (_services.length < QUERY_LIMIT && result.nextToken !== null) {
+                        parameters.nextToken = result.nextToken;
+                        result = await getList('listServices', listServices, parameters);
+                        _services = [..._services, ...result.items];
+                        tokens.servicesNextToken = result.nextToken
+                    }
                 }
 
-                //get companyServices
-                parameters = { id: company.id, limit: QUERY_LIMIT };
-                result = await getItemById('getCompany', getCompanyServices, parameters);
-                __companyServices = result.services.items;
-                tokens.companyServicesNextToken = result.services.nextToken
-                while (__companyServices.length < QUERY_LIMIT && result.services.nextToken !== null) {
-                    parameters.nextToken = result.services.nextToken;
+                //get companyServices only execute it if needed
+                if (_companyServices.length === 0) {
+                    parameters = { id: company.id, limit: QUERY_LIMIT };
                     result = await getItemById('getCompany', getCompanyServices, parameters);
-                    __companyServices = [...__companyServices, ...result.services.items];
+                    __companyServices = result.services.items;
                     tokens.companyServicesNextToken = result.services.nextToken
+                    while (__companyServices.length < QUERY_LIMIT && result.services.nextToken !== null) {
+                        parameters.nextToken = result.services.nextToken;
+                        result = await getItemById('getCompany', getCompanyServices, parameters);
+                        __companyServices = [...__companyServices, ...result.services.items];
+                        tokens.companyServicesNextToken = result.services.nextToken
+                    }
                 }
 
             } catch (e) {
@@ -76,17 +80,19 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
             }
 
             if (!didCancel) {
-                setItemsFromStore({
-                    services: _services,
-                    companyServices: __companyServices
-                });
+                if (services.length === 0 || _companyServices.length === 0) {
+                    setItemsFromStore({
+                        services: _services,
+                        companyServices: __companyServices
+                    });
+                    setNextToken(tokens);
+                }
 
-                setNextToken(tokens);
                 setLoading(false);
             }
         };
 
-        if (currentTab === "services" && services.length === 0) {
+        if (currentTab === "services") {
             fetch();
         }
         return () => {
@@ -94,7 +100,7 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
             setLoading(false)
         };
 
-    }, [setNextToken, setItemsFromStore, company, currentTab, services])
+    }, [setNextToken, setItemsFromStore, company, currentTab, services, _companyServices, companyServicesNextToken, servicesNextToken])
 
     const getItemsNextToken = useCallback(async () => {
         setLoading(true);
