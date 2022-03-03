@@ -251,7 +251,7 @@ export const getCompanyProducts = /* GraphQL */ `
 
 /*********************************
 *
-*   COMPANY OFFICE CUSTOM QUERY
+*   OFFICE CUSTOM QUERY
 *
 **********************************/
 export const getCompanyOffices = /* GraphQL */ `
@@ -272,6 +272,31 @@ export const getCompanyOffices = /* GraphQL */ `
           image
           location
           name
+        }
+        nextToken
+      }
+    }
+  }
+`;
+
+export const getOfficeEmployees = /* GraphQL */ `
+  query GetOffice(
+    $id: ID!
+    $filter: ModelOfficeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getOffice(id: $id) {
+      employees(filter: $filter, limit: $limit, nextToken: $nextToken)) {
+        items {
+          id
+          name
+          username
+          officeId
+          phoneid
+          phone_number
+          image
+          deleted
         }
         nextToken
       }

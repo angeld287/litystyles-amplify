@@ -155,3 +155,43 @@ export const updateOffice = /* GraphQL */ `
     }
   }
 `;
+
+/***************************************
+*
+*   EMPLOYEE CUSTOM MUTATIONS
+*
+****************************************/
+export const createEmployee = /* GraphQL */ `
+  mutation CreateEmployee(
+    $input: CreateEmployeeInput!
+    $condition: ModelEmployeeConditionInput
+  ) {
+    createEmployee(input: $input, condition: $condition) {
+      id
+      name
+      username
+      officeId
+      phoneid
+      phone_number
+      image
+      deleted
+    }
+  }
+`;
+export const updateEmployee = /* GraphQL */ `
+  mutation UpdateEmployee(
+    $input: UpdateEmployeeInput!
+    $condition: ModelEmployeeConditionInput
+  ) {
+    updateEmployee(input: $input, condition: $condition) {
+      id
+      name
+      username
+      officeId
+      phoneid
+      phone_number
+      image
+      deleted
+    }
+  }
+`;
