@@ -115,3 +115,43 @@ export const updateCompanyProduct = /* GraphQL */ `
     }
   }
 `;
+
+/***************************************
+*
+*   OFFICES CUSTOM MUTATIONS
+*
+****************************************/
+export const createOffice = /* GraphQL */ `
+  mutation CreateOffice(
+    $input: CreateOfficeInput!
+    $condition: ModelOfficeConditionInput
+  ) {
+    createOffice(input: $input, condition: $condition) {
+      administrator
+      categoryId
+      companyId
+      deleted
+      id
+      image
+      location
+      name
+    }
+  }
+`;
+export const updateOffice = /* GraphQL */ `
+  mutation UpdateOffice(
+    $input: UpdateOfficeInput!
+    $condition: ModelOfficeConditionInput
+  ) {
+    updateOffice(input: $input, condition: $condition) {
+      administrator
+      categoryId
+      companyId
+      deleted
+      id
+      image
+      location
+      name
+    }
+  }
+`;

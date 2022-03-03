@@ -12,3 +12,5 @@ export const CustomIntents = {
 };
 
 export const QUERY_LIMIT = 10;
+
+export const GOOGLE_MAPS_API_URL = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCyw0xtlbcJiaRUDB3bNWbkcW2IJWprrbc&libraries=places';

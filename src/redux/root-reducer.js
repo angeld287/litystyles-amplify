@@ -5,6 +5,7 @@ import communReducer from './commun/commun.reducer'
 import servicesReducer from "./services/services.reducer";
 import companyReducer from "./company/company.reducer";
 import productsReducer from "./products/products.reducer";
+import officesReducer from "./offices/offices.reducer";
 
 export default combineReducers({
     user: userReducer,
@@ -12,4 +13,5 @@ export default combineReducers({
     services: servicesReducer,
     company: companyReducer,
     products: productsReducer,
+    offices: officesReducer,
 });

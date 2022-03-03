@@ -248,3 +248,33 @@ export const getCompanyProducts = /* GraphQL */ `
     }
   }
 `;
+
+/*********************************
+*
+*   COMPANY OFFICE CUSTOM QUERY
+*
+**********************************/
+export const getCompanyOffices = /* GraphQL */ `
+  query getCompanyOffices(
+    $id: ID!
+    $filter: ModelCompanyFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getCompany(id: $id) {
+      offices(filter: $filter, limit: $limit, nextToken: $nextToken) {
+        items {
+          administrator
+          categoryId
+          companyId
+          deleted
+          id
+          image
+          location
+          name
+        }
+        nextToken
+      }
+    }
+  }
+`;

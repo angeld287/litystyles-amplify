@@ -4,6 +4,7 @@ import CustomTabs from '../../Components/CustomTabs'
 import Requests from './Requests'
 import Services from './Services'
 import Products from './Products'
+import Offices from './Offices'
 
 const Administration = () => {
     const [currentTab, setCurrentTab] = useState('products');
@@ -12,13 +13,13 @@ const Administration = () => {
     }, []);
 
     const tabs = useMemo(() => [
-        { name: 'requests', iconTitle: <Icon icon="numbered-list" />, children: <Requests /> },
-        { name: 'offices', iconTitle: <Icon icon="office" />, children: '' },
-        { name: 'services', iconTitle: <Icon icon="cog" />, children: <Services currentTab={currentTab} /> },
-        { name: 'products', iconTitle: <Icon icon="shopping-cart" />, children: <Products currentTab={currentTab} /> },
+        { name: 'requests', title: <Icon icon="numbered-list" />, children: <Requests /> },
+        { name: 'offices', title: <Icon icon="office" />, children: <Offices /> },
+        { name: 'services', title: <Icon icon="cog" />, children: <Services currentTab={currentTab} /> },
+        { name: 'products', title: <Icon icon="shopping-cart" />, children: <Products currentTab={currentTab} /> },
     ], [currentTab]);
 
-    return <CustomTabs onSelectTab={onSelectTab} tabs={tabs} />;
+    return <CustomTabs onSelectTab={onSelectTab} tabs={tabs} defaultTab={tabs[1].name} />;
 }
 
 export default Administration;
