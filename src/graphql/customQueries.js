@@ -257,7 +257,7 @@ export const getCompanyProducts = /* GraphQL */ `
 export const getCompanyOffices = /* GraphQL */ `
   query getCompanyOffices(
     $id: ID!
-    $filter: ModelCompanyFilterInput
+    $filter: ModelOfficeFilterInput
     $limit: Int
     $nextToken: String
   ) {

@@ -1,24 +1,24 @@
 import { Types } from "./offices.types";
 
-export const setCompanyOffice = companyOffice => ({
+export const setOffice = office => ({
     type: Types.ADD_ITEM,
-    payload: companyOffice
+    payload: office
 })
 
-export const editCompanyOffice = companyOffice => ({
+export const editOffice = office => ({
     type: Types.EDIT_ITEM,
-    payload: companyOffice
+    payload: office
 })
 
-export const removeCompanyOffice = companyOffice => ({
+export const removeOffice = office => ({
     type: Types.REMOVE_ITEM,
-    payload: companyOffice
+    payload: office
 })
 
 export const setItemsFromStore = (data) => {
     return {
         type: Types.SET_ITEMS,
-        payload: data.companyOffices
+        payload: data.offices
     }
 }
 

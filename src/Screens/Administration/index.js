@@ -7,14 +7,14 @@ import Products from './Products'
 import Offices from './Offices'
 
 const Administration = () => {
-    const [currentTab, setCurrentTab] = useState('products');
+    const [currentTab, setCurrentTab] = useState('offices');
     const onSelectTab = useCallback((e) => {
         setCurrentTab(e)
     }, []);
 
     const tabs = useMemo(() => [
-        { name: 'requests', title: <Icon icon="numbered-list" />, children: <Requests /> },
-        { name: 'offices', title: <Icon icon="office" />, children: <Offices /> },
+        { name: 'requests', title: <Icon icon="numbered-list" />, children: <Requests currentTab={currentTab} /> },
+        { name: 'offices', title: <Icon icon="office" />, children: <Offices currentTab={currentTab} /> },
         { name: 'services', title: <Icon icon="cog" />, children: <Services currentTab={currentTab} /> },
         { name: 'products', title: <Icon icon="shopping-cart" />, children: <Products currentTab={currentTab} /> },
     ], [currentTab]);

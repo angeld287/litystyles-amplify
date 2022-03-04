@@ -16,15 +16,69 @@ import { getList, getItemById, createUpdateItem, deleteItem } from "../../../ser
 import { QUERY_LIMIT } from '../../../utils/Constants'
 
 import { connect } from 'react-redux';
-import { setCompanyOffice, removeCompanyOffice, setItemsFromStore, setNextToken, editCompanyOffice } from '../../../redux/offices/offices.actions'
+import { setOffice, removeOffice, setItemsFromStore, setNextToken, editOffice } from '../../../redux/offices/offices.actions'
 
 import swal from 'sweetalert';
 
 import { Icon } from '@blueprintjs/core';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
-const Offices = ({ companyOffices, nextToken, company, setCompanyOffice, removeCompanyOffice, setItemsFromStore, setNextToken, editCompanyOffice }) => {
-    const [office, setOffice] = useState({});
+const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOffice, setItemsFromStore, setNextToken, editOffice }) => {
+    const [office, _setOffice] = useState({});
+    const [loading, setLoading] = useState({});
+
+    //#region Actions to fetch data
+
+    useEffect(() => {
+        let didCancel = false;
+        const fetch = async () => {
+            setLoading(true);
+
+            var result = [];
+            var _offices = offices;
+            let parameters = {};
+            let tokens = nextToken;
+
+            try {
+                //get products
+                if (offices.length === 0) {
+                    parameters = { id: company.id, limit: QUERY_LIMIT, filter: { deleted: { ne: true } } };
+                    result = await getList('getCompany', getCompanyOffices, parameters);
+                    _offices = result.offices.items;
+                    tokens = result.offices.nextToken
+                    while (_offices.length < QUERY_LIMIT && result.offices.nextToken !== null) {
+                        parameters.nextToken = result.offices.nextToken;
+                        result = await getList('getCompany', getCompanyOffices, parameters);
+                        _offices = [..._offices, ...result.offices.items];
+                        tokens = result.offices.nextToken
+                    }
+                }
+            } catch (e) {
+                console.log(e)
+                setLoading(false);
+                throw new Error('offices - 01: ', e)
+            }
+
+            if (!didCancel) {
+                if (offices.length === 0) {
+                    setItemsFromStore({ offices: _offices });
+                    setNextToken(tokens);
+                }
+                setLoading(false);
+            }
+        };
+        if (currentTab === "offices") {
+            fetch();
+        }
+
+        return () => {
+            didCancel = true;
+            setLoading(false)
+        };
+
+    }, [setNextToken, setItemsFromStore, company, currentTab, offices, nextToken])
+
+    //#endregion
 
     const getItemsNextTokenSelect = () => {
 
@@ -39,22 +93,22 @@ const Offices = ({ companyOffices, nextToken, company, setCompanyOffice, removeC
     }
 
     const tabs = useMemo(() => [
-        { name: 'map', title: <div><Icon icon="map" /><spam>  Mapa</spam></div>, children: <CustomMap /> },
-        { name: 'employees', title: <div><Icon icon="people" /><spam>  Empleados</spam></div>, children: <Employees /> },
+        { name: 'map', title: <div><Icon icon="map" />  Mapa</div>, children: <CustomMap /> },
+        { name: 'employees', title: <div><Icon icon="people" />  Empleados</div>, children: <Employees /> },
     ], []);
 
     return (
         <Container fluid>
             <Row style={{ marginTop: 10 }}>
                 <Col sm={5}>
-                    <CustomSelect id="offices" dataTestId="select-offices" onChange={e => setOffice(e)} items={[]} getItemsNextToken={getItemsNextTokenSelect} />
+                    <CustomSelect id="offices" dataTestId="select-offices" onChange={e => _setOffice(e)} items={offices} getItemsNextToken={getItemsNextTokenSelect} />
                 </Col>
-                <Col sm={2}><CustomButton loading={false} onClick={e => { e.preventDefault(); handleOpenOffice(null); }} icon="open"></CustomButton></Col>
+                <Col sm={2}><CustomButton loading={false} onClick={e => { e.preventDefault(); handleOpenOffice(null); }} >Abrir Oficina</CustomButton></Col>
             </Row>
             <Row style={{ marginTop: 10 }}>
                 <Col sm={8}>
                     <Card border="info">
-                        <Card.Header>Header</Card.Header>
+                        <Card.Header>{office.name !== undefined ? office.name : 'Nombre de Oficina'}</Card.Header>
                         <Card.Img variant="top" src={image} />
                         <Card.Body>
                             <Card.Title>Info Card Title</Card.Title>
@@ -79,17 +133,17 @@ const Offices = ({ companyOffices, nextToken, company, setCompanyOffice, removeC
 }
 
 const mapStateToProps = state => ({
-    companyOffices: state.offices.companyOffices,
+    offices: state.offices.offices,
     nextToken: state.offices.nextToken,
     company: state.company.company,
 })
 
 const mapDispatchToProps = dispatch => ({
-    setCompanyOffice: companyOffice => dispatch(setCompanyOffice(companyOffice)),
-    removeCompanyOffice: companyOffice => dispatch(removeCompanyOffice(companyOffice)),
+    setOffice: office => dispatch(setOffice(office)),
+    removeOffice: office => dispatch(removeOffice(office)),
     setItemsFromStore: data => dispatch(setItemsFromStore(data)),
     setNextToken: token => dispatch(setNextToken(token)),
-    editCompanyOffice: companyOffice => dispatch(editCompanyOffice(companyOffice)),
+    editOffice: office => dispatch(editOffice(office)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Offices)

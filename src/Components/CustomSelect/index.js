@@ -52,9 +52,7 @@ const CustomSelect = ({ id, dataTestId, items, onChange, defaultValue, getItemsN
         filterOption={(input, option) =>
             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }
-        filterSort={(optionA, optionB) =>
-            optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
-        }
+        filterSort={(optionA, optionB) => (optionA.children !== undefined && optionB.children !== undefined) ? optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase()) : []}
     >
         {!loading ? options : [...options, <Select.Option key="loading">Loading...</Select.Option>]}
     </Select>;
