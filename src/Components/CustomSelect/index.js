@@ -27,10 +27,15 @@ const CustomSelect = ({ id, dataTestId, items, onChange, defaultValue, getItemsN
     }
 
     const _dvalue = useMemo(() => typeof defaultValue === "string" ? defaultValue : () => {
-        if (typeof defaultValue === "object" && defaultValue !== null && defaultValue.items.length > 0) {
-            const obj = defaultValue.items[0];
-            const field = Object.keys(obj).find(_ => obj[_] !== null && obj[_].id !== undefined);
-            return field !== undefined ? obj[field].id : null
+        if (typeof defaultValue === "object" && defaultValue !== null) {
+            if (defaultValue.items !== undefined && defaultValue.items.length > 0) {
+                const obj = defaultValue.items[0];
+                const field = Object.keys(obj).find(_ => obj[_] !== null && obj[_].id !== undefined);
+                return field !== undefined ? obj[field].id : null
+            } else {
+                return defaultValue.id;
+            }
+
         } else {
             return null;
         }

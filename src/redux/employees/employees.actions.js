@@ -15,12 +15,10 @@ export const removeEmployee = employee => ({
     payload: employee
 })
 
-export const setItemsFromStore = (data) => {
-    return {
-        type: Types.SET_ITEMS,
-        payload: data.employees
-    }
-}
+export const setItemsFromStore = data => ({
+    type: Types.SET_ITEMS,
+    payload: data.employees
+})
 
 export const setNextToken = (token) => {
     return {

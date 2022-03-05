@@ -6,7 +6,7 @@ const INITIAL_STATES = {
     employee: {},
     nextToken: "",
 }
-const employesReducer = (state = INITIAL_STATES, action) => {
+const employeesReducer = (state = INITIAL_STATES, action) => {
     switch (action.type) {
         case Types.ADD_ITEM:
             return {
@@ -31,7 +31,7 @@ const employesReducer = (state = INITIAL_STATES, action) => {
         case Types.SET_ITEMS:
             return {
                 ...state,
-                employees: action.payload.employees
+                employees: action.payload
             }
         case Types.SET_NEXT_TOKEN:
             return {
@@ -43,4 +43,4 @@ const employesReducer = (state = INITIAL_STATES, action) => {
     }
 }
 
-export default employesReducer;
+export default employeesReducer;

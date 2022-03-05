@@ -282,12 +282,12 @@ export const getCompanyOffices = /* GraphQL */ `
 export const getOfficeEmployees = /* GraphQL */ `
   query GetOffice(
     $id: ID!
-    $filter: ModelOfficeFilterInput
+    $filter: ModelEmployeeFilterInput
     $limit: Int
     $nextToken: String
   ) {
     getOffice(id: $id) {
-      employees(filter: $filter, limit: $limit, nextToken: $nextToken)) {
+      employees(filter: $filter, limit: $limit, nextToken: $nextToken) {
         items {
           id
           name

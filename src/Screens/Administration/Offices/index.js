@@ -25,6 +25,7 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 
 const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOffice, setItemsFromStore, setNextToken, editOffice }) => {
     const [office, _setOffice] = useState({});
+    const [officeCurrentTab, setCurrentTab] = useState('map');
     const [loading, setLoading] = useState({});
 
     //#region Actions to fetch data
@@ -40,7 +41,7 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
             let tokens = nextToken;
 
             try {
-                //get products
+                //get offices
                 if (offices.length === 0) {
                     parameters = { id: company.id, limit: QUERY_LIMIT, filter: { deleted: { ne: true } } };
                     result = await getList('getCompany', getCompanyOffices, parameters);
@@ -64,6 +65,8 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                     setItemsFromStore({ offices: _offices });
                     setNextToken(tokens);
                 }
+
+                _setOffice(_offices.length > 0 ? _offices[0] : null);
                 setLoading(false);
             }
         };
@@ -89,32 +92,32 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
     }
 
     const onSelectTab = (e) => {
-        console.log(e);
+        setCurrentTab(e);
     }
 
     const tabs = useMemo(() => [
         { name: 'map', title: <div><Icon icon="map" />  Mapa</div>, children: <CustomMap /> },
-        { name: 'employees', title: <div><Icon icon="people" />  Empleados</div>, children: <Employees /> },
-    ], []);
+        { name: 'employees', title: <div><Icon icon="people" />  Empleados</div>, children: <Employees currentTab={officeCurrentTab} officeId={office.id} /> },
+    ], [office, officeCurrentTab]);
+
+    if (loading) return <h1>Loading...</h1>;
 
     return (
         <Container fluid>
             <Row style={{ marginTop: 10 }}>
                 <Col sm={5}>
-                    <CustomSelect id="offices" dataTestId="select-offices" onChange={e => _setOffice(e)} items={offices} getItemsNextToken={getItemsNextTokenSelect} />
+                    <CustomSelect id="offices" dataTestId="select-offices" defaultValue={office} onChange={e => _setOffice(e)} items={offices} getItemsNextToken={getItemsNextTokenSelect} />
                 </Col>
                 <Col sm={2}><CustomButton loading={false} onClick={e => { e.preventDefault(); handleOpenOffice(null); }} >Abrir Oficina</CustomButton></Col>
             </Row>
             <Row style={{ marginTop: 10 }}>
                 <Col sm={8}>
                     <Card border="info">
-                        <Card.Header>{office.name !== undefined ? office.name : 'Nombre de Oficina'}</Card.Header>
                         <Card.Img variant="top" src={image} />
                         <Card.Body>
-                            <Card.Title>Info Card Title</Card.Title>
+                            <Card.Title>{office.name}</Card.Title>
                             <Card.Text>
-                                Some quick example text to build on the card title and make up the bulk
-                                of the card's content.
+                                Oficina principal ubicada en {office.location}. Se ofrecen servicios de lavado del pelo, masajes, faciales, entre otros.
                             </Card.Text>
                         </Card.Body>
                     </Card>
