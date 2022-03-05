@@ -12,14 +12,13 @@ const center = {
     lng: -38.523
 };
 
-const CustomMap = () => <LoadScript
-    googleMapsApiKey={GOOGLE_MAPS_API_URL}>
+const CustomMap = () => <LoadScript>
     <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
         zoom={10}
     >
-        { /* Child components, such as markers, info windows, etc. */}
+        { /* Child components, such as markers, info windows, etc.  googleMapsApiKey={GOOGLE_MAPS_API_URL}*/}
         <></>
     </GoogleMap>
 </LoadScript>
