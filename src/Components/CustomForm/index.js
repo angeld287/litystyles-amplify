@@ -8,6 +8,7 @@ import {
 } from "@blueprintjs/core";
 import CustomInputGroup from '../CustomInputGroup';
 import CustomButton from '../CustomButton';
+import CustomSelect from '../CustomSelect';
 import { useForm } from 'react-hook-form';
 
 const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, verticalButtons, loading }) => {
@@ -28,9 +29,15 @@ const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, verticalBu
                         const hasDefaultValue = _.defaultValue !== undefined && _.defaultValue !== '';
                         return <div key={'form_' + _.name} text-align='left'>
                             {hasDefaultValue && <Label htmlFor={'input_id_' + _.name}>{_.placeholder}</Label>}
-                            <CustomInputGroup id={'input_id_' + _.name} key={'input_' + _.name} {..._} style={{ marginBottom: 10 }} autoComplete="on"
-                                inputRef={register({ required: { message: _.validationmessage, value: isRequired } })}
-                            />
+                            {/*definition of elements*/}
+                            {(_.type === undefined || _.type === 'input') &&
+                                <CustomInputGroup id={'input_id_' + _.name} key={'input_' + _.name} {..._} style={{ marginBottom: 10 }} autoComplete="on"
+                                    inputRef={register({ required: { message: _.validationmessage, value: isRequired } })}
+                                />
+                            }
+                            {(_.type !== undefined && _.type === 'select') &&
+                                <CustomSelect id={'select_id_' + _.name} dataTestId={'select_id_' + _.name} key={'select_id_' + _.name} style={{ marginBottom: 10 }} items={_.items} placeHolder="selecciona un elemento" getItemsNextToken={_.getItemsNextToken} />
+                            }
                             <div key={'error_' + _.name} style={{ marginBottom: 10 }}>
                                 {errors[_.name] && <Callout intent="danger">{errors[_.name].message}</Callout>}
                             </div>

@@ -5,11 +5,13 @@ import CustomSelect from '../../../Components/CustomSelect';
 import CustomTable from '../../../Components/CustomTable';
 import CustomTabs from '../../../Components/CustomTabs';
 import CustomMap from '../../../Components/CustomMap';
+import CustomForm from '../../../Components/CustomForm';
+import { CustomClasses } from '../../../utils/Constants';
 import Employees from './Employees';
 
 import image from "../../../images/SalonBelleza.jpg"
 
-import { getCompanyOffices } from "../../../graphql/customQueries"
+import { getCompanyOffices, listTypes } from "../../../graphql/customQueries"
 import { createOffice, updateOffice } from "../../../graphql/customMutations"
 import { getList, getItemById, createUpdateItem, deleteItem } from "../../../services/AppSync"
 
@@ -17,14 +19,20 @@ import { QUERY_LIMIT } from '../../../utils/Constants'
 
 import { connect } from 'react-redux';
 import { setOffice, removeOffice, setItemsFromStore, setNextToken, editOffice } from '../../../redux/offices/offices.actions'
+import { setItemsFromStore as setItemsFromStoreTypes, setNextToken as setNextTokenTypes } from '../../../redux/types/types.actions'
 
 import swal from 'sweetalert';
 
 import { Icon } from '@blueprintjs/core';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
-const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOffice, setItemsFromStore, setNextToken, editOffice }) => {
+
+const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOffice, setItemsFromStore, setNextToken, editOffice, setItemsFromStoreTypes, types, nextTokenTypes, setNextTokenTypes }) => {
     const [office, _setOffice] = useState({});
+    const [editing, setEditing] = useState(false);
+    const [errorForm, setErrorForm] = useState(false);
+    const [errorFormMessage, setErrorFormMessage] = useState('');
+    const [loadingForm, setLoadingForm] = useState(false);
     const [officeCurrentTab, setCurrentTab] = useState('map');
     const [loading, setLoading] = useState({});
 
@@ -37,8 +45,10 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
 
             var result = [];
             var _offices = offices;
+            var _types = types;
             let parameters = {};
             let tokens = nextToken;
+            let tokenTypes = nextTokenTypes;
 
             try {
                 //get offices
@@ -54,6 +64,20 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                         tokens = result.offices.nextToken
                     }
                 }
+
+                //get offices types
+                if (types.length === 0) {
+                    parameters = { limit: QUERY_LIMIT, filter: { deleted: { ne: true } } };
+                    result = await getList('listTypes', listTypes, parameters);
+                    _types = result.items;
+                    tokenTypes = result.nextToken
+                    while (_types.length < QUERY_LIMIT && result.nextToken !== null) {
+                        parameters.nextToken = result.nextToken;
+                        result = await getList('listTypes', listTypes, parameters);
+                        _types = [..._types, ...result.items];
+                        tokenTypes = result.nextToken
+                    }
+                }
             } catch (e) {
                 console.log(e)
                 setLoading(false);
@@ -64,6 +88,11 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                 if (offices.length === 0) {
                     setItemsFromStore({ offices: _offices });
                     setNextToken(tokens);
+                }
+
+                if (types.length === 0) {
+                    setItemsFromStoreTypes({ types: _types });
+                    setNextTokenTypes(tokenTypes)
                 }
 
                 _setOffice(_offices.length > 0 ? _offices[0] : null);
@@ -81,11 +110,31 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
 
     }, [setNextToken, setItemsFromStore, company, currentTab, offices, nextToken])
 
-    //#endregion
-
     const getItemsNextTokenSelect = () => {
 
     }
+
+    const getItemsNextTokenSelectTypes = () => {
+
+    }
+
+    //#endregion
+
+
+    //#region Mutation Actions
+
+    const onFormSubmit = (e) => {
+        setLoadingForm(true);
+        try {
+
+            console.log(e)
+            setEditing(false)
+        } catch (e) {
+            setLoadingForm(false)
+        }
+    }
+
+    //#endregion
 
     const handleOpenOffice = () => {
 
@@ -95,10 +144,34 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
         setCurrentTab(e);
     }
 
+    const handleCloseEditing = () => {
+        setEditing(false)
+    }
+
+    const handleOpenToEdit = () => {
+        setEditing(true)
+    }
+
     const tabs = useMemo(() => [
         { name: 'map', title: <div><Icon icon="map" />  Mapa</div>, children: <CustomMap /> },
         { name: 'employees', title: <div><Icon icon="people" />  Empleados</div>, children: <Employees currentTab={officeCurrentTab} officeId={office.id} /> },
     ], [office, officeCurrentTab]);
+
+    const formFields = useMemo(() => {
+        return [
+            { name: 'name', placeholder: 'Nombre de La Oficina', validationmessage: 'Digita el Nombre de La Oficina', disabled: !editing, defaultValue: office.name },
+            { name: 'tipo', type: 'select', placeholder: 'Tipo de Negocio', validationmessage: 'Digita el Tipo de Negocio', disabled: !editing, defaultValue: office.location, items: types, getItemsNextToken: getItemsNextTokenSelectTypes }
+        ];
+    }, [office, editing, getItemsNextTokenSelectTypes]);
+
+    const formButtons = useMemo(() => [
+        { name: 'cancelBtn', text: "Cancelar", className: CustomClasses.INTENT_DANGER, onClick: handleCloseEditing, type: 'button', loading: false, },
+        { name: 'saveBtn', text: "Guardar", }
+    ], [handleCloseEditing]);
+
+    const formButtonEdit = useMemo(() => [
+        { name: 'editBtn', text: "Editar", className: CustomClasses.INTENT_PRIMARY, onClick: handleOpenToEdit, type: 'button', loading: false, }
+    ], [handleOpenToEdit]);
 
     if (loading) return <h1>Loading...</h1>;
 
@@ -119,6 +192,18 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                             <Card.Text>
                                 Oficina principal ubicada en {office.location}. Se ofrecen servicios de lavado del pelo, masajes, faciales, entre otros.
                             </Card.Text>
+                            <Row style={{ marginTop: 10 }}>
+                                <Col>
+                                    <Card align="left">
+                                        <Card.Header></Card.Header>
+                                        <Card.Body>
+                                            <CustomForm buttons={editing ? formButtons : formButtonEdit} fields={formFields} onSubmit={onFormSubmit} error={errorForm} errorMessage={errorFormMessage} loading={loadingForm} />
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                                <Col>
+                                </Col>
+                            </Row>
                         </Card.Body>
                     </Card>
                     <br />
@@ -138,14 +223,18 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
 const mapStateToProps = state => ({
     offices: state.offices.offices,
     nextToken: state.offices.nextToken,
+    nextTokenTypes: state.types.nextToken,
     company: state.company.company,
+    types: state.types.types,
 })
 
 const mapDispatchToProps = dispatch => ({
     setOffice: office => dispatch(setOffice(office)),
     removeOffice: office => dispatch(removeOffice(office)),
     setItemsFromStore: data => dispatch(setItemsFromStore(data)),
+    setItemsFromStoreTypes: data => dispatch(setItemsFromStoreTypes(data)),
     setNextToken: token => dispatch(setNextToken(token)),
+    setNextTokenTypes: token => dispatch(setNextTokenTypes(token)),
     editOffice: office => dispatch(editOffice(office)),
 })
 

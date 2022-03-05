@@ -7,6 +7,7 @@ import companyReducer from "./company/company.reducer";
 import productsReducer from "./products/products.reducer";
 import officesReducer from "./offices/offices.reducer";
 import employeesReducer from "./employees/employees.reducer";
+import typesReducer from "./types/types.reducer";
 
 export default combineReducers({
     user: userReducer,
@@ -16,4 +17,5 @@ export default combineReducers({
     products: productsReducer,
     offices: officesReducer,
     employees: employeesReducer,
+    types: typesReducer,
 });
