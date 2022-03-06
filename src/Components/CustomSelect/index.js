@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Select } from "antd";
 
 
-const CustomSelect = ({ id, dataTestId, items, onChange, defaultValue, getItemsNextToken, placeHolder }) => {
+const CustomSelect = ({ id, dataTestId, items, onChange, defaultValue, getItemsNextToken, placeHolder, disabled }) => {
     const [loading, setLoading] = useState(false);
 
     const options = items !== undefined ? items.map(_ => { return <Select.Option key={_.id}>{_.name}</Select.Option> }) : [];
@@ -53,6 +53,7 @@ const CustomSelect = ({ id, dataTestId, items, onChange, defaultValue, getItemsN
         defaultActiveFirstOption={false}
         onChange={onChange}
         optionFilterProp="children"
+        disabled={disabled}
         onPopupScroll={onScroll}
         filterOption={(input, option) =>
             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -71,13 +72,15 @@ CustomSelect.propTypes = {
     onChange: PropTypes.func,
     placeHolder: PropTypes.string,
     loading: PropTypes.bool,
-    getItemsNextToken: PropTypes.func
+    getItemsNextToken: PropTypes.func,
+    disabled: PropTypes.bool,
 }
 
 CustomSelect.defaultProps = {
     items: [],
     placeholder: 'Nombre del Campo',
     defaultValue: null,
+    disabled: false,
 }
 
 export default CustomSelect;

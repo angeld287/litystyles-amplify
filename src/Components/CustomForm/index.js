@@ -11,6 +11,8 @@ import CustomButton from '../CustomButton';
 import CustomSelect from '../CustomSelect';
 import { useForm } from 'react-hook-form';
 
+import { Form } from 'antd'
+
 const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, verticalButtons, loading }) => {
 
     const { register, handleSubmit, errors, formState } = useForm();
@@ -18,7 +20,6 @@ const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, verticalBu
     const _buttons = useMemo(() => buttons.map(b => (
         <CustomButton style={{ marginRight: 5 }} key={'btn_' + b.name} loading={loading !== undefined ? loading : formState.isSubmitting} {...b} />
     )), [buttons, formState.isSubmitting, loading])
-
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <ControlGroup vertical style={{ marginTop: 15 }}>
@@ -36,7 +37,13 @@ const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, verticalBu
                                 />
                             }
                             {(_.type !== undefined && _.type === 'select') &&
-                                <CustomSelect id={'select_id_' + _.name} dataTestId={'select_id_' + _.name} key={'select_id_' + _.name} style={{ marginBottom: 10 }} items={_.items} placeHolder="selecciona un elemento" getItemsNextToken={_.getItemsNextToken} />
+                                <Form.Item
+                                    name={_.name}
+                                    noStyle
+                                    rules={[{ required: isRequired, message: _.validationmessage }]}
+                                >
+                                    <CustomSelect id={'select_id_' + _.name} defaultValue={_.defaultValue} dataTestId={'select_id_' + _.name} key={'select_id_' + _.name} style={{ marginBottom: 10 }} items={_.items} placeHolder="selecciona un elemento" getItemsNextToken={_.getItemsNextToken} disabled={_.disabled} />
+                                </Form.Item>
                             }
                             <div key={'error_' + _.name} style={{ marginBottom: 10 }}>
                                 {errors[_.name] && <Callout intent="danger">{errors[_.name].message}</Callout>}

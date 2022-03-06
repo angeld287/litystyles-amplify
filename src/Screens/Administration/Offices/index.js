@@ -5,13 +5,13 @@ import CustomSelect from '../../../Components/CustomSelect';
 import CustomTable from '../../../Components/CustomTable';
 import CustomTabs from '../../../Components/CustomTabs';
 import CustomMap from '../../../Components/CustomMap';
-import CustomForm from '../../../Components/CustomForm';
+import CustomForm from '../../../Components/CustomForm/antdForm';
 import { CustomClasses } from '../../../utils/Constants';
 import Employees from './Employees';
 
 import image from "../../../images/SalonBelleza.jpg"
 
-import { getCompanyOffices, listTypes } from "../../../graphql/customQueries"
+import { getCompanyOffices, listCategorys } from "../../../graphql/customQueries"
 import { createOffice, updateOffice } from "../../../graphql/customMutations"
 import { getList, getItemById, createUpdateItem, deleteItem } from "../../../services/AppSync"
 
@@ -19,7 +19,7 @@ import { QUERY_LIMIT } from '../../../utils/Constants'
 
 import { connect } from 'react-redux';
 import { setOffice, removeOffice, setItemsFromStore, setNextToken, editOffice } from '../../../redux/offices/offices.actions'
-import { setItemsFromStore as setItemsFromStoreTypes, setNextToken as setNextTokenTypes } from '../../../redux/types/types.actions'
+import { setItemsFromStore as setItemsFromStoreCategories, setNextToken as setNextTokenCategories } from '../../../redux/categories/categories.actions'
 
 import swal from 'sweetalert';
 
@@ -27,7 +27,7 @@ import { Icon } from '@blueprintjs/core';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
 
-const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOffice, setItemsFromStore, setNextToken, editOffice, setItemsFromStoreTypes, types, nextTokenTypes, setNextTokenTypes }) => {
+const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOffice, setItemsFromStore, setNextToken, editOffice, setItemsFromStoreCategories, categories, nextTokenCategories, setNextTokenCategories }) => {
     const [office, _setOffice] = useState({});
     const [editing, setEditing] = useState(false);
     const [errorForm, setErrorForm] = useState(false);
@@ -45,10 +45,10 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
 
             var result = [];
             var _offices = offices;
-            var _types = types;
+            var _categories = categories;
             let parameters = {};
             let tokens = nextToken;
-            let tokenTypes = nextTokenTypes;
+            let tokenCategories = nextTokenCategories;
 
             try {
                 //get offices
@@ -66,16 +66,16 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                 }
 
                 //get offices types
-                if (types.length === 0) {
+                if (categories.length === 0) {
                     parameters = { limit: QUERY_LIMIT, filter: { deleted: { ne: true } } };
-                    result = await getList('listTypes', listTypes, parameters);
-                    _types = result.items;
-                    tokenTypes = result.nextToken
-                    while (_types.length < QUERY_LIMIT && result.nextToken !== null) {
+                    result = await getList('listCategorys', listCategorys, parameters);
+                    _categories = result.items;
+                    tokenCategories = result.nextToken
+                    while (_categories.length < 40 && result.nextToken !== null) {
                         parameters.nextToken = result.nextToken;
-                        result = await getList('listTypes', listTypes, parameters);
-                        _types = [..._types, ...result.items];
-                        tokenTypes = result.nextToken
+                        result = await getList('listCategorys', listCategorys, parameters);
+                        _categories = [..._categories, ...result.items];
+                        tokenCategories = result.nextToken
                     }
                 }
             } catch (e) {
@@ -90,12 +90,13 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                     setNextToken(tokens);
                 }
 
-                if (types.length === 0) {
-                    setItemsFromStoreTypes({ types: _types });
-                    setNextTokenTypes(tokenTypes)
+                if (categories.length === 0) {
+                    setItemsFromStoreCategories({ categories: _categories });
+                    setNextTokenCategories(tokenCategories)
                 }
 
                 _setOffice(_offices.length > 0 ? _offices[0] : null);
+
                 setLoading(false);
             }
         };
@@ -114,7 +115,7 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
 
     }
 
-    const getItemsNextTokenSelectTypes = () => {
+    const getItemsNextTokenSelectCategories = () => {
 
     }
 
@@ -160,9 +161,9 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
     const formFields = useMemo(() => {
         return [
             { name: 'name', placeholder: 'Nombre de La Oficina', validationmessage: 'Digita el Nombre de La Oficina', disabled: !editing, defaultValue: office.name },
-            { name: 'tipo', type: 'select', placeholder: 'Tipo de Negocio', validationmessage: 'Digita el Tipo de Negocio', disabled: !editing, defaultValue: office.location, items: types, getItemsNextToken: getItemsNextTokenSelectTypes }
+            { name: 'tipo', type: 'select', placeholder: 'Tipo de Negocio', validationmessage: 'Digita el Tipo de Negocio', disabled: !editing, defaultValue: office.categoryId, items: categories.filter(_ => _.typeName === 'Office'), getItemsNextToken: getItemsNextTokenSelectCategories }
         ];
-    }, [office, editing, getItemsNextTokenSelectTypes]);
+    }, [office, editing, getItemsNextTokenSelectCategories]);
 
     const formButtons = useMemo(() => [
         { name: 'cancelBtn', text: "Cancelar", className: CustomClasses.INTENT_DANGER, onClick: handleCloseEditing, type: 'button', loading: false, },
@@ -225,16 +226,16 @@ const mapStateToProps = state => ({
     nextToken: state.offices.nextToken,
     nextTokenTypes: state.types.nextToken,
     company: state.company.company,
-    types: state.types.types,
+    categories: state.categories.categories,
 })
 
 const mapDispatchToProps = dispatch => ({
     setOffice: office => dispatch(setOffice(office)),
     removeOffice: office => dispatch(removeOffice(office)),
     setItemsFromStore: data => dispatch(setItemsFromStore(data)),
-    setItemsFromStoreTypes: data => dispatch(setItemsFromStoreTypes(data)),
+    setItemsFromStoreCategories: data => dispatch(setItemsFromStoreCategories(data)),
     setNextToken: token => dispatch(setNextToken(token)),
-    setNextTokenTypes: token => dispatch(setNextTokenTypes(token)),
+    setNextTokenCategories: token => dispatch(setNextTokenCategories(token)),
     editOffice: office => dispatch(editOffice(office)),
 })
 
