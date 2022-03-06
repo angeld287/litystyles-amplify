@@ -124,11 +124,21 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
 
     //#region Mutation Actions
 
-    const onFormSubmit = (e) => {
-        //setLoadingForm(true);
+    const onFormSubmit = async (e) => {
+        setLoadingForm(true);
+        let mutationResult = false, alertTitle = 'Editar Oficina', input = { id: office.id, ...e };
         try {
-
+            mutationResult = await createUpdateItem('updateOffice', updateOffice, input);
             console.log(e)
+
+            if (mutationResult === false) {
+                swal({ title: alertTitle, text: 'Ha ocurrido un error al actualizar la oficina', type: "error", timer: 2000 });
+            } else {
+                _setOffice({ categoryId: e.categoryId, name: e.name, ...office })
+                editOffice({ ...office, categoryId: e.categoryId, name: e.name })
+                swal({ title: alertTitle, text: "La informacion se ha actualizado correctamente!", type: "sucess", timer: 2000 });
+            }
+            setLoadingForm(false);
             setEditing(false)
         } catch (e) {
             setLoadingForm(false)
@@ -161,7 +171,7 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
     const formFields = useMemo(() => {
         return [
             { name: 'name', placeholder: 'Nombre de La Oficina', validationmessage: 'Digita el Nombre de La Oficina', disabled: !editing, defaultValue: office.name },
-            { name: 'tipo', type: 'select', placeholder: 'Tipo de Negocio', validationmessage: 'Digita el Tipo de Negocio', disabled: !editing, defaultValue: office.categoryId, items: categories.filter(_ => _.typeName === 'Office'), getItemsNextToken: getItemsNextTokenSelectCategories }
+            { name: 'categoryId', type: 'select', placeholder: 'Tipo de Negocio', validationmessage: 'Digita el Tipo de Negocio', disabled: !editing, defaultValue: office.categoryId, items: categories.filter(_ => _.typeName === 'Office'), getItemsNextToken: getItemsNextTokenSelectCategories }
         ];
     }, [office, editing, getItemsNextTokenSelectCategories]);
 

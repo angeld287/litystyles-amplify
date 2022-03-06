@@ -262,7 +262,7 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
                 mutationResult = e.cost !== companyProductObj.product.cost ? await createUpdateItem('updateCompanyProduct', updateCompanyProduct, input) : true;
             }
 
-            console.log(mutationResult)
+            //console.log(mutationResult)
             if (mutationResult === false) {
                 swal({ title: messageTitle, text: errorText, type: "error", timer: 2000 });
             } else {
