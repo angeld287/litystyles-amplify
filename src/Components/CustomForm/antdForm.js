@@ -2,16 +2,11 @@ import React, { memo, useMemo } from 'react';
 import PropTypes from 'prop-types'
 
 import CustomButton from '../CustomButton';
-import CustomSelect from '../CustomSelect';
+import CustomSelect from '../CustomSelect/antdSelect';
+import CustomInputGroup from '../CustomInputGroup/antdInput';
 
-import { Form, Input, Button, Select } from 'antd';
+import { Form, Input, Select } from 'antd';
 
-const { Option } = Select;
-
-const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-};
 const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
 };
@@ -24,24 +19,21 @@ const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, loading })
     )), [buttons, loading])
 
     return (
-        <Form {...layout} form={form} name="control-hooks" onFinish={onSubmit}>
-            <Form.Item name="note" label="Note" rules={[{ required: true }]}>
-                <Input />
-            </Form.Item>
-            <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-                <Select
-                    placeholder="Select a option and change input text above"
-                //onChange={onGenderChange}
-                >
-                    <Option value="male">male</Option>
-                    <Option value="female">female</Option>
-                    <Option value="other">other</Option>
-                </Select>
-            </Form.Item>
+        <Form layout="vertical" form={form} name="control-hooks" onFinish={onSubmit}>
+            {fields.map(
+                _ => {
+                    return <div key={'form_' + _.name} >
+                        {(_.type === undefined || _.type === 'input') &&
+                            <CustomInputGroup disabled={_.disabled} defaultValue={_.defaultValue} />
+                        }
+                        {(_.type !== undefined && _.type === 'select') &&
+                            <CustomSelect id={'select_id_' + _.name} defaultValue={_.defaultValue} dataTestId={'select_id_' + _.name} key={'select_id_' + _.name} style={{ marginBottom: 10 }} items={_.items} placeholder="selecciona un elemento" getItemsNextToken={_.getItemsNextToken} disabled={_.disabled} />
+                        }
+                    </div>
+                }
+            )}
             <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
+                {_buttons}
             </Form.Item>
         </Form>
 
