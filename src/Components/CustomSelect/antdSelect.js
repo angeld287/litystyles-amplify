@@ -41,7 +41,7 @@ const CustomSelect = ({ id, dataTestId, items, onChange, defaultValue, getItemsN
         }
     }, [defaultValue]);
 
-    return <Form.Item name={name} label={placeholder} ><Select
+    return <Form.Item name={name} label={placeholder} initialValue={_dvalue !== undefined && _dvalue !== "" ? _dvalue : null} ><Select
         id={id}
         data-testid={dataTestId}
         loading={loading}
@@ -49,7 +49,7 @@ const CustomSelect = ({ id, dataTestId, items, onChange, defaultValue, getItemsN
         onSearch={onSearch}
         style={{ width: '100%' }}
         placeholder={placeholder}
-        defaultValue={_dvalue !== undefined && _dvalue !== "" ? _dvalue : null}
+        //defaultValue={_dvalue !== undefined && _dvalue !== "" ? _dvalue : null}
         defaultActiveFirstOption={false}
         onChange={onChange}
         optionFilterProp="children"

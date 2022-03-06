@@ -5,13 +5,13 @@ import { Input, Form } from 'antd';
 
 const CustomInputGroup = (props) => {
 
-    return <Form.Item name={props.name} label={props.placeholder} ><Input {...props} /></Form.Item>;
+    return <Form.Item name={props.name} label={props.label} initialValue={props.defaultValue} ><Input disabled={props.disabled} /></Form.Item>;
 }
 
 CustomInputGroup.propTypes = {
     disabled: PropTypes.bool,
     leftIcon: PropTypes.string,
-    placeholder: PropTypes.string,
+    label: PropTypes.string,
     name: PropTypes.string,
     className: PropTypes.string,
     style: PropTypes.object,

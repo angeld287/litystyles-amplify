@@ -24,17 +24,17 @@ const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, loading })
                 _ => {
                     return <div key={'form_' + _.name} >
                         {(_.type === undefined || _.type === 'input') &&
-                            <CustomInputGroup disabled={_.disabled} defaultValue={_.defaultValue} />
+                            <CustomInputGroup disabled={_.disabled} defaultValue={_.defaultValue} name={_.name} label={_.placeholder} />
                         }
                         {(_.type !== undefined && _.type === 'select') &&
-                            <CustomSelect id={'select_id_' + _.name} defaultValue={_.defaultValue} dataTestId={'select_id_' + _.name} key={'select_id_' + _.name} style={{ marginBottom: 10 }} items={_.items} placeholder="selecciona un elemento" getItemsNextToken={_.getItemsNextToken} disabled={_.disabled} />
+                            <CustomSelect id={'select_id_' + _.name} defaultValue={_.defaultValue} name={_.name} dataTestId={'select_id_' + _.name} key={'select_id_' + _.name} style={{ marginBottom: 10 }} items={_.items} placeholder={_.placeholder} getItemsNextToken={_.getItemsNextToken} disabled={_.disabled} />
                         }
                     </div>
                 }
             )}
-            <Form.Item {...tailLayout}>
+            <div style={{ textAlign: 'right' }}>
                 {_buttons}
-            </Form.Item>
+            </div>
         </Form>
 
     );

@@ -125,7 +125,7 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
     //#region Mutation Actions
 
     const onFormSubmit = (e) => {
-        setLoadingForm(true);
+        //setLoadingForm(true);
         try {
 
             console.log(e)
