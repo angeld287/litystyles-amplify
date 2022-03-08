@@ -25,6 +25,7 @@ import swal from 'sweetalert';
 
 import { Icon } from '@blueprintjs/core';
 import { Container, Row, Col, Card } from 'react-bootstrap';
+import CustomPlacesAutocomplete from '../../../Components/CustomPlacesAutocomplete';
 
 
 const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOffice, setItemsFromStore, setNextToken, editOffice, setItemsFromStoreCategories, categories, nextTokenCategories, setNextTokenCategories }) => {
@@ -147,6 +148,10 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
 
     //#endregion
 
+    const setValuePlaces = (e) => {
+        console.log(e)
+    }
+
     const handleOpenOffice = () => {
 
     }
@@ -213,6 +218,7 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                                     </Card>
                                 </Col>
                                 <Col>
+                                    <CustomPlacesAutocomplete setValue={setValuePlaces} />
                                 </Col>
                             </Row>
                         </Card.Body>

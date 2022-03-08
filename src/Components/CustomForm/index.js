@@ -31,7 +31,7 @@ const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, verticalBu
                         return <div key={'form_' + _.name} text-align='left'>
                             {hasDefaultValue && <Label htmlFor={'input_id_' + _.name}>{_.placeholder}</Label>}
                             {/*definition of elements*/}
-                            {(_.type === undefined || _.type === 'input') &&
+                            {(_.type === undefined || _.type === 'input' || _.type === 'password') &&
                                 <CustomInputGroup id={'input_id_' + _.name} key={'input_' + _.name} {..._} style={{ marginBottom: 10 }} autoComplete="on"
                                     inputRef={register({ required: { message: _.validationmessage, value: isRequired } })}
                                 />

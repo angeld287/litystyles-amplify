@@ -1,6 +1,5 @@
 import React from 'react';
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
-import { GOOGLE_MAPS_API_URL } from '../../utils/Constants'
+import { GoogleMap, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
     width: 'auto',
@@ -12,16 +11,25 @@ const center = {
     lng: -38.523
 };
 
-const CustomMap = () => <LoadScript>
-    <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={10}
-    >
-        { /* Child components, such as markers, info windows, etc.  googleMapsApiKey={GOOGLE_MAPS_API_URL}*/}
-        <></>
-    </GoogleMap>
-</LoadScript>
+const position = {
+    lat: 37.772,
+    lng: -122.214
+}
+
+const onLoad = marker => {
+    console.log('marker: ', marker)
+}
+
+const CustomMap = () => <GoogleMap
+    mapContainerStyle={containerStyle}
+    center={center}
+    zoom={10}
+>
+    <Marker
+        onLoad={onLoad}
+        position={position}
+    />
+</GoogleMap>
 
 
 export default CustomMap;

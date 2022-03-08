@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import HeaderLinks from '../Components/HeaderLinks';
 import Administration from '../Screens/Administration';
-import Employee from '../Screens/Employee'
 import Customer from '../Screens/Customer'
 import Reports from '../Screens/Reports'
 import Home from '../Screens/Home';
@@ -19,7 +18,6 @@ const Routes = ({ currentScreen, loadingScreen }) => {
             <HeaderLinks />
             {currentScreen === 'HOME' && <Home />}
             {currentScreen === 'COMPANY_ADMIN' && <Administration />}
-            {currentScreen === 'STYLIST' && <Employee />}
             {currentScreen === 'CUSTOMER' && <Customer />}
             {currentScreen === 'REPORTS' && <Reports />}
         </div>
