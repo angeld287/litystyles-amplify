@@ -1,35 +1,80 @@
-import React from 'react';
-import { GoogleMap, Marker } from '@react-google-maps/api';
+import React, { useState } from 'react';
+import { GoogleMap, Marker, StandaloneSearchBox } from '@react-google-maps/api';
 
-const containerStyle = {
-    width: 'auto',
-    height: '400px'
-};
+const mapContainerStyle = {
+    height: "400px",
+    width: "auto"
+}
 
 const center = {
-    lat: -3.745,
-    lng: -38.523
+    lat: 38.685,
+    lng: -115.234
 };
 
-const position = {
-    lat: 37.772,
-    lng: -122.214
-}
+const CustomMap = () => {
 
-const onLoad = marker => {
-    console.log('marker: ', marker)
-}
+    const [searchBox, setSearchBox] = useState(null);
+    const [position, setPosition] = useState(null);
 
-const CustomMap = () => <GoogleMap
-    mapContainerStyle={containerStyle}
-    center={center}
-    zoom={10}
->
-    <Marker
-        onLoad={onLoad}
-        position={position}
-    />
-</GoogleMap>
+    const onLoad = ref => {
+        setSearchBox(ref);
+    }
+
+    const onLoadMarker = ref => {
+        console.log(ref);
+    }
+
+    const onPlacesChanged = () => {
+        var places = searchBox.getPlaces()
+        console.log(places[0]);
+
+        console.log(places[0].geometry.location.lat())
+        console.log(places[0].geometry.location.lng())
+
+        setPosition({
+            lat: places[0].geometry.location.lat(),
+            lng: places[0].geometry.location.lng()
+        });
+    };
+
+    return (<GoogleMap
+        id="searchbox"
+        mapContainerStyle={mapContainerStyle}
+        zoom={15}
+        center={position}
+    >
+        <StandaloneSearchBox
+            onLoad={onLoad}
+            onPlacesChanged={
+                onPlacesChanged
+            }
+        >
+            <input
+                type="text"
+                placeholder="Cambiar de Ubicacion"
+                style={{
+                    boxSizing: `border-box`,
+                    border: `1px solid transparent`,
+                    width: `240px`,
+                    height: `32px`,
+                    padding: `0 12px`,
+                    borderRadius: `3px`,
+                    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                    fontSize: `14px`,
+                    outline: `none`,
+                    textOverflow: `ellipses`,
+                    position: "absolute",
+                    left: "50%",
+                    marginLeft: "-120px"
+                }}
+            />
+        </StandaloneSearchBox>
+        <Marker
+            onLoad={onLoadMarker}
+            position={position}
+        />
+    </GoogleMap>);
+}
 
 
 export default CustomMap;

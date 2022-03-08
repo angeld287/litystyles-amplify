@@ -200,7 +200,7 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                 <Col sm={2}><CustomButton loading={false} onClick={e => { e.preventDefault(); handleOpenOffice(null); }} >Abrir Oficina</CustomButton></Col>
             </Row>
             <Row style={{ marginTop: 10 }}>
-                <Col sm={8}>
+                <Col sm={6}>
                     <Card border="info">
                         <Card.Img variant="top" src={image} />
                         <Card.Body>
@@ -218,14 +218,15 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                                     </Card>
                                 </Col>
                                 <Col>
-                                    <CustomPlacesAutocomplete setValue={setValuePlaces} />
+                                    <p>Ubicacion Actual</p>
+                                    <p>Ubicacion Actual</p>
                                 </Col>
                             </Row>
                         </Card.Body>
                     </Card>
                     <br />
                 </Col>
-                <Col sm={4}>
+                <Col sm={6}>
                     <Card border="info">
                         <Card.Body>
                             <CustomTabs onSelectTab={onSelectTab} tabs={tabs} defaultTab={tabs[0].name} />
