@@ -34,6 +34,8 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
     const [errorForm, setErrorForm] = useState(false);
     const [errorFormMessage, setErrorFormMessage] = useState('');
     const [loadingForm, setLoadingForm] = useState(false);
+    const [location, setLocation] = useState(null);
+    const [loadingLocChange, setLoadingLocChange] = useState(false);
     const [officeCurrentTab, setCurrentTab] = useState('map');
     const [loading, setLoading] = useState({});
 
@@ -98,6 +100,15 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
 
                 _setOffice(_offices.length > 0 ? _offices[0] : null);
 
+                if (_offices.length > 0 && _offices[0].location !== undefined) {
+                    try {
+                        const obj = JSON.parse(_offices[0].location);
+                        setLocation(obj);
+                    } catch (e) {
+                        console.log("Ubicacion Incorrecta")
+                    }
+                }
+
                 setLoading(false);
             }
         };
@@ -130,7 +141,6 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
         let mutationResult = false, alertTitle = 'Editar Oficina', input = { id: office.id, ...e };
         try {
             mutationResult = await createUpdateItem('updateOffice', updateOffice, input);
-            console.log(e)
 
             if (mutationResult === false) {
                 swal({ title: alertTitle, text: 'Ha ocurrido un error al actualizar la oficina', type: "error", timer: 2000 });
@@ -140,9 +150,40 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                 swal({ title: alertTitle, text: "La informacion se ha actualizado correctamente!", type: "sucess", timer: 2000 });
             }
             setLoadingForm(false);
-            setEditing(false)
+            setEditing(false);
         } catch (e) {
-            setLoadingForm(false)
+            setLoadingForm(false);
+        }
+    }
+
+    const onLocationChange = async (places) => {
+        let place = places.length > 0 ? places[0] : null;
+        if (place !== null) {
+            setLoadingLocChange(true);
+
+            let place_obj = {
+                name: place.formatted_address,
+                location: {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng()
+                }
+            }
+
+            let mutationResult = false, alertTitle = 'Editar Oficina', input = { id: office.id, location: JSON.stringify(place_obj) };
+            try {
+                mutationResult = await createUpdateItem('updateOffice', updateOffice, input);
+
+                if (mutationResult === false) {
+                    swal({ title: alertTitle, text: 'Ha ocurrido un error al actualizar la oficina', type: "error", timer: 2000 });
+                } else {
+                    _setOffice({ ...office, location: place_obj })
+                    editOffice({ ...office, location: place_obj })
+                    setLocation(place_obj)
+                }
+                setLoadingLocChange(false);
+            } catch (e) {
+                setLoadingLocChange(false);
+            }
         }
     }
 
@@ -168,10 +209,16 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
         setEditing(true)
     }
 
-    const tabs = useMemo(() => [
-        { name: 'map', title: <div><Icon icon="map" />  Mapa</div>, children: <CustomMap /> },
-        { name: 'employees', title: <div><Icon icon="people" />  Empleados</div>, children: <Employees currentTab={officeCurrentTab} officeId={office.id} /> },
-    ], [office, officeCurrentTab]);
+    const tabs = useMemo(() => {
+        if (loading) {
+            return [];
+        } else {
+            return [
+                { name: 'map', title: <div><Icon icon="map" />  Mapa</div>, children: <CustomMap location={location.location} onLocationChanged={onLocationChange} /> },
+                { name: 'employees', title: <div><Icon icon="people" />  Empleados</div>, children: <Employees currentTab={officeCurrentTab} officeId={office.id} /> },
+            ];
+        }
+    }, [office, officeCurrentTab, loading]);
 
     const formFields = useMemo(() => {
         return [
@@ -206,7 +253,7 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                         <Card.Body>
                             <Card.Title>{office.name}</Card.Title>
                             <Card.Text>
-                                Oficina principal ubicada en {office.location}. Se ofrecen servicios de lavado del pelo, masajes, faciales, entre otros.
+                                Oficina principal ubicada en Ciudad Juan Bosh. Se ofrecen servicios de lavado del pelo, masajes, faciales, entre otros.
                             </Card.Text>
                             <Row style={{ marginTop: 10 }}>
                                 <Col>
@@ -219,7 +266,7 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                                 </Col>
                                 <Col>
                                     <p>Ubicacion Actual</p>
-                                    <p>Ubicacion Actual</p>
+                                    <p>{location.name}</p>
                                 </Col>
                             </Row>
                         </Card.Body>

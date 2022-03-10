@@ -1,53 +1,32 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { GoogleMap, Marker, StandaloneSearchBox } from '@react-google-maps/api';
+import PropTypes from 'prop-types'
 
 const mapContainerStyle = {
     height: "400px",
     width: "auto"
 }
 
-const center = {
-    lat: 38.685,
-    lng: -115.234
-};
-
-const CustomMap = () => {
-
+const CustomMap = ({ location, onLocationChanged }) => {
     const [searchBox, setSearchBox] = useState(null);
-    const [position, setPosition] = useState(null);
 
-    const onLoad = ref => {
+    const onLoad = (ref) => {
         setSearchBox(ref);
     }
 
-    const onLoadMarker = ref => {
-        console.log(ref);
-    }
-
-    const onPlacesChanged = () => {
-        var places = searchBox.getPlaces()
-        console.log(places[0]);
-
-        console.log(places[0].geometry.location.lat())
-        console.log(places[0].geometry.location.lng())
-
-        setPosition({
-            lat: places[0].geometry.location.lat(),
-            lng: places[0].geometry.location.lng()
-        });
-    };
+    const onPlacesChanged = useCallback(() => {
+        onLocationChanged(searchBox.getPlaces());
+    }, [onLocationChanged, searchBox]);
 
     return (<GoogleMap
         id="searchbox"
         mapContainerStyle={mapContainerStyle}
         zoom={15}
-        center={position}
+        center={location}
     >
         <StandaloneSearchBox
             onLoad={onLoad}
-            onPlacesChanged={
-                onPlacesChanged
-            }
+            onPlacesChanged={onPlacesChanged}
         >
             <input
                 type="text"
@@ -69,11 +48,18 @@ const CustomMap = () => {
                 }}
             />
         </StandaloneSearchBox>
-        <Marker
-            onLoad={onLoadMarker}
-            position={position}
-        />
+        <Marker position={location} />
     </GoogleMap>);
+}
+
+CustomMap.propTypes = {
+    location: PropTypes.object,
+    onLocationChanged: PropTypes.func,
+}
+
+CustomMap.defaultProps = {
+    location: { lat: 18.4657614, lng: -69.936461 },
+    onLocationChanged: () => { }
 }
 
 
