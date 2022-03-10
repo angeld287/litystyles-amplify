@@ -5,11 +5,7 @@ import CustomButton from '../CustomButton';
 import CustomSelect from '../CustomSelect/antdSelect';
 import CustomInputGroup from '../CustomInputGroup/antdInput';
 
-import { Form, Input, Select } from 'antd';
-
-const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
-};
+import { Form, } from 'antd';
 
 const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, loading }) => {
     const [form] = Form.useForm();

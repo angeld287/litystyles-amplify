@@ -7,12 +7,12 @@ import CustomForm from '../CustomForm';
 import { CustomClasses } from '../../utils/Constants';
 
 const CustomModal = (props) => {
-    const { show, handleClose, title, withOutClose } = props;
+    const { show, handleClose, title, withOutClose, saveButtonText } = props;
     const noFunction = () => { return null }
 
     const buttons = useMemo(() => [
         { name: 'cancelBtn', text: "Cancelar", className: CustomClasses.INTENT_DANGER, onClick: handleClose, type: 'button', loading: false, },
-        { name: 'saveBtn', text: "Guardar", }
+        { name: 'saveBtn', text: saveButtonText, }
     ], [handleClose]);
 
     return (
@@ -37,6 +37,7 @@ CustomModal.propTypes = {
     button: PropTypes.object,
     withOutClose: PropTypes.bool,
     onSubmit: PropTypes.func,
+    saveButtonText: PropTypes.string,
 }
 
 export default memo(CustomModal);

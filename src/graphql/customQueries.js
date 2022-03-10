@@ -303,3 +303,37 @@ export const getOfficeEmployees = /* GraphQL */ `
     }
   }
 `;
+
+
+/*********************************
+*
+*   EMPLOYEES CUSTOM QUERY
+*
+**********************************/
+export const listEmployees = /* GraphQL */ `
+  query ListEmployees(
+    $filter: ModelEmployeeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmployees(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        username
+        officeId
+        phoneid
+        phone_number
+        image
+        services {
+          nextToken
+        }
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;

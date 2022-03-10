@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { GoogleMap, Marker, StandaloneSearchBox } from '@react-google-maps/api';
 import PropTypes from 'prop-types'
 
