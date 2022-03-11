@@ -297,6 +297,9 @@ export const getOfficeEmployees = /* GraphQL */ `
           phone_number
           image
           deleted
+          services {
+            nextToken
+          }
         }
         nextToken
       }
@@ -329,9 +332,6 @@ export const listEmployees = /* GraphQL */ `
           nextToken
         }
         deleted
-        deletedAt
-        createdAt
-        owner
       }
       nextToken
     }

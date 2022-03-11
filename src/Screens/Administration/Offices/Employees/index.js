@@ -16,9 +16,12 @@ import CustomButton from '../../../../Components/CustomButton';
 
 import aws_exports from '../../../../aws-exports';
 
-const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromStore, setNextToken }) => {
+import swal from 'sweetalert';
+
+const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromStore, setNextToken, setEmployee, removeEmployee }) => {
     const [loading, setLoading] = useState(false);
     const [employeesList, setEmployees] = useState([]);
+    const [unlinkLoading, setUnlinkLoading] = useState("")
     const [showModal, setShowModal] = useState(false);
     const [modalError, setModalError] = useState(false);
     const [modalErrorMessage, setModalErrorMessage] = useState("");
@@ -95,14 +98,29 @@ const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromSto
                 return false;
             }
         } catch (e) {
+            console.log(e)
             return false;
         }
     }
 
     //#region Mutation Actions
 
-    const handleUnlinkEmployee = (e) => {
-        console.log(e)
+    const handleUnlinkEmployee = async (e) => {
+        setUnlinkLoading(e.id);
+        let parameters = {};
+
+        //unassociate the current office to from employee
+        parameters = { id: e.id, officeEmployeesId: 'nan', officeId: 'nan' };
+        let mutationResult = false;
+        mutationResult = await createUpdateItem('updateEmployee', updateEmployee, parameters);
+
+        if (mutationResult !== false) {
+            removeEmployee(mutationResult);
+            swal({ title: "Desvinculacion de Empleado", text: "El empleado ha sigo desvinculado exitosamente!", type: "sucess", timer: 2000 });
+        } else {
+            swal({ title: "Desvinculacion de Empleado", text: "Ha ocurrido un erro al desvincular el empleado.", type: "error", timer: 2000 });
+        }
+        setUnlinkLoading("");
     }
 
     const onSubmitModal = async (e) => {
@@ -125,14 +143,42 @@ const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromSto
                 }
 
                 if (_employee.length > 0) {
+                    //if the employee exist on db, verify if has an associated office.
                     const employee = _employee[0];
                     if (employee.officeId !== "nan" && employee.officeId !== "") {
                         setModalError(true);
                         setModalErrorMessage("Este Empleado ya tiene una oficina asociada");
                         return null;
                     }
-                } else {
 
+                    //associate the current office to the employees
+                    parameters = { id: employee.id, officeId: officeId, officeEmployeesId: officeId };
+                    let mutationResult = false;
+                    mutationResult = await createUpdateItem('updateEmployee', updateEmployee, parameters);
+
+                    if (mutationResult !== false) {
+                        setEmployee(mutationResult);
+                        handleShowModal();
+                        swal({ title: "Agregar Empleado", text: "El empleado ha sigo agregado exitosamente!", type: "sucess", timer: 2000 });
+                    } else {
+                        setModalError(true);
+                        setModalErrorMessage("Ha ocurrido un error agregando el empleado a la oficina");
+                        console.log(mutationResult)
+                    }
+                } else {
+                    //create the employee and associate the office.
+                    parameters = { name: user.Attributes[0].Value, username: user.Username, officeId: officeId, officeEmployeesId: officeId };
+                    let mutationResult = false;
+                    mutationResult = await createUpdateItem('createEmployee', createEmployee, parameters);
+
+                    if (mutationResult !== false) {
+                        setEmployee(mutationResult);
+                        handleShowModal();
+                        swal({ title: "Agregar Empleado", text: "El empleado ha sigo agregado exitosamente!", type: "sucess", timer: 2000 });
+                    } else {
+                        setModalError(true);
+                        setModalErrorMessage("Ha ocurrido un error agregando el empleado a la oficina");
+                    }
                 }
 
             } else {
@@ -167,7 +213,7 @@ const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromSto
                 setEmployees(employees.map(e => ({
                     nombre: e.name,
                     acciones: [
-                        { id: e.id, color: 'blue', icon: 'blocked-person', onClick: () => { handleUnlinkEmployee(e) }, text: "" },
+                        { id: e.id, color: 'blue', loading: unlinkLoading === e.id, icon: 'blocked-person', onClick: () => { handleUnlinkEmployee(e) }, text: "" },
                     ],
                     id: e.id
                 })))
@@ -175,7 +221,7 @@ const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromSto
         } catch (error) {
             throw new Error('Employees - xx: ', error);
         }
-    }, [employees, setEmployees]);
+    }, [employees, setEmployees, unlinkLoading]);
 
     const tableHeaders = useMemo(() => ['Nombre', 'Acciones'], []);
     const tableItems = useMemo(() => employeesList, [employeesList]);
