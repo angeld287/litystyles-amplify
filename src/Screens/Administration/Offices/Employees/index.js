@@ -1,10 +1,10 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState, useEffect, useCallback } from 'react'
 import { Container, Row, Col } from 'react-bootstrap';
 import CustomTable from '../../../../Components/CustomTable';
 
 import { getOfficeEmployees, listEmployees } from "../../../../graphql/customQueries"
 import { createEmployee, updateEmployee } from "../../../../graphql/customMutations"
-import { getList, getItemById, createUpdateItem, deleteItem } from "../../../../services/AppSync"
+import { getList, createUpdateItem } from "../../../../services/AppSync"
 import { findCognitoUser } from "../../../../services/Lambda"
 
 import { QUERY_LIMIT } from '../../../../utils/Constants';
@@ -105,7 +105,7 @@ const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromSto
 
     //#region Mutation Actions
 
-    const handleUnlinkEmployee = async (e) => {
+    const handleUnlinkEmployee = useCallback(async (e) => {
         setUnlinkLoading(e.id);
         let parameters = {};
 
@@ -121,25 +121,23 @@ const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromSto
             swal({ title: "Desvinculacion de Empleado", text: "Ha ocurrido un erro al desvincular el empleado.", type: "error", timer: 2000 });
         }
         setUnlinkLoading("");
-    }
+    }, [setUnlinkLoading, removeEmployee]);
 
     const onSubmitModal = async (e) => {
         const users = await handleFindUser(e.email);
         if (users !== false) {
             if (users.length > 0) {
                 const user = users[0];
-                let parameters = {}, result = {}, _employee = [], tokens = null;
+                let parameters = {}, result = {}, _employee = [];
 
                 //search user in the db
                 parameters = { limit: QUERY_LIMIT, filter: { username: { eq: user.Username }, deleted: { ne: true } } };
                 result = await getList('listEmployees', listEmployees, parameters);
                 _employee = result.items;
-                tokens = result.nextToken
                 while (_employee.length < QUERY_LIMIT && result.nextToken !== null) {
                     parameters.nextToken = result.nextToken;
                     result = await getList('listEmployees', listEmployees, parameters);
                     _employee = [..._employee, ...result.items];
-                    tokens = result.nextToken
                 }
 
                 if (_employee.length > 0) {
@@ -205,7 +203,7 @@ const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromSto
         return [
             { name: 'email', placeholder: 'Email del Empleado', validationmessage: 'Digita el Email', disabled: false },
         ];
-    });
+    }, []);
 
     useEffect(() => {
         try {
@@ -221,7 +219,7 @@ const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromSto
         } catch (error) {
             throw new Error('Employees - xx: ', error);
         }
-    }, [employees, setEmployees, unlinkLoading]);
+    }, [employees, setEmployees, unlinkLoading, handleUnlinkEmployee]);
 
     const tableHeaders = useMemo(() => ['Nombre', 'Acciones'], []);
     const tableItems = useMemo(() => employeesList, [employeesList]);

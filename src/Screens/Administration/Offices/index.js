@@ -1,8 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import CustomButton from '../../../Components/CustomButton';
-import CustomModal from '../../../Components/CustomModal';
 import CustomSelect from '../../../Components/CustomSelect';
-import CustomTable from '../../../Components/CustomTable';
 import CustomTabs from '../../../Components/CustomTabs';
 import CustomMap from '../../../Components/CustomMap';
 import CustomForm from '../../../Components/CustomForm/antdForm';
@@ -12,8 +9,8 @@ import Employees from './Employees';
 import image from "../../../images/SalonBelleza.jpg"
 
 import { getCompanyOffices, listCategorys } from "../../../graphql/customQueries"
-import { createOffice, updateOffice } from "../../../graphql/customMutations"
-import { getList, getItemById, createUpdateItem, deleteItem } from "../../../services/AppSync"
+import { updateOffice } from "../../../graphql/customMutations"
+import { getList, createUpdateItem } from "../../../services/AppSync"
 
 import { QUERY_LIMIT } from '../../../utils/Constants'
 
@@ -25,14 +22,11 @@ import swal from 'sweetalert';
 
 import { Icon } from '@blueprintjs/core';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import CustomPlacesAutocomplete from '../../../Components/CustomPlacesAutocomplete';
 
 
-const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOffice, setItemsFromStore, setNextToken, editOffice, setItemsFromStoreCategories, categories, nextTokenCategories, setNextTokenCategories }) => {
+const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories, removeOffice, setItemsFromStore, setNextToken, editOffice, setItemsFromStoreCategories, categories, setNextTokenCategories }) => {
     const [office, _setOffice] = useState({});
     const [editing, setEditing] = useState(false);
-    const [errorForm, setErrorForm] = useState(false);
-    const [errorFormMessage, setErrorFormMessage] = useState('');
     const [loadingForm, setLoadingForm] = useState(false);
     const [location, setLocation] = useState(null);
     const [loadingLocChange, setLoadingLocChange] = useState(false);
@@ -121,15 +115,35 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
             setLoading(false)
         };
 
-    }, [setNextToken, setItemsFromStore, company, currentTab, offices, nextToken])
+    }, [setNextToken, setItemsFromStore, company, currentTab, offices, nextToken, categories, nextTokenCategories, setItemsFromStoreCategories, setNextTokenCategories])
 
     const getItemsNextTokenSelect = () => {
 
     }
 
-    const getItemsNextTokenSelectCategories = () => {
+    const getItemsNextTokenSelectCategories = useCallback(async () => {
+        var result = [];
+        var parameters = {};
+        var tokens = nextTokenCategories;
+        var _categories = [];
 
-    }
+        if (tokens !== null) {
+            try {
+
+                parameters = { limit: QUERY_LIMIT, filter: { deleted: { ne: true } }, nextToken: tokens };
+                result = await getList('listCategorys', listCategorys, parameters);
+                _categories = result.items;
+                tokens = result.nextToken
+
+                setItemsFromStoreCategories([...categories, ..._categories]);
+                setNextTokenCategories(tokens);
+
+            } catch (e) {
+                console.log(e)
+                throw new Error('Offices - xx: ', e)
+            }
+        }
+    }, [nextTokenCategories, setNextTokenCategories, setItemsFromStoreCategories, categories]);
 
     //#endregion
 
@@ -156,7 +170,7 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
         }
     }
 
-    const onLocationChange = async (places) => {
+    const onLocationChange = useCallback(async (places) => {
         let place = places.length > 0 ? places[0] : null;
         if (place !== null) {
             setLoadingLocChange(true);
@@ -185,29 +199,21 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                 setLoadingLocChange(false);
             }
         }
-    }
+    }, [setLoadingLocChange, setLocation, editOffice, _setOffice, office]);
 
     //#endregion
-
-    const setValuePlaces = (e) => {
-        console.log(e)
-    }
-
-    const handleOpenOffice = () => {
-
-    }
 
     const onSelectTab = (e) => {
         setCurrentTab(e);
     }
 
-    const handleCloseEditing = () => {
+    const handleCloseEditing = useCallback(() => {
         setEditing(false)
-    }
+    }, [setEditing]);
 
-    const handleOpenToEdit = () => {
+    const handleOpenToEdit = useCallback(() => {
         setEditing(true)
-    }
+    }, [setEditing]);
 
     const tabs = useMemo(() => {
         if (loading) {
@@ -218,14 +224,14 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                 { name: 'employees', title: <div><Icon icon="people" />  Empleados</div>, children: <Employees currentTab={officeCurrentTab} officeId={office.id} /> },
             ];
         }
-    }, [office, officeCurrentTab, loading]);
+    }, [office, officeCurrentTab, loading, location, onLocationChange]);
 
     const formFields = useMemo(() => {
         return [
             { name: 'name', placeholder: 'Nombre de La Oficina', validationmessage: 'Digita el Nombre de La Oficina', disabled: !editing, defaultValue: office.name },
             { name: 'categoryId', type: 'select', placeholder: 'Tipo de Negocio', validationmessage: 'Digita el Tipo de Negocio', disabled: !editing, defaultValue: office.categoryId, items: categories.filter(_ => _.typeName === 'Office'), getItemsNextToken: getItemsNextTokenSelectCategories }
         ];
-    }, [office, editing, getItemsNextTokenSelectCategories]);
+    }, [office, editing, getItemsNextTokenSelectCategories, categories]);
 
     const formButtons = useMemo(() => [
         { name: 'cancelBtn', text: "Cancelar", className: CustomClasses.INTENT_DANGER, onClick: handleCloseEditing, type: 'button', loading: false, },
@@ -244,7 +250,6 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                 <Col sm={5}>
                     <CustomSelect id="offices" dataTestId="select-offices" defaultValue={office} onChange={e => _setOffice(e)} items={offices} getItemsNextToken={getItemsNextTokenSelect} />
                 </Col>
-                <Col sm={2}><CustomButton loading={false} onClick={e => { e.preventDefault(); handleOpenOffice(null); }} >Abrir Oficina</CustomButton></Col>
             </Row>
             <Row style={{ marginTop: 10 }}>
                 <Col sm={6}>
@@ -260,7 +265,7 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
                                     <Card align="left">
                                         <Card.Header></Card.Header>
                                         <Card.Body>
-                                            <CustomForm buttons={editing ? formButtons : formButtonEdit} fields={formFields} onSubmit={onFormSubmit} error={errorForm} errorMessage={errorFormMessage} loading={loadingForm} />
+                                            <CustomForm buttons={editing ? formButtons : formButtonEdit} fields={formFields} onSubmit={onFormSubmit} loading={loadingForm} />
                                         </Card.Body>
                                     </Card>
                                 </Col>
@@ -288,7 +293,7 @@ const Offices = ({ currentTab, offices, nextToken, company, setOffice, removeOff
 const mapStateToProps = state => ({
     offices: state.offices.offices,
     nextToken: state.offices.nextToken,
-    nextTokenTypes: state.types.nextToken,
+    nextTokenCategories: state.categories.nextToken,
     company: state.company.company,
     categories: state.categories.categories,
 })

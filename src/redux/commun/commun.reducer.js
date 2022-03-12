@@ -1,7 +1,7 @@
 import { Types } from './commun.types'
 
 const INITIAL_STATES = {
-    currentScreen: 'COMPANY_ADMIN',
+    currentScreen: 'CUSTOMER',
     loadingScreen: false
 };
 

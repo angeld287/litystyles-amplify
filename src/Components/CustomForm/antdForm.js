@@ -7,7 +7,7 @@ import CustomInputGroup from '../CustomInputGroup/antdInput';
 
 import { Form, } from 'antd';
 
-const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, loading }) => {
+const CustomForm = ({ onSubmit, fields, buttons, loading }) => {
     const [form] = Form.useForm();
 
     const _buttons = useMemo(() => buttons.map(b => (
@@ -38,8 +38,6 @@ const CustomForm = ({ onSubmit, error, errorMessage, fields, buttons, loading })
 
 CustomForm.propTypes = {
     onSubmit: PropTypes.func,
-    error: PropTypes.bool,
-    errorMessage: PropTypes.string,
     fields: PropTypes.array,
     buttons: PropTypes.array,
     verticalButtons: PropTypes.bool,

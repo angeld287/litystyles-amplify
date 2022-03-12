@@ -13,7 +13,7 @@ const CustomModal = (props) => {
     const buttons = useMemo(() => [
         { name: 'cancelBtn', text: "Cancelar", className: CustomClasses.INTENT_DANGER, onClick: handleClose, type: 'button', loading: false, },
         { name: 'saveBtn', text: saveButtonText, }
-    ], [handleClose]);
+    ], [handleClose, saveButtonText]);
 
     return (
         <Modal show={show} onHide={!withOutClose ? handleClose : noFunction}>

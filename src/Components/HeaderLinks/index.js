@@ -35,7 +35,7 @@ const HeaderLinks = ({ setCurrentUser, setCurrentScreen, currentUser }) => {
                 <Navbar.Divider />
                 <Button className="bp3-minimal" onClick={(e) => { e.preventDefault(); setCurrentScreen('HOME') }} icon="home" />
                 {userRoles !== null && userRoles.indexOf('company_admin') !== -1 && <Button className="bp3-minimal" onClick={(e) => { e.preventDefault(); setCurrentScreen('COMPANY_ADMIN') }} icon="wrench" />}
-                {userRoles !== null && userRoles.indexOf('employee') !== -1 && <Button className="bp3-minimal" onClick={(e) => { e.preventDefault(); setCurrentScreen('STYLIST') }} icon="cut" />}
+                {/* {userRoles !== null && userRoles.indexOf('employee') !== -1 && <Button className="bp3-minimal" onClick={(e) => { e.preventDefault(); setCurrentScreen('STYLIST') }} icon="cut" />} */}
                 {userRoles !== null && (userRoles.indexOf('company_admin') !== -1 && userRoles.indexOf('supplier') === -1) && <Button className="bp3-minimal" onClick={(e) => { e.preventDefault(); setCurrentScreen('CUSTOMER') }} icon="people" />}
                 {userRoles !== null && userRoles.indexOf('company_admin') !== -1 && <Button className="bp3-minimal" onClick={(e) => { e.preventDefault(); setCurrentScreen('REPORTS') }} icon="chart" />}
             </Navbar.Group>
