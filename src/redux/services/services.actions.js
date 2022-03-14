@@ -22,6 +22,20 @@ export const setItemsFromStore = (data) => {
     }
 }
 
+export const setCompanyServicesItemsFromStore = (data) => {
+    return {
+        type: Types.SET_COMPANY_SERVICES_ITEMS,
+        payload: data
+    }
+}
+
+export const setCompanyServicesNextToken = (token) => {
+    return {
+        type: Types.SET_COMPANY_SERVICES_NEXT_TOKEN,
+        payload: token
+    }
+}
+
 export const setNextToken = (token) => {
     return {
         type: Types.SET_NEXT_TOKEN,

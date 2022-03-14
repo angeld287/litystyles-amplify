@@ -337,3 +337,32 @@ export const listEmployees = /* GraphQL */ `
     }
   }
 `;
+
+/*********************************
+*
+*   COMPANY CUSTOM QUERY
+*
+**********************************/
+
+export const listCompanys = /* GraphQL */ `
+  query ListCompanys(
+    $filter: ModelCompanyFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        assistant
+        owner
+        offices {
+          items {
+            id
+          }
+        }
+      }
+      nextToken
+    }
+  }
+`;

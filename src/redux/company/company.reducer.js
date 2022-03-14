@@ -1,7 +1,7 @@
 import { Types } from './company.types'
 
 const INITIAL_STATES = {
-    company: { id: "acdf97db-9126-46a5-8371-8f04d08c3018" },
+    company: null,
     nextToken: {},
 }
 const companyReducer = (state = INITIAL_STATES, action) => {

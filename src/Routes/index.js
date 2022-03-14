@@ -7,6 +7,7 @@ import Customer from '../Screens/Customer'
 import Reports from '../Screens/Reports'
 import Home from '../Screens/Home';
 import CustomSpinner from '../Components/CustomSpinner';
+import ErrorBoundary from '../Components/ErrorBoundary'
 
 
 const Routes = ({ currentScreen, loadingScreen }) => {
@@ -16,10 +17,10 @@ const Routes = ({ currentScreen, loadingScreen }) => {
     return (
         <div className="App">
             <HeaderLinks />
-            {currentScreen === 'HOME' && <Home />}
-            {currentScreen === 'COMPANY_ADMIN' && <Administration />}
-            {currentScreen === 'CUSTOMER' && <Customer />}
-            {currentScreen === 'REPORTS' && <Reports />}
+            {currentScreen === 'HOME' && <ErrorBoundary><Home /></ErrorBoundary>}
+            {currentScreen === 'COMPANY_ADMIN' && <ErrorBoundary><Administration /></ErrorBoundary>}
+            {currentScreen === 'CUSTOMER' && <ErrorBoundary><Customer /></ErrorBoundary>}
+            {currentScreen === 'REPORTS' && <ErrorBoundary><Reports /></ErrorBoundary>}
         </div>
     );
 

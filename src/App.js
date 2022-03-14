@@ -7,10 +7,15 @@ import aws_exports from './aws-exports';
 import Routes from './Routes';
 import CustomSignIn from './Components/Authentication/CustomSignIn';
 
+import { listCompanys } from "./graphql/customQueries";
+import { getList } from "./services/AppSync";
+import { QUERY_LIMIT } from "./utils/Constants"
+
 import { withAuthenticator, AmplifyTheme, ConfirmSignIn, ConfirmSignUp, ForgotPassword, RequireNewPassword, SignUp, VerifyContact } from 'aws-amplify-react'
 import { connect } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
 import { setLoadingScreen } from './redux/commun/commun.actions'
+import { setCompany } from './redux/company/company.actions'
 
 Amplify.configure(aws_exports);
 
@@ -53,8 +58,40 @@ const signUpConfig = {
   }
 };
 
-const Application = ({ setCurrentUser }) => {
+const Application = ({ setCurrentUser, setCompany, setLoadingScreen, company }) => {
   setLoadingScreen(true)
+
+  const fetchCompany = async (currentUser) => {
+    try {
+      var result = [], _company = company, parameters = {}, token = "";
+
+      //get products
+      if (company === null) {
+
+        parameters = { limit: QUERY_LIMIT, filter: { owner: { eq: currentUser.username }, deleted: { ne: true } } };
+        result = await getList('listCompanys', listCompanys, parameters);
+        _company = result.items;
+        token = result.nextToken
+
+        while (_company.length === 0 && result.nextToken !== null) {
+          parameters.nextToken = result.nextToken;
+          result = await getList('listCompanys', listCompanys, parameters);
+          _company = [..._company, ...result.items];
+          token = result.nextToken
+        }
+
+        if (_company.length !== 0) {
+          setCompany(_company[0])
+        }
+
+      }
+      setLoadingScreen(false)
+    } catch (e) {
+      console.log(e);
+      setLoadingScreen(false)
+    }
+  }
+
   useEffect(() => {
     let currentUserLS = JSON.parse(sessionStorage.getItem('CURRENT_USER_SESSION'));
     if (typeof currentUserLS !== 'object') {
@@ -62,19 +99,24 @@ const Application = ({ setCurrentUser }) => {
         sessionStorage.setItem('CURRENT_USER_SESSION', null);
       });
     } else {
-      setCurrentUser(currentUserLS)
+      setCurrentUser(currentUserLS);
+      fetchCompany(currentUserLS)
     }
-    //setLoadingScreen(false)
   });
 
   return <Routes />;
 }
 
+const mapStateToProps = state => ({
+  company: state.company.company,
+})
+
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user)),
   setLoadingScreen: loading => dispatch(setLoadingScreen(loading)),
+  setCompany: company => dispatch(setCompany(company)),
 })
 
-const connectApplication = connect(null, mapDispatchToProps)(Application)
+const connectApplication = connect(mapStateToProps, mapDispatchToProps)(Application)
 
 export default withAuthenticator(connectApplication, false, authenticatorComponents, null, authTheme, signUpConfig)

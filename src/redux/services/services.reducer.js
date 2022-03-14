@@ -6,6 +6,7 @@ const INITIAL_STATES = {
     companyService: {},
     services: [],
     nextToken: { servicesNextToken: "", companyServicesNextToken: "" },
+    companyServicesNextToken: null,
 }
 const servicesReducer = (state = INITIAL_STATES, action) => {
     switch (action.type) {
@@ -34,6 +35,16 @@ const servicesReducer = (state = INITIAL_STATES, action) => {
                 ...state,
                 services: action.payload.services,
                 companyServices: action.payload.companyServices
+            }
+        case Types.SET_COMPANY_SERVICES_ITEMS:
+            return {
+                ...state,
+                companyServices: action.payload
+            }
+        case Types.SET_COMPANY_SERVICES_NEXT_TOKEN:
+            return {
+                ...state,
+                companyServicesNextToken: action.payload
             }
         case Types.SET_NEXT_TOKEN:
             return {

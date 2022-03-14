@@ -11,13 +11,13 @@ import { getList, getItemById, createUpdateItem, deleteItem } from "../../../ser
 import { QUERY_LIMIT } from '../../../utils/Constants'
 
 import { connect } from 'react-redux';
-import { setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, editCompanyService } from '../../../redux/services/services.actions'
+import { setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, editCompanyService, setCompanyServicesNextToken } from '../../../redux/services/services.actions'
 
 import swal from 'sweetalert';
 
 import { Container, Row, Col } from 'react-bootstrap';
 
-const Services = ({ currentTab, _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, company, companyServicesNextToken, servicesNextToken, editCompanyService }) => {
+const Services = ({ currentTab, _companyServices, services, setCompanyService, removeCompanyService, setItemsFromStore, setNextToken, company, companyServicesNextToken, servicesNextToken, editCompanyService, setCompanyServicesNextToken }) => {
 
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(false);
@@ -85,6 +85,7 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
                         services: _services,
                         companyServices: __companyServices
                     });
+                    setCompanyServicesNextToken(tokens.companyServicesNextToken)
                     setNextToken(tokens);
                 }
 
@@ -389,6 +390,7 @@ const mapDispatchToProps = dispatch => ({
     setItemsFromStore: data => dispatch(setItemsFromStore(data)),
     setNextToken: token => dispatch(setNextToken(token)),
     editCompanyService: companyService => dispatch(editCompanyService(companyService)),
+    setCompanyServicesNextToken: token => dispatch(setCompanyServicesNextToken(token)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Services)
