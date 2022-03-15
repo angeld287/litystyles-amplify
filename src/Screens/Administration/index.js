@@ -7,7 +7,7 @@ import Products from './Products'
 import Offices from './Offices'
 
 const Administration = () => {
-    const [currentTab, setCurrentTab] = useState('offices');
+    const [currentTab, setCurrentTab] = useState('requests');
     const onSelectTab = useCallback((e) => {
         setCurrentTab(e)
     }, []);
@@ -19,7 +19,7 @@ const Administration = () => {
         { name: 'products', title: <Icon icon="shopping-cart" />, children: <Products currentTab={currentTab} /> },
     ], [currentTab]);
 
-    return <CustomTabs onSelectTab={onSelectTab} tabs={tabs} defaultTab={tabs[1].name} />;
+    return <CustomTabs onSelectTab={onSelectTab} tabs={tabs} defaultTab={tabs[0].name} />;
 }
 
 export default Administration;

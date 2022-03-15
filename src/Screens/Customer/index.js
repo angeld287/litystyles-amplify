@@ -141,37 +141,45 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
     //#endregion
 
     const createRequest = async () => {
-        setLoading(true);
-        const _date = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z';
-        const ri = { state: 'ON_HOLD', customerName: customerName, companyId: company.id, date: _date, createdAt: _date, paymentType: "CASH", resposibleName: selectedEmployee.username };
+        try {
+            setLoading(true);
+            const _date = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z';
+            const ri = { state: 'ON_HOLD', customerName: customerName, companyId: company.id, date: _date, createdAt: _date, paymentType: "CASH", resposibleName: selectedEmployee.username };
 
-        let requestInsert = await createUpdateItem('createRequest', _createRequest, ri);
+            let requestInsert = await createUpdateItem('createRequest', _createRequest, ri);
 
-        if (requestInsert === false) {
-            swal({ title: "Creacion de Solicitud", text: "Ha ocurrido un error al crear la solicitud", icon: "error", timer: 2000 });
+            if (requestInsert === false) {
+                swal({ title: "Creacion de Solicitud", text: "Ha ocurrido un error al crear la solicitud", icon: "error", timer: 2000 });
+                setLoading(false);
+                setInitialStates();
+            } else {
+                const rei = { cost: selectedService.cost, createdAt: _date, requestEmployeeEmployeeId: selectedEmployee.id }
+                const rsi = { cost: selectedService.cost, createdAt: _date, requestServiceServiceId: selectedService.id }
+                rei.requestEmployeeRequestId = requestInsert.id;
+                rsi.requestServiceRequestId = requestInsert.id;
+                rsi.resposibleName = ri.resposibleName;
+
+                let serviceInsert = await createUpdateItem('createRequestService', createRequestService, rsi);
+                let employeeInsert = await createUpdateItem('createRequestEmployee', createRequestEmployee, rei);
+
+                if (serviceInsert === false || employeeInsert === false) {
+                    swal({ title: "Creacion de Solicitud", text: "Ha ocurrido un error al crear los elementos asociados a la solitud", icon: "error", timer: 2000 });
+                    setInitialStates();
+                    setLoading(false);
+
+                } else {
+                    setRequest(requestInsert);
+                    swal({ title: "Creacion de Solicitud", text: "La solicitud ha sido creada correctamente!", icon: "success", timer: 2000 });
+                    setInitialStates();
+                    setLoading(false);
+
+                }
+            }
+        } catch (e) {
+            console.log(e)
             setLoading(false);
             setInitialStates();
-        } else {
-            const rei = { cost: selectedService.cost, createdAt: _date, requestEmployeeEmployeeId: selectedEmployee.id }
-            const rsi = { cost: selectedService.cost, createdAt: _date, requestServiceServiceId: selectedService.id }
-            rei.requestEmployeeRequestId = requestInsert.id;
-            rsi.requestServiceRequestId = requestInsert.id;
-            rsi.resposibleName = ri.resposibleName;
-
-            let serviceInsert = await createUpdateItem('createRequestService', createRequestService, rsi);
-            let employeeInsert = await createUpdateItem('createRequestEmployee', createRequestEmployee, rei);
-
-            if (serviceInsert === false || employeeInsert === false) {
-                swal({ title: "Creacion de Solicitud", text: "Ha ocurrido un error al crear los elementos asociados a la solitud", icon: "error", timer: 2000 });
-                setInitialStates();
-                setLoading(false);
-
-            } else {
-                swal({ title: "Creacion de Solicitud", text: "La solicitud ha sido creada correctamente!", icon: "success", timer: 2000 });
-                setInitialStates();
-                setLoading(false);
-
-            }
+            swal({ title: "Creacion de Solicitud", text: "Ha ocurrido un error en la creacion de la solicitud. Intentelo nuevamente", icon: "error", timer: 2000 });
         }
     }
 
@@ -272,7 +280,6 @@ const mapStateToProps = state => ({
     employees: state.employees.employees,
     employeesNextToken: state.employees.nextToken,
     companyServicesNextToken: state.services.nextToken,
-    company: state.company.company,
     currentScreen: state.commun.currentScreen,
     requests: state.requests.requests,
     requestsNextToken: state.requests.nextToken,
@@ -286,6 +293,7 @@ const mapDispatchToProps = dispatch => ({
     setCompanyServicesNextToken: token => dispatch(setCompanyServicesNextToken(token)),
     setRequestsItemsFromStore: data => dispatch(setRequestsItemsFromStore(data)),
     setRequestsNextToken: token => dispatch(setRequestsNextToken(token)),
+    setRequest: data => dispatch(setRequest(data)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Customer);
