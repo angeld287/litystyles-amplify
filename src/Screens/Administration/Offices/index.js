@@ -157,11 +157,11 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
             mutationResult = await createUpdateItem('updateOffice', updateOffice, input);
 
             if (mutationResult === false) {
-                swal({ title: alertTitle, text: 'Ha ocurrido un error al actualizar la oficina', type: "error", timer: 2000 });
+                swal({ title: alertTitle, text: 'Ha ocurrido un error al actualizar la oficina', icon: "error", timer: 2000 });
             } else {
                 _setOffice({ categoryId: e.categoryId, name: e.name, ...office })
                 editOffice({ ...office, categoryId: e.categoryId, name: e.name })
-                swal({ title: alertTitle, text: "La informacion se ha actualizado correctamente!", type: "sucess", timer: 2000 });
+                swal({ title: alertTitle, text: "La informacion se ha actualizado correctamente!", icon: "success", timer: 2000 });
             }
             setLoadingForm(false);
             setEditing(false);
@@ -188,7 +188,7 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
                 mutationResult = await createUpdateItem('updateOffice', updateOffice, input);
 
                 if (mutationResult === false) {
-                    swal({ title: alertTitle, text: 'Ha ocurrido un error al actualizar la oficina', type: "error", timer: 2000 });
+                    swal({ title: alertTitle, text: 'Ha ocurrido un error al actualizar la oficina', icon: "error", timer: 2000 });
                 } else {
                     _setOffice({ ...office, location: place_obj })
                     editOffice({ ...office, location: place_obj })

@@ -148,7 +148,7 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
         let requestInsert = await createUpdateItem('createRequest', _createRequest, ri);
 
         if (requestInsert === false) {
-            swal({ title: "Creacion de Solicitud", text: "Ha ocurrido un error al crear la solicitud", type: "error", timer: 2000 });
+            swal({ title: "Creacion de Solicitud", text: "Ha ocurrido un error al crear la solicitud", icon: "error", timer: 2000 });
             setLoading(false);
             setInitialStates();
         } else {
@@ -162,12 +162,12 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
             let employeeInsert = await createUpdateItem('createRequestEmployee', createRequestEmployee, rei);
 
             if (serviceInsert === false || employeeInsert === false) {
-                swal({ title: "Creacion de Solicitud", text: "Ha ocurrido un error al crear los elementos asociados a la solitud", type: "error", timer: 2000 });
+                swal({ title: "Creacion de Solicitud", text: "Ha ocurrido un error al crear los elementos asociados a la solitud", icon: "error", timer: 2000 });
                 setInitialStates();
                 setLoading(false);
 
             } else {
-                swal({ title: "Creacion de Solicitud", text: "La solicitud ha sido creada correctamente!", type: "sucess", timer: 2000 });
+                swal({ title: "Creacion de Solicitud", text: "La solicitud ha sido creada correctamente!", icon: "success", timer: 2000 });
                 setInitialStates();
                 setLoading(false);
 
@@ -197,7 +197,7 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
 
     const next = () => {
         if (customerName === "") {
-            swal({ title: "Error en la Creacion de Solicitud!", text: "Debe digitar su nombre.", type: "error", timer: 2000 });
+            swal({ title: "Error en la Creacion de Solicitud!", text: "Debe digitar su nombre.", icon: "error", timer: 2000 });
             return null;
         }
         setCurrent(current + 1);

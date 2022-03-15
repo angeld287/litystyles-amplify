@@ -116,9 +116,9 @@ const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromSto
 
         if (mutationResult !== false) {
             removeEmployee(mutationResult);
-            swal({ title: "Desvinculacion de Empleado", text: "El empleado ha sigo desvinculado exitosamente!", type: "sucess", timer: 2000 });
+            swal({ title: "Desvinculacion de Empleado", text: "El empleado ha sigo desvinculado exitosamente!", icon: "success", timer: 2000 });
         } else {
-            swal({ title: "Desvinculacion de Empleado", text: "Ha ocurrido un erro al desvincular el empleado.", type: "error", timer: 2000 });
+            swal({ title: "Desvinculacion de Empleado", text: "Ha ocurrido un erro al desvincular el empleado.", icon: "error", timer: 2000 });
         }
         setUnlinkLoading("");
     }, [setUnlinkLoading, removeEmployee]);
@@ -157,7 +157,7 @@ const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromSto
                     if (mutationResult !== false) {
                         setEmployee(mutationResult);
                         handleShowModal();
-                        swal({ title: "Agregar Empleado", text: "El empleado ha sigo agregado exitosamente!", type: "sucess", timer: 2000 });
+                        swal({ title: "Agregar Empleado", text: "El empleado ha sigo agregado exitosamente!", icon: "success", timer: 2000 });
                     } else {
                         setModalError(true);
                         setModalErrorMessage("Ha ocurrido un error agregando el empleado a la oficina");
@@ -172,7 +172,7 @@ const Employees = ({ officeId, currentTab, employees, nextToken, setItemsFromSto
                     if (mutationResult !== false) {
                         setEmployee(mutationResult);
                         handleShowModal();
-                        swal({ title: "Agregar Empleado", text: "El empleado ha sigo agregado exitosamente!", type: "sucess", timer: 2000 });
+                        swal({ title: "Agregar Empleado", text: "El empleado ha sigo agregado exitosamente!", icon: "success", timer: 2000 });
                     } else {
                         setModalError(true);
                         setModalErrorMessage("Ha ocurrido un error agregando el empleado a la oficina");

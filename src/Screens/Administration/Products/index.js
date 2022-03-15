@@ -202,7 +202,7 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
         if (!showModal) {
             if (e === null) {
                 if (product === '0') {
-                    swal({ title: "Agregar Producto!", text: "Debe seleccionar un producto.", type: "error", timer: 2000 });
+                    swal({ title: "Agregar Producto!", text: "Debe seleccionar un producto.", icon: "error", timer: 2000 });
                     return null;
                 }
                 setMutation('create')
@@ -225,18 +225,18 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
     const onSubmitModal = useCallback(async (e) => {
         try {
             if (mutation === 'create' && product === '0') {
-                swal({ title: "Agregar Producto!", text: "Debe seleccionar un producto.", type: "error", timer: 2000 });
+                swal({ title: "Agregar Producto!", text: "Debe seleccionar un producto.", icon: "error", timer: 2000 });
                 return;
             }
 
             if (e.cost.match(/^[0-9]+$/) === null) {
-                swal({ title: "Agregar Producto!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
+                swal({ title: "Agregar Producto!", text: "El campo costo debe ser un numero.", icon: "error", timer: 2000 });
                 return;
             }
 
             const result = mutation === 'create' ? await getCompanyProductById(product) : undefined;
             if (result !== undefined) {
-                swal({ title: "Agregar Producto!", text: "Este producto ya existe en su empresa!", type: "error", timer: 2000 });
+                swal({ title: "Agregar Producto!", text: "Este producto ya existe en su empresa!", icon: "error", timer: 2000 });
                 return;
             }
 
@@ -264,14 +264,14 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
 
             //console.log(mutationResult)
             if (mutationResult === false) {
-                swal({ title: messageTitle, text: errorText, type: "error", timer: 2000 });
+                swal({ title: messageTitle, text: errorText, icon: "error", timer: 2000 });
             } else {
                 if (mutation === 'create') {
                     setCompanyProduct(mutationResult);
                 } else if (mutation === 'update') {
                     editCompanyProduct(mutationResult);
                 }
-                swal({ title: messageTitle, text: sucessText, type: "sucess", timer: 2000 });
+                swal({ title: messageTitle, text: sucessText, icon: "success", timer: 2000 });
 
             }
 
@@ -297,14 +297,14 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
                     }
 
                     if (_delete === false) {
-                        swal({ title: "Eliminar Producto", text: "Ha ocurrido un error al eliminar el producto.", type: "error", timer: 2000 });
+                        swal({ title: "Eliminar Producto", text: "Ha ocurrido un error al eliminar el producto.", icon: "error", timer: 2000 });
                     } else {
                         removeCompanyProduct(_delete)
-                        swal({ title: "Eliminar Producto", text: "Se ha eliminado el producto correctamente.", type: "sucess", timer: 2000 });
+                        swal({ title: "Eliminar Producto", text: "Se ha eliminado el producto correctamente.", icon: "success", timer: 2000 });
                     }
 
                 } else {
-                    swal({ title: "Eliminar Producto", text: "Se ha cancelado la eliminacion del producto.", type: "error", timer: 2000 });
+                    swal({ title: "Eliminar Producto", text: "Se ha cancelado la eliminacion del producto.", icon: "error", timer: 2000 });
                 }
 
                 setDlBtnLoading(false);

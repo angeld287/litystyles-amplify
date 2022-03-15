@@ -203,7 +203,7 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
         if (!showModal) {
             if (e === null) {
                 if (service === '0') {
-                    swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+                    swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", icon: "error", timer: 2000 });
                     return null;
                 }
                 setMutation('create')
@@ -226,18 +226,18 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
     const onSubmitModal = useCallback(async (e) => {
         try {
             if (mutation === 'create' && service === '0') {
-                swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", type: "error", timer: 2000 });
+                swal({ title: "Agregar Servicio!", text: "Debe seleccionar un servicio.", icon: "error", timer: 2000 });
                 return;
             }
 
             if (e.cost.match(/^[0-9]+$/) === null) {
-                swal({ title: "Agregar Servicio!", text: "El campo costo debe ser un numero.", type: "error", timer: 2000 });
+                swal({ title: "Agregar Servicio!", text: "El campo costo debe ser un numero.", icon: "error", timer: 2000 });
                 return;
             }
 
             const result = mutation === 'create' ? await getCompanyServiceById(service) : undefined;
             if (result !== undefined) {
-                swal({ title: "Agregar Servicio!", text: "Este servicio ya existe en su empresa!", type: "error", timer: 2000 });
+                swal({ title: "Agregar Servicio!", text: "Este servicio ya existe en su empresa!", icon: "error", timer: 2000 });
                 return;
             }
 
@@ -265,14 +265,14 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
 
             console.log(mutationResult)
             if (mutationResult === false) {
-                swal({ title: messageTitle, text: errorText, type: "error", timer: 2000 });
+                swal({ title: messageTitle, text: errorText, icon: "error", timer: 2000 });
             } else {
                 if (mutation === 'create') {
                     setCompanyService(mutationResult);
                 } else if (mutation === 'update') {
                     editCompanyService(mutationResult);
                 }
-                swal({ title: messageTitle, text: sucessText, type: "sucess", timer: 2000 });
+                swal({ title: messageTitle, text: sucessText, icon: "success", timer: 2000 });
 
             }
 
@@ -298,14 +298,14 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
                     }
 
                     if (_delete === false) {
-                        swal({ title: "Eliminar Servicio", text: "Ha ocurrido un error al eliminar el servicio.", type: "error", timer: 2000 });
+                        swal({ title: "Eliminar Servicio", text: "Ha ocurrido un error al eliminar el servicio.", icon: "error", timer: 2000 });
                     } else {
                         removeCompanyService(_delete)
-                        swal({ title: "Eliminar Servicio", text: "Se ha eliminado el servicio correctamente.", type: "sucess", timer: 2000 });
+                        swal({ title: "Eliminar Servicio", text: "Se ha eliminado el servicio correctamente.", icon: "success", timer: 2000 });
                     }
 
                 } else {
-                    swal({ title: "Eliminar Servicio", text: "Se ha cancelado la eliminacion del servicio.", type: "error", timer: 2000 });
+                    swal({ title: "Eliminar Servicio", text: "Se ha cancelado la eliminacion del servicio.", icon: "error", timer: 2000 });
                 }
 
                 setDlBtnLoading(false);
