@@ -12,7 +12,7 @@ const CustomEmployeeCard = ({ key, image, title, onClick }) => {
                 hoverable
                 onClick={onClick}
                 style={{ width: 240 }}
-                cover={<img src={image} />}
+                cover={<img alt={title} src={image} />}
             >
                 <Meta title={title} description="Estilista" />
             </Card>

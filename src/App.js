@@ -63,7 +63,7 @@ const Application = ({ setCurrentUser, setCompany, setLoadingScreen, company }) 
 
   const fetchCompany = async (currentUser) => {
     try {
-      var result = [], _company = company, parameters = {}, token = "";
+      var result = [], _company = company, parameters = {};
 
       //get products
       if (company === null) {
@@ -71,13 +71,11 @@ const Application = ({ setCurrentUser, setCompany, setLoadingScreen, company }) 
         parameters = { limit: QUERY_LIMIT, filter: { owner: { eq: currentUser.username }, deleted: { ne: true } } };
         result = await getList('listCompanys', listCompanys, parameters);
         _company = result.items;
-        token = result.nextToken
 
         while (_company.length === 0 && result.nextToken !== null) {
           parameters.nextToken = result.nextToken;
           result = await getList('listCompanys', listCompanys, parameters);
           _company = [..._company, ...result.items];
-          token = result.nextToken
         }
 
         if (_company.length !== 0) {

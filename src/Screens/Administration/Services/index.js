@@ -101,7 +101,7 @@ const Services = ({ currentTab, _companyServices, services, setCompanyService, r
             setLoading(false)
         };
 
-    }, [setNextToken, setItemsFromStore, company, currentTab, services, _companyServices, companyServicesNextToken, servicesNextToken])
+    }, [setCompanyServicesNextToken, setNextToken, setItemsFromStore, company, currentTab, services, _companyServices, companyServicesNextToken, servicesNextToken])
 
     const getItemsNextToken = useCallback(async () => {
         setLoading(true);

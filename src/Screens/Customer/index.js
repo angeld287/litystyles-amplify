@@ -3,14 +3,15 @@ import CustomStepper from '../../Components/CustomStepper'
 import { Container } from "react-bootstrap"
 import CustomInputGroup from '../../Components/CustomInputGroup';
 
-import { getOfficeEmployees, getCompanyServices } from "../../graphql/customQueries"
-import { createCompanyService, deleteCompanyService, updateCompanyService } from "../../graphql/customMutations"
+import { getOfficeEmployees, getCompanyServices, listRequests } from "../../graphql/customQueries"
+import { createRequest as _createRequest, createRequestService, createRequestEmployee } from "../../graphql/customMutations"
 import { getList, getItemById, createUpdateItem } from "../../services/AppSync"
-import { QUERY_LIMIT } from "../../utils/Constants"
+import { QUERY_LIMIT, REQUESTS_QUERY_LIMIT } from "../../utils/Constants"
 
 import { connect } from 'react-redux';
 import { setItemsFromStore as setEmployeesItemsFromStore, setNextToken as setEmployeesNextToken } from '../../redux/employees/employees.actions';
 import { setCompanyServicesItemsFromStore, setCompanyServicesNextToken } from '../../redux/services/services.actions';
+import { setItemsFromStore as setRequestsItemsFromStore, setNextToken as setRequestsNextToken, setRequest } from '../../redux/requests/requests.actions'
 import CustomEmployeeCard from '../../Components/CustomEmployeeCard';
 import CustomSpinner from '../../Components/CustomSpinner';
 import CustomServiceCard from '../../Components/CustomServiceCard';
@@ -20,7 +21,7 @@ import CustomResumeCard from '../../Components/CustomResumeCard';
 
 import swal from 'sweetalert';
 
-const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextToken, setCompanyServicesItemsFromStore, setCompanyServicesNextToken, companyServices, employees, companyServicesNextToken, employeesNextToken, company }) => {
+const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextToken, setCompanyServicesItemsFromStore, setCompanyServicesNextToken, companyServices, employees, companyServicesNextToken, employeesNextToken, company, requests, setRequestsNextToken, setRequestsItemsFromStore, setRequest, requestsNextToken }) => {
     const [current, setCurrent] = useState(0);
     const [loading, setLoading] = useState(false);
     const [customerName, setCustomerName] = useState("");
@@ -34,14 +35,42 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
         var result = [];
         var _companyServices = companyServices;
         var _employees = employees;
+        var _requests = requests;
         let parameters = {};
         let employeestoken = employeesNextToken;
         let _companyServicesTokens = companyServicesNextToken;
+        let _requestsNextToken = requestsNextToken;
 
         const fetch = async () => {
             setLoading(true);
 
             try {
+
+                //get requests only execute it if needed
+
+                if (_requests.length === 0) {
+
+                    const filter = {
+                        and: [
+                            { state: { ne: 'FINISHED' } },
+                            { state: { ne: 'CANCELED' } },
+                            { companyId: { eq: company.id } },
+                            { deleted: { ne: true } },
+                        ]
+                    };
+
+                    parameters = { limit: REQUESTS_QUERY_LIMIT, filter: filter };
+                    result = await getList('listRequests', listRequests, parameters);
+                    _requests = result.items;
+                    _requestsNextToken = result.nextToken
+
+                    while (_requests.length < QUERY_LIMIT && result.nextToken !== null) {
+                        parameters.nextToken = result.nextToken;
+                        result = await getList('listRequests', listRequests, parameters);
+                        _requests = [..._requests, ...result.items];
+                        _requestsNextToken = result.nextToken
+                    }
+                }
 
                 //get employees  only execute it if needed
                 if (_employees.length === 0) {
@@ -90,6 +119,11 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
                     setEmployeesNextToken(employeestoken);
                 }
 
+                if (requests.length === 0) {
+                    setRequestsItemsFromStore(_requests);
+                    setRequestsNextToken(_requestsNextToken);
+                }
+
                 setLoading(false);
             }
         };
@@ -102,20 +136,50 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
             setLoading(false)
         };
 
-    }, [currentScreen, setEmployeesItemsFromStore, setEmployeesNextToken, setCompanyServicesItemsFromStore, setCompanyServicesNextToken, companyServices, employees, companyServicesNextToken, employeesNextToken, company])
+    }, [currentScreen, setEmployeesItemsFromStore, setEmployeesNextToken, setCompanyServicesItemsFromStore, setCompanyServicesNextToken, companyServices, employees, companyServicesNextToken, employeesNextToken, company, setRequestsNextToken, setRequestsItemsFromStore, requests, requestsNextToken])
 
     //#endregion
 
     const createRequest = async () => {
+        setLoading(true);
         const _date = moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z';
         const ri = { state: 'ON_HOLD', customerName: customerName, companyId: company.id, date: _date, createdAt: _date, paymentType: "CASH", resposibleName: selectedEmployee.username };
 
-        const rei = { cost: selectedService.cost, createdAt: _date, requestEmployeeEmployeeId: selectedEmployee.id }
-        const rsi = { cost: selectedService.cost, createdAt: _date, requestServiceServiceId: selectedService.id }
+        let requestInsert = await createUpdateItem('createRequest', _createRequest, ri);
 
-        console.log(ri, rei, rsi)
-        //() => message.success('Processing complete!')
+        if (requestInsert === false) {
+            swal({ title: "Creacion de Solicitud", text: "Ha ocurrido un error al crear la solicitud", type: "error", timer: 2000 });
+            setLoading(false);
+            setInitialStates();
+        } else {
+            const rei = { cost: selectedService.cost, createdAt: _date, requestEmployeeEmployeeId: selectedEmployee.id }
+            const rsi = { cost: selectedService.cost, createdAt: _date, requestServiceServiceId: selectedService.id }
+            rei.requestEmployeeRequestId = requestInsert.id;
+            rsi.requestServiceRequestId = requestInsert.id;
+            rsi.resposibleName = ri.resposibleName;
 
+            let serviceInsert = await createUpdateItem('createRequestService', createRequestService, rsi);
+            let employeeInsert = await createUpdateItem('createRequestEmployee', createRequestEmployee, rei);
+
+            if (serviceInsert === false || employeeInsert === false) {
+                swal({ title: "Creacion de Solicitud", text: "Ha ocurrido un error al crear los elementos asociados a la solitud", type: "error", timer: 2000 });
+                setInitialStates();
+                setLoading(false);
+
+            } else {
+                swal({ title: "Creacion de Solicitud", text: "La solicitud ha sido creada correctamente!", type: "sucess", timer: 2000 });
+                setInitialStates();
+                setLoading(false);
+
+            }
+        }
+    }
+
+    const setInitialStates = () => {
+        setCustomerName("");
+        setSelectedEmployee({});
+        setSelectedService({});
+        setCurrent(0);
     }
 
     const _employees = employees.map(_ => ({
@@ -210,6 +274,9 @@ const mapStateToProps = state => ({
     companyServicesNextToken: state.services.nextToken,
     company: state.company.company,
     currentScreen: state.commun.currentScreen,
+    requests: state.requests.requests,
+    requestsNextToken: state.requests.nextToken,
+    company: state.company.company
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -217,6 +284,8 @@ const mapDispatchToProps = dispatch => ({
     setEmployeesNextToken: token => dispatch(setEmployeesNextToken(token)),
     setCompanyServicesItemsFromStore: data => dispatch(setCompanyServicesItemsFromStore(data)),
     setCompanyServicesNextToken: token => dispatch(setCompanyServicesNextToken(token)),
+    setRequestsItemsFromStore: data => dispatch(setRequestsItemsFromStore(data)),
+    setRequestsNextToken: token => dispatch(setRequestsNextToken(token)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Customer);

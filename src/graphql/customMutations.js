@@ -195,3 +195,118 @@ export const updateEmployee = /* GraphQL */ `
     }
   }
 `;
+
+
+
+/***************************************
+*
+*   REQUESTS CUSTOM MUTATIONS
+*
+****************************************/
+export const createRequestEmployee = /* GraphQL */ `
+  mutation CreateRequestEmployee(
+    $input: CreateRequestEmployeeInput!
+    $condition: ModelRequestEmployeeConditionInput
+  ) {
+    createRequestEmployee(input: $input, condition: $condition) {
+      id
+    }
+  }
+`;
+
+export const createRequestService = /* GraphQL */ `
+  mutation CreateRequestService(
+    $input: CreateRequestServiceInput!
+    $condition: ModelRequestServiceConditionInput
+  ) {
+    createRequestService(input: $input, condition: $condition) {
+      id
+    }
+  }
+`;
+
+export const createRequest = /* GraphQL */ `
+  mutation CreateRequest(
+    $input: CreateRequestInput!
+    $condition: ModelRequestConditionInput
+  ) {
+    createRequest(input: $input, condition: $condition) {
+      id
+      companyId
+      resposible {
+        nextToken
+      }
+      service {
+        items {
+          service {
+            name
+          }
+        }
+      }
+      product {
+        nextToken
+      }
+      customer {
+        items {
+          customer {
+            name
+            phoneid
+            id
+          }
+        }
+      }
+      resposibleName
+      customerName
+      state
+      notified
+      paymentType
+      deleted
+      deletedAt
+      date
+      createdAt
+    }
+  }
+`;
+
+export const updateRequest = /* GraphQL */ `
+  mutation UpdateRequest(
+    $input: UpdateRequestInput!
+    $condition: ModelRequestConditionInput
+  ) {
+    updateRequest(input: $input, condition: $condition) {
+      id
+      companyId
+      resposible {
+        nextToken
+      }
+      service {
+        items {
+          service {
+            name
+          }
+        }
+      }
+      product {
+        nextToken
+      }
+      customer {
+        items {
+          customer {
+            name
+            phoneid
+            id
+          }
+        }
+      }
+      resposibleName
+      customerName
+      state
+      notified
+      paymentType
+      deleted
+      deletedAt
+      date
+      createdAt
+    }
+  }
+`;

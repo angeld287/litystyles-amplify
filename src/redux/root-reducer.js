@@ -9,6 +9,7 @@ import officesReducer from "./offices/offices.reducer";
 import employeesReducer from "./employees/employees.reducer";
 import typesReducer from "./types/types.reducer";
 import categoriesReducer from "./categories/categories.reducer";
+import requestsReducer from "./requests/requests.reducer"
 
 export default combineReducers({
     user: userReducer,
@@ -20,4 +21,5 @@ export default combineReducers({
     employees: employeesReducer,
     types: typesReducer,
     categories: categoriesReducer,
+    requests: requestsReducer
 });
