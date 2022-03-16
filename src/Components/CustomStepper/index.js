@@ -14,7 +14,7 @@ const CustomStepper = ({ steps, next, prev, current, buttonsStyle, onConfirm }) 
                     <Step key={item.title} title={item.title} />
                 ))}
             </Steps>
-            <div className="steps-content" style={{ height: '400px', margin: 10 }}>{steps[current].content}</div>
+            <div className="steps-content" style={{ height: '500px', margin: 10 }}>{steps[current].content}</div>
             <div className="steps-action">
                 {current === 0 && (
                     <CustomButton style={buttonsStyle} type="primary" onClick={() => next()}>

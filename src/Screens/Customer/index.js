@@ -253,7 +253,16 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
 const EmployeesOptions = ({ options }) => {
     return (
         <div>
-            {options.map(_ => <CustomEmployeeCard key={_.id} title={_.text} onClick={() => _.onClick(_)} />)}
+            <List
+                key="employeesCardListId"
+                grid={{ gutter: 16, column: 4 }}
+                dataSource={options}
+                renderItem={_ => (
+                    <List.Item>
+                        <CustomEmployeeCard key={_.id} title={_.text} onClick={() => _.onClick(_)} />
+                    </List.Item>
+                )}
+            />
         </div>
     );
 }
@@ -264,7 +273,7 @@ const ServicesOptions = ({ options }) => {
             <List
                 key="serviceCardListId"
                 grid={{ gutter: 16, column: 4 }}
-                dataSource={options.slice(0, 8)}
+                dataSource={options}
                 renderItem={item => (
                     <List.Item>
                         <CustomServiceCard key={item.id} title={item.text} cost={item.cost} onClick={() => item.onClick(item)} image="https://joeschmoe.io/api/v1/random" />

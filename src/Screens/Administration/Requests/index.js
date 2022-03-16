@@ -157,7 +157,7 @@ const Requests = ({ currentTab, company, setRequestsNextToken, setRequestsItemsF
                 }
             });
 
-    }, []);
+    }, [removeRequest]);
 
     useEffect(() => {
         try {

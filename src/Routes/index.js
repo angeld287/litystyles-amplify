@@ -3,11 +3,10 @@ import { connect } from 'react-redux';
 
 import HeaderLinks from '../Components/HeaderLinks';
 import Administration from '../Screens/Administration';
-import Customer from '../Screens/Customer'
-import Reports from '../Screens/Reports'
+import Customer from '../Screens/Customer';
 import Home from '../Screens/Home';
 import CustomSpinner from '../Components/CustomSpinner';
-import ErrorBoundary from '../Components/ErrorBoundary'
+import ErrorBoundary from '../Components/ErrorBoundary';
 
 
 const Routes = ({ currentScreen, loadingScreen }) => {
@@ -20,7 +19,6 @@ const Routes = ({ currentScreen, loadingScreen }) => {
             {currentScreen === 'HOME' && <ErrorBoundary><Home /></ErrorBoundary>}
             {currentScreen === 'COMPANY_ADMIN' && <ErrorBoundary><Administration /></ErrorBoundary>}
             {currentScreen === 'CUSTOMER' && <ErrorBoundary><Customer /></ErrorBoundary>}
-            {currentScreen === 'REPORTS' && <ErrorBoundary><Reports /></ErrorBoundary>}
         </div>
     );
 

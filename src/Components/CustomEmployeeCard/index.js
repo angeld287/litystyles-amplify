@@ -6,7 +6,7 @@ const { Meta } = Card;
 
 const CustomEmployeeCard = ({ key, image, title, onClick }) => {
     return (
-        <div style={{ margin: 20 }} >
+        <div style={{ width: 300, margin: 20 }} >
             <Card
                 key={key}
                 hoverable
