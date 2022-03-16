@@ -26,6 +26,7 @@ const CustomTabs = ({ onSelectTab, tabs, defaultTab }) => {
 CustomTabs.propTypes = {
     onSelectTab: PropTypes.func,
     tabs: PropTypes.array,
+    defaultTab: PropTypes.string
 }
 
 export default React.memo(CustomTabs);

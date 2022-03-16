@@ -216,7 +216,7 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
     }, [setEditing]);
 
     const tabs = useMemo(() => {
-        if (loading) {
+        if (loading || location === null) {
             return [];
         } else {
             return [
@@ -241,6 +241,8 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
     const formButtonEdit = useMemo(() => [
         { name: 'editBtn', text: "Editar", className: CustomClasses.INTENT_PRIMARY, onClick: handleOpenToEdit, type: 'button', loading: false, }
     ], [handleOpenToEdit]);
+
+    if (currentTab !== "offices") return <h1>NO OFFICE</h1>;
 
     if (loading) return <CustomSpinner />;
 
@@ -271,7 +273,7 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
                                 </Col>
                                 <Col>
                                     <p>Ubicacion Actual</p>
-                                    <p>{location.name}</p>
+                                    <p>{location === null ? "" : location.name}</p>
                                 </Col>
                             </Row>
                         </Card.Body>
@@ -281,7 +283,7 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
                 <Col sm={6}>
                     <Card border="info">
                         <Card.Body>
-                            <CustomTabs onSelectTab={onSelectTab} tabs={tabs} defaultTab={tabs[0].name} />
+                            <CustomTabs onSelectTab={onSelectTab} tabs={tabs} defaultTab={'map'} />
                         </Card.Body>
                     </Card>
                 </Col>

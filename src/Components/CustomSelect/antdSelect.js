@@ -6,7 +6,7 @@ import { Select, Form } from "antd";
 const CustomSelect = ({ id, dataTestId, items, onChange, defaultValue, getItemsNextToken, placeholder, disabled, name }) => {
     const [loading, setLoading] = useState(false);
 
-    const options = items !== undefined ? items.map(_ => { return <Select.Option key={_.id}>{_.name}</Select.Option> }) : [];
+    const options = useMemo(() => items !== undefined ? items.map(_ => { return <Select.Option key={_.id}>{_.name}</Select.Option> }) : [], [items]);
 
     const onScroll = async (event) => {
         var target = event.target
@@ -26,7 +26,7 @@ const CustomSelect = ({ id, dataTestId, items, onChange, defaultValue, getItemsN
         }
     }
 
-    const _dvalue = useMemo(() => typeof defaultValue === "string" ? defaultValue : () => {
+    const _dvalue = useMemo(() => typeof defaultValue === "string" ? defaultValue : (() => {
         if (typeof defaultValue === "object" && defaultValue !== null) {
             if (defaultValue.items !== undefined && defaultValue.items.length > 0) {
                 const obj = defaultValue.items[0];
@@ -39,7 +39,7 @@ const CustomSelect = ({ id, dataTestId, items, onChange, defaultValue, getItemsN
         } else {
             return null;
         }
-    }, [defaultValue]);
+    })(), [defaultValue]);
 
     return <Form.Item name={name} label={placeholder} initialValue={_dvalue !== undefined && _dvalue !== "" ? _dvalue : null} ><Select
         id={id}
