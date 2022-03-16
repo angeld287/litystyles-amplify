@@ -22,7 +22,7 @@ import swal from 'sweetalert';
 
 import { Icon } from '@blueprintjs/core';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-
+import CustomSpinner from '../../../Components/CustomSpinner';
 
 const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories, removeOffice, setItemsFromStore, setNextToken, editOffice, setItemsFromStoreCategories, categories, setNextTokenCategories }) => {
     const [office, _setOffice] = useState({});
@@ -30,7 +30,7 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
     const [loadingForm, setLoadingForm] = useState(false);
     const [location, setLocation] = useState(null);
     const [loadingLocChange, setLoadingLocChange] = useState(false);
-    const [officeCurrentTab, setCurrentTab] = useState('map');
+    const [officeCurrentTab, setOfficeCurrentTab] = useState('map');
     const [loading, setLoading] = useState({});
 
     //#region Actions to fetch data
@@ -204,7 +204,7 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
     //#endregion
 
     const onSelectTab = (e) => {
-        setCurrentTab(e);
+        setOfficeCurrentTab(e);
     }
 
     const handleCloseEditing = useCallback(() => {
@@ -242,7 +242,7 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
         { name: 'editBtn', text: "Editar", className: CustomClasses.INTENT_PRIMARY, onClick: handleOpenToEdit, type: 'button', loading: false, }
     ], [handleOpenToEdit]);
 
-    if (loading) return <h1>Loading...</h1>;
+    if (loading) return <CustomSpinner />;
 
     return (
         <Container fluid>
