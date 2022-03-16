@@ -3,11 +3,10 @@ import { connect } from 'react-redux';
 
 import HeaderLinks from '../Components/HeaderLinks';
 import Administration from '../Screens/Administration';
-import Employee from '../Screens/Employee'
-import Customer from '../Screens/Customer'
-import Reports from '../Screens/Reports'
+import Customer from '../Screens/Customer';
 import Home from '../Screens/Home';
 import CustomSpinner from '../Components/CustomSpinner';
+import ErrorBoundary from '../Components/ErrorBoundary';
 
 
 const Routes = ({ currentScreen, loadingScreen }) => {
@@ -17,11 +16,9 @@ const Routes = ({ currentScreen, loadingScreen }) => {
     return (
         <div className="App">
             <HeaderLinks />
-            {currentScreen === 'HOME' && <Home />}
-            {currentScreen === 'COMPANY_ADMIN' && <Administration />}
-            {currentScreen === 'STYLIST' && <Employee />}
-            {currentScreen === 'CUSTOMER' && <Customer />}
-            {currentScreen === 'REPORTS' && <Reports />}
+            {currentScreen === 'HOME' && <ErrorBoundary><Home /></ErrorBoundary>}
+            {currentScreen === 'COMPANY_ADMIN' && <ErrorBoundary><Administration /></ErrorBoundary>}
+            {currentScreen === 'CUSTOMER' && <ErrorBoundary><Customer /></ErrorBoundary>}
         </div>
     );
 
@@ -32,4 +29,4 @@ const mapStateToProps = state => ({
     loadingScreen: state.commun.loadingScreen
 })
 
-export default connect(mapStateToProps)(Routes);;
+export default connect(mapStateToProps)(Routes);

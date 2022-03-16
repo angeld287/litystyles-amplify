@@ -1,41 +1,208 @@
-  export const getCompanyOfficesProductsAndServices = /* GraphQL */ `
-  query getCompanyProductsAndServices($id: ID!) {
-    getCompany(id: $id) {
-      id
-      name
-      offices(filter: {deleted: {ne: true}}) {
-        items {
-          id
-          name
-          administrator
-          categoryId
-          image
-          employees {
-            items {
+/*********************************
+*
+*   PRODUCTS CUSTOM QUERIES
+*
+**********************************/
+
+export const listProducts = /* GraphQL */ `
+  query ListProducts(
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        cost
+        categoryId
+        subCategoryId
+        name
+        image
+        deleted
+        id
+        packagingformat
+        createdAt
+        category {
+          items {
+            id
+            category {
               id
               name
-              username
-              officeId
-              services {
-                items {
-                  id
-                  service {
-                    cost
-                    name
-                    id
-                  }
-                }
-              }
             }
           }
-          location
-          deleted
-          deletedAt
-          createdAt
-          owner
+        }
+        subcategory {
+          items {
+            id
+            subcategory {
+              id
+              name
+            }
+          }
         }
       }
-      services {
+      nextToken
+    }
+  }
+`;
+
+/*********************************
+*
+*   SERVICES CUSTOM QUERIES
+*
+**********************************/
+
+export const listServices = /* GraphQL */ `
+  query ListServices(
+    $filter: ModelServiceFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listServices(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        cost
+        categoryId
+        subCategoryId
+        deleted
+        deletedAt
+        createdAt
+        owner
+        category {
+          items {
+            id
+            category {
+              id
+              name
+            }
+          }
+        }
+        subcategory {
+          items {
+            id
+            subcategory {
+              id
+              name
+            }
+          }
+        }
+      }
+      nextToken
+    }
+  }
+`;
+
+
+/*********************************
+*
+*   CATEGORIES CUSTOM QUERIES
+*
+**********************************/
+
+export const listCategorys = /* GraphQL */ `
+  query ListCategorys(
+    $filter: ModelCategoryFilterInput
+    $filterSub: ModelSubCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listCategorys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        subcategories(filter: $filterSub) {
+          items {
+            name
+            code
+            deleted
+            categoryName
+            id
+          }
+          nextToken
+        }
+        typeName
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+
+/*********************************
+*
+*   SUBCATEGORIES CUSTOM QUERIES
+*
+**********************************/
+
+export const listSubCategorys = /* GraphQL */ `
+  query ListSubCategorys(
+    $filter: ModelSubCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSubCategorys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        code
+        categoryName
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+
+
+/*********************************
+*
+*   TYPES CUSTOM QUERIES
+*
+**********************************/
+
+export const listTypes = /* GraphQL */ `
+  query ListTypes(
+    $filter: ModelTypeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTypes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        code
+        deleted
+        deletedAt
+        createdAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+
+
+/*********************************
+*
+*   COMPANY SERVICES CUSTOM QUERY
+*
+**********************************/
+export const getCompanyServices = /* GraphQL */ `
+  query getCompanyServices(
+    $id: ID!
+    $filter: ModelCompanyServiceFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getCompany(id: $id) {
+      services(filter: $filter, limit: $limit, nextToken: $nextToken) {
         items {
           id
           service {
@@ -46,53 +213,136 @@
           }
           cost
         }
-      }
-      products {
-        items {
-          id
-          quantity
-          product {
-            name
-            cost
-            id
-          }
-          cost
-        }
+        nextToken
       }
     }
   }
 `;
 
-export const getCompanyProductsAndServices = /* GraphQL */ `
-query getCompanyProductsAndServices($id: ID!) {
-  getCompany(id: $id) {
-    id
-    name
-    services {
-      items {
-        id
-        service {
-          name
-          cost
+/*********************************
+*
+*   COMPANY PRODUCTS CUSTOM QUERY
+*
+**********************************/
+export const getCompanyProducts = /* GraphQL */ `
+  query getCompanyProducts(
+    $id: ID!
+    $filter: ModelCompanyProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getCompany(id: $id) {
+      products(filter: $filter, limit: $limit, nextToken: $nextToken) {
+        items {
           id
-        }
-        cost
-      }
-    }
-    products {
-      items {
-        id
-        product {
-          name
+          product {
+            name
+            cost
+            id
+            categoryId
+          }
           cost
-          id
         }
-        cost
+        nextToken
       }
     }
   }
-}
 `;
+
+/*********************************
+*
+*   OFFICE CUSTOM QUERY
+*
+**********************************/
+export const getCompanyOffices = /* GraphQL */ `
+  query getCompanyOffices(
+    $id: ID!
+    $filter: ModelOfficeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getCompany(id: $id) {
+      offices(filter: $filter, limit: $limit, nextToken: $nextToken) {
+        items {
+          administrator
+          categoryId
+          companyId
+          deleted
+          id
+          image
+          location
+          name
+        }
+        nextToken
+      }
+    }
+  }
+`;
+
+export const getOfficeEmployees = /* GraphQL */ `
+  query GetOffice(
+    $id: ID!
+    $filter: ModelEmployeeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    getOffice(id: $id) {
+      employees(filter: $filter, limit: $limit, nextToken: $nextToken) {
+        items {
+          id
+          name
+          username
+          officeId
+          phoneid
+          phone_number
+          image
+          deleted
+          services {
+            nextToken
+          }
+        }
+        nextToken
+      }
+    }
+  }
+`;
+
+
+/*********************************
+*
+*   EMPLOYEES CUSTOM QUERY
+*
+**********************************/
+export const listEmployees = /* GraphQL */ `
+  query ListEmployees(
+    $filter: ModelEmployeeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmployees(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        username
+        officeId
+        phoneid
+        phone_number
+        image
+        services {
+          nextToken
+        }
+        deleted
+      }
+      nextToken
+    }
+  }
+`;
+
+/*********************************
+*
+*   COMPANY CUSTOM QUERY
+*
+**********************************/
 
 export const listCompanys = /* GraphQL */ `
   query ListCompanys(
@@ -104,13 +354,11 @@ export const listCompanys = /* GraphQL */ `
       items {
         id
         name
-        offices(filter: {deleted: {ne: true}}) {
+        assistant
+        owner
+        offices {
           items {
-            administrator
             id
-            location
-            owner
-            categoryId
           }
         }
       }
@@ -119,52 +367,11 @@ export const listCompanys = /* GraphQL */ `
   }
 `;
 
-export const listEmployees = `
-  query Employees($id: String!) {
-    listEmployees(filter: {officeId: {eq: $id}}) {
-      items {
-        id
-        name
-        username
-        services {
-          items {
-            id
-            service {
-              cost
-              name
-              id
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-export const listEmployeesFromOffice = `
-query Office($id: String!) {
-  getOffice(id: $id) {
-    employees {
-      items {
-        name
-        id
-        username
-        services {
-          items {
-            id
-            service {
-              cost
-              name
-              id
-            }
-          }
-        }
-      }
-    }
-  }
-}
-`;
-
+/*********************************
+*
+*   REQUESTS CUSTOM QUERY
+*
+**********************************/
 export const listRequests = /* GraphQL */ `
   query ListRequests(
     $filter: ModelRequestFilterInput
@@ -208,271 +415,6 @@ export const listRequests = /* GraphQL */ `
         createdAt
       }
       nextToken
-    }
-  }
-`;
-
-export const listRequestsPerDay = /* GraphQL */ `
-  query ListRequests(
-    $filter: ModelRequestFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listRequests(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        service {
-          items {
-            service {
-              name
-              cost
-            }
-            cost
-          }
-        }
-        product {
-          items {
-            product {
-              name
-              cost
-            }
-            cost
-          }
-        }
-        paymentType
-        customerName
-        createdAt
-        date
-      }
-      nextToken
-    }
-  }
-`;
-
-export const listOffices = /* GraphQL */ `
-  query ListOffices(
-    $filter: ModelOfficeFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listOffices(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        administrator
-        employees {
-          items {
-            id
-            name
-            username
-            officeId
-            services {
-              items {
-                id
-                service {
-                  name
-                  id
-                }
-              }
-            }
-          }
-        }
-        location
-        deleted
-        deletedAt
-        createdAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-
-export const getRequest = /* GraphQL */ `
-  query GetRequest($id: ID!) {
-    getRequest(id: $id) {
-      id
-      companyId
-      resposible {
-        nextToken
-      }
-      service {
-        items {
-          service {
-            name
-          }
-        }
-      }
-      product {
-        nextToken
-      }
-      customer {
-        items {
-          customer {
-            name
-            phoneid
-            id
-          }
-        }
-      }
-      resposibleName
-      customerName
-      notified
-      state
-      paymentType
-      deleted
-      deletedAt
-      date
-      createdAt
-    }
-  }
-`;
-
-export const getProduct = /* GraphQL */ `
-  query GetProduct($id: ID!) {
-    getProduct(id: $id) {
-      id
-      name
-      cost
-      companies {
-        items {
-          id
-          quantity
-          cost
-          createdAt
-        }
-        nextToken
-      }
-      request {
-        items {
-          id
-          cost
-          quantity
-          createdAt
-        }
-        nextToken
-      }
-      category {
-        items {
-          id
-          createdAt
-          category {
-            id
-          }
-        }
-        nextToken
-      }
-      subcategory {
-        items {
-          id
-          createdAt
-          subcategory {
-            id
-          }
-        }
-        nextToken
-      }
-      deleted
-      image
-      packagingformat
-      deletedAt
-      createdAt
-      owner
-    }
-  }
-`;
-
-export const listCategorys = /* GraphQL */ `
-  query ListCategorys(
-    $filter: ModelCategoryFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listCategorys(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        offices {
-          nextToken
-        }
-        subcategories {
-          items {
-            id
-            name
-          }
-        }
-        products {
-          nextToken
-        }
-        services {
-          nextToken
-        }
-        typeName
-        code
-        deleted
-        deletedAt
-        createdAt
-        owner
-      }
-      nextToken
-    }
-  }
-`;
-
-export const getService = /* GraphQL */ `
-  query GetService($id: ID!) {
-    getService(id: $id) {
-      id
-      name
-      cost
-      employees {
-        items {
-          id
-          createdAt
-        }
-        nextToken
-      }
-      companies {
-        items {
-          id
-          cost
-          createdAt
-        }
-        nextToken
-      }
-      request {
-        items {
-          id
-          resposibleName
-          cost
-          createdAt
-        }
-        nextToken
-      }
-      category {
-        items {
-          id
-          createdAt
-          category {
-            id
-          }
-        }
-        nextToken
-      }
-      subcategory {
-        items {
-          id
-          createdAt
-          subcategory {
-            id
-          }
-        }
-        nextToken
-      }
-      deleted
-      deletedAt
-      createdAt
-      owner
     }
   }
 `;
