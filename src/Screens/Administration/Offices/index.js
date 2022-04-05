@@ -29,7 +29,6 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
     const [editing, setEditing] = useState(false);
     const [loadingForm, setLoadingForm] = useState(false);
     const [location, setLocation] = useState(null);
-    const [loadingLocChange, setLoadingLocChange] = useState(false);
     const [officeCurrentTab, setOfficeCurrentTab] = useState('map');
     const [loading, setLoading] = useState({});
 
@@ -173,7 +172,6 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
     const onLocationChange = useCallback(async (places) => {
         let place = places.length > 0 ? places[0] : null;
         if (place !== null) {
-            setLoadingLocChange(true);
 
             let place_obj = {
                 name: place.formatted_address,
@@ -194,12 +192,11 @@ const Offices = ({ currentTab, offices, nextToken, company, nextTokenCategories,
                     editOffice({ ...office, location: place_obj })
                     setLocation(place_obj)
                 }
-                setLoadingLocChange(false);
             } catch (e) {
-                setLoadingLocChange(false);
+                console.log(e)
             }
         }
-    }, [setLoadingLocChange, setLocation, editOffice, _setOffice, office]);
+    }, [setLocation, editOffice, _setOffice, office]);
 
     //#endregion
 

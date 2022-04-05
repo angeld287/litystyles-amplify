@@ -18,7 +18,7 @@ export const removeCompanyProduct = companyProduct => ({
 export const setItemsFromStore = (data) => {
     return {
         type: Types.SET_ITEMS,
-        payload: { products: data.products, companyProducts: data.companyProducts }
+        payload: { products: data.products, companyProducts: data.companyProducts, companyHasProducts: data.companyHasProducts }
     }
 }
 

@@ -17,7 +17,7 @@ import swal from 'sweetalert';
 
 import { Container, Row, Col } from 'react-bootstrap';
 
-const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, removeCompanyProduct, setItemsFromStore, setNextToken, company, companyProductsNextToken, productsNextToken, editCompanyProduct }) => {
+const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, removeCompanyProduct, setItemsFromStore, setNextToken, company, companyProductsNextToken, productsNextToken, editCompanyProduct, companyHasProducts }) => {
 
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(false);
@@ -58,7 +58,7 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
                 }
 
                 //get companyProducts
-                if (_companyProducts.length === 0) {
+                if (_companyProducts.length === 0 && companyHasProducts) {
                     parameters = { id: company.id, limit: QUERY_LIMIT };
                     result = await getItemById('getCompany', getCompanyProducts, parameters);
                     __companyProducts = result.products.items;
@@ -82,7 +82,8 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
                 if (products.length === 0 || _companyProducts.length === 0) {
                     setItemsFromStore({
                         products: _products,
-                        companyProducts: __companyProducts
+                        companyProducts: __companyProducts,
+                        companyHasProducts: __companyProducts.length > 0,
                     });
 
                     setNextToken(tokens);
@@ -100,7 +101,7 @@ const Products = ({ currentTab, _companyProducts, products, setCompanyProduct, r
             setLoading(false)
         };
 
-    }, [setNextToken, setItemsFromStore, company, currentTab, products, _companyProducts, productsNextToken, companyProductsNextToken])
+    }, [setNextToken, setItemsFromStore, company, currentTab, products, _companyProducts, productsNextToken, companyProductsNextToken, companyHasProducts])
 
     const getItemsNextToken = useCallback(async () => {
         setLoading(true);
@@ -381,6 +382,7 @@ const mapStateToProps = state => ({
     productsNextToken: state.products.nextToken.productsNextToken,
     companyProductsNextToken: state.products.nextToken.companyProductsNextToken,
     company: state.company.company,
+    companyHasProducts: state.products.companyHasProducts,
 })
 
 const mapDispatchToProps = dispatch => ({

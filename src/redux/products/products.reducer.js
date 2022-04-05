@@ -4,6 +4,7 @@ import { utilAddItem, utilRemoveItem, utilEditItem, getItem } from '../../utils/
 const INITIAL_STATES = {
     companyProducts: [],
     companyProduct: {},
+    companyHasProducts: true,
     products: [],
     nextToken: { productsNextToken: "", companyProductsNextToken: "" },
 }
@@ -33,7 +34,8 @@ const productsReducer = (state = INITIAL_STATES, action) => {
             return {
                 ...state,
                 products: action.payload.products,
-                companyProducts: action.payload.companyProducts
+                companyProducts: action.payload.companyProducts,
+                companyHasProducts: action.payload.companyHasProducts,
             }
         case Types.SET_NEXT_TOKEN:
             return {
