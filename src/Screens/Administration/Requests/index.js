@@ -19,8 +19,8 @@ const Requests = ({ currentTab, company, setRequestsNextToken, setRequestsItemsF
     const [upBtnLoading, setUpBtnLoading] = useState("");
     useEffect(() => {
         let didCancel = false;
-        var result = [];
-        var _requests = requests;
+        let result = [];
+        let _requests = [];
         let parameters = {};
         let _requestsNextToken = requestsNextToken;
 
@@ -48,6 +48,7 @@ const Requests = ({ currentTab, company, setRequestsNextToken, setRequestsItemsF
                     _requestsNextToken = result.nextToken
 
                     while (_requests.length < QUERY_LIMIT && result.nextToken !== null) {
+
                         parameters.nextToken = result.nextToken;
                         result = await getList('listRequests', listRequests, parameters);
                         _requests = [..._requests, ...result.items];
@@ -61,12 +62,8 @@ const Requests = ({ currentTab, company, setRequestsNextToken, setRequestsItemsF
             }
 
             if (!didCancel) {
-
-                if (requests.length === 0) {
-                    setRequestsItemsFromStore(_requests);
-                    setRequestsNextToken(_requestsNextToken);
-                }
-
+                setRequestsItemsFromStore(_requests);
+                setRequestsNextToken(_requestsNextToken);
                 setLoading(false);
             }
         };
@@ -79,15 +76,15 @@ const Requests = ({ currentTab, company, setRequestsNextToken, setRequestsItemsF
             setLoading(false)
         };
 
-    }, [currentTab, company, setRequestsNextToken, setRequestsItemsFromStore, requests, requestsNextToken])
+    }, [currentTab, company, setRequestsNextToken, setRequestsItemsFromStore, requestsNextToken])
 
     const getItemsNextToken = useCallback(async () => {
         setLoading(true);
 
-        var result = [];
-        var parameters = {};
-        var token = requestsNextToken;
-        var _requests = requests;
+        let result = [];
+        let parameters = {};
+        let token = requestsNextToken;
+        let _requests = requests;
 
         if (requestsNextToken !== null) {
             try {
