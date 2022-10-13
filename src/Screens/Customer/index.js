@@ -32,10 +32,10 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
 
     useEffect(() => {
         let didCancel = false;
-        var result = [];
-        var _companyServices = companyServices;
-        var _employees = employees;
-        var _requests = requests;
+        let result = [];
+        let _companyServices = [];
+        let _employees = [];
+        let _requests = [];
         let parameters = {};
         let employeestoken = employeesNextToken;
         let _companyServicesTokens = companyServicesNextToken;
@@ -109,20 +109,13 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
 
             if (!didCancel) {
 
-                if (companyServices.length === 0) {
-                    setCompanyServicesItemsFromStore(_companyServices);
-                    setCompanyServicesNextToken(_companyServicesTokens);
-                }
+                setCompanyServicesItemsFromStore(_companyServices);
+                setCompanyServicesNextToken(_companyServicesTokens);
+                setEmployeesItemsFromStore({ employees: _employees });
+                setEmployeesNextToken(employeestoken);
 
-                if (employees.length === 0) {
-                    setEmployeesItemsFromStore({ employees: _employees });
-                    setEmployeesNextToken(employeestoken);
-                }
-
-                if (requests.length === 0) {
-                    setRequestsItemsFromStore(_requests);
-                    setRequestsNextToken(_requestsNextToken);
-                }
+                setRequestsItemsFromStore(_requests);
+                setRequestsNextToken(_requestsNextToken);
 
                 setLoading(false);
             }
@@ -136,7 +129,7 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
             setLoading(false)
         };
 
-    }, [currentScreen, setEmployeesItemsFromStore, setEmployeesNextToken, setCompanyServicesItemsFromStore, setCompanyServicesNextToken, companyServices, employees, companyServicesNextToken, employeesNextToken, company, setRequestsNextToken, setRequestsItemsFromStore, requests, requestsNextToken])
+    }, [currentScreen, setEmployeesItemsFromStore, setEmployeesNextToken, setCompanyServicesItemsFromStore, setCompanyServicesNextToken, companyServicesNextToken, employeesNextToken, company, setRequestsNextToken, setRequestsItemsFromStore, requestsNextToken])
 
     //#endregion
 
