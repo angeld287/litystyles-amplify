@@ -225,7 +225,7 @@ const Customer = ({ currentScreen, setEmployeesItemsFromStore, setEmployeesNextT
             content: <CustomInputGroup placeholder="Digite su nombre..." onChange={_ => setCustomerName(_.target.value)} style={{ fontSize: "70px", height: 100, marginTop: 70 }} />,
         },
         {
-            title: 'Seleeccion de Estilista',
+            title: 'Seleccion de Estilista',
             content: <EmployeesOptions options={_employees} />,
         },
         {
